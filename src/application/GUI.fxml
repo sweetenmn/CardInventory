@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+
+
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
+   <center>
+      <TabPane prefHeight="400.0" prefWidth="450.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+        <tabs>
+          <Tab text="Search">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+            </content>
+          </Tab>
+          <Tab text="Edit">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+            </content>
+          </Tab>
+            <Tab text="View">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              </content>
+            </Tab>
+            <Tab text="Set List">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              </content>
+            </Tab>
+        </tabs>
+      </TabPane>
+   </center>
+   <top>
+      <Pane prefHeight="30.0" prefWidth="450.0" BorderPane.alignment="CENTER">
+         <children>
+            <TextField layoutX="7.0" layoutY="4.0" prefHeight="25.0" prefWidth="214.0" promptText="Search by card" />
+            <CheckBox layoutX="251.0" layoutY="9.0" mnemonicParsing="false" text="Search sets">
+               <font>
+                  <Font size="10.0" />
+               </font>
+            </CheckBox>
+            <ImageView fitHeight="24.0" fitWidth="23.0" layoutX="224.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../search.png" />
+               </image>
+            </ImageView>
+         </children>
+      </Pane>
+   </top>
+</BorderPane>
