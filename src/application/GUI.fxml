@@ -125,16 +125,12 @@
       <Pane prefHeight="30.0" prefWidth="450.0" BorderPane.alignment="CENTER">
          <children>
             <TextField layoutX="7.0" layoutY="4.0" prefHeight="25.0" prefWidth="214.0" promptText="Search by card" />
-            <CheckBox layoutX="251.0" layoutY="9.0" mnemonicParsing="false" text="Search sets">
+            <CheckBox layoutX="266.0" layoutY="9.0" mnemonicParsing="false" text="Sets">
                <font>
                   <Font size="10.0" />
                </font>
             </CheckBox>
-            <ImageView fitHeight="24.0" fitWidth="23.0" layoutX="224.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../search.png" />
-               </image>
-            </ImageView>
+            <Button layoutX="211.0" layoutY="4.0" mnemonicParsing="false" text="Search" />
          </children>
       </Pane>
    </top>
