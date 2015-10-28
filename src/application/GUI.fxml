@@ -213,7 +213,7 @@
                            <children>
                               <ImageView fitHeight="200.0" fitWidth="140.0" layoutX="2.0">
                                  <image>
-                                    <Image url="@../../../../../Downloads/3118.jpg" />
+                                    <Image url="@../3118.jpg" />
                                  </image>
                               </ImageView>
                            </children>
