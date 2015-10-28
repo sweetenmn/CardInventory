@@ -109,7 +109,7 @@
                                     </Button>
                                     <AnchorPane prefHeight="24.0" prefWidth="63.0">
                                        <children>
-                                          <Text layoutX="5.0" layoutY="15.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Excelent" wrappingWidth="85.345703125" />
+                                          <Text layoutX="5.0" layoutY="15.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Excellent" wrappingWidth="85.345703125" />
                                        </children>
                                     </AnchorPane>
                                  </children>
@@ -278,7 +278,7 @@
                                     </TextField>
                                     <AnchorPane prefHeight="24.0" prefWidth="63.0">
                                        <children>
-                                          <Text layoutX="5.0" layoutY="15.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Excelent" wrappingWidth="85.345703125" />
+                                          <Text layoutX="5.0" layoutY="15.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Excellent" wrappingWidth="85.345703125" />
                                        </children>
                                     </AnchorPane>
                                  </children>
