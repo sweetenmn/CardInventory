@@ -19,9 +19,8 @@
                           <columns>
                             <TableColumn prefWidth="156.0" text="Card Name" />
                               <TableColumn prefWidth="129.0" text="Set" />
-                              <TableColumn prefWidth="54.0" text="Rarity" />
-                              <TableColumn minWidth="8.0" prefWidth="42.0" text="Foil" />
-                              <TableColumn minWidth="1.0" prefWidth="47.0" text="Total" />
+                              <TableColumn prefWidth="107.0" text="Rarity" />
+                              <TableColumn minWidth="1.0" prefWidth="36.0" text="Total" />
                           </columns>
                         </TableView>
                         <Label layoutX="14.0" layoutY="14.0" prefHeight="20.0" prefWidth="402.0" text="Search results for: &quot;battle&quot;">
@@ -32,11 +31,172 @@
                      </children></AnchorPane>
             </content>
           </Tab>
+            <Tab text="Set List">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Label layoutX="14.0" layoutY="10.0" prefHeight="27.0" prefWidth="184.0" text="Battle for Zendikar">
+                           <font>
+                              <Font name="System Bold" size="18.0" />
+                           </font>
+                        </Label>
+                        <TableView layoutX="14.0" layoutY="41.0" prefHeight="290.0" prefWidth="420.0">
+                          <columns>
+                            <TableColumn prefWidth="257.0" text="Card Name" />
+                            <TableColumn prefWidth="61.0" text="Rarity" />
+                              <TableColumn minWidth="8.0" prefWidth="55.0" text="Foil" />
+                              <TableColumn minWidth="1.0" prefWidth="46.0" text="Total" />
+                          </columns>
+                        </TableView>
+                        <Button layoutX="409.0" layoutY="11.0" mnemonicParsing="false" text="+">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Button>
+                        <Button layoutX="363.0" layoutY="337.0" mnemonicParsing="false" text="Delete Set" />
+                        <Button layoutX="347.0" layoutY="11.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="62.0" text="Edit Title">
+                           <font>
+                              <Font size="11.0" />
+                           </font>
+                        </Button>
+                     </children></AnchorPane>
+              </content>
+            </Tab>
+            <Tab text="View">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Pane layoutX="227.0" layoutY="116.0" prefHeight="200.0" prefWidth="143.0">
+                           <children>
+                              <ImageView fitHeight="200.0" fitWidth="140.0" layoutX="2.0">
+                                 <image>
+                                    <Image url="@../3118.jpg" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </Pane>
+                        <Button layoutX="256.0" layoutY="326.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="86.0" text="Edit Card" />
+                        <TextField layoutX="193.0" layoutY="80.0" prefHeight="28.0" prefWidth="243.0" text="7th Edition" />
+                        <Text layoutX="193.0" layoutY="76.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Set Name">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Text>
+                        <TextField layoutX="193.0" layoutY="33.0" prefHeight="28.0" prefWidth="243.0" text="Thorn Elemental" />
+                        <Text layoutX="193.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Card Name">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Text>
+                        <VBox layoutX="14.0" layoutY="41.0" prefHeight="73.0" prefWidth="107.0">
+                           <children>
+                              <CheckBox mnemonicParsing="false" text="Mythic Rare" />
+                              <CheckBox mnemonicParsing="false" selected="true" text="Rare" />
+                              <CheckBox mnemonicParsing="false" text="Uncommon" />
+                              <CheckBox mnemonicParsing="false" text="Common" />
+                           </children>
+                        </VBox>
+                        <Text layoutX="14.0" layoutY="37.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Card Rarity">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Text>
+                        <Text layoutX="14.0" layoutY="138.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Condition">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Text>
+                        <VBox layoutX="14.0" layoutY="142.0" prefHeight="115.0" prefWidth="129.0">
+                           <children>
+                              <HBox prefHeight="17.0" prefWidth="87.0">
+                                 <children>
+                                    <TextField prefHeight="25.0" prefWidth="156.0" text="1">
+                                       <font>
+                                          <Font size="12.0" />
+                                       </font>
+                                    </TextField>
+                                    <AnchorPane prefHeight="24.0" prefWidth="63.0">
+                                       <children>
+                                          <Text layoutX="5.0" layoutY="15.0" strokeType="OUTSIDE" strokeWidth="0.0" text="New Mint/ Mint" wrappingWidth="85.345703125">
+                                             <font>
+                                                <Font size="11.0" />
+                                             </font>
+                                          </Text>
+                                       </children>
+                                    </AnchorPane>
+                                 </children>
+                              </HBox>
+                              <HBox layoutX="10.0" layoutY="10.0" prefHeight="17.0" prefWidth="87.0">
+                                 <children>
+                                    <TextField prefHeight="25.0" prefWidth="156.0">
+                                       <font>
+                                          <Font size="12.0" />
+                                       </font>
+                                    </TextField>
+                                    <AnchorPane prefHeight="24.0" prefWidth="63.0">
+                                       <children>
+                                          <Text layoutX="5.0" layoutY="15.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Excellent" wrappingWidth="85.345703125" />
+                                       </children>
+                                    </AnchorPane>
+                                 </children>
+                              </HBox>
+                              <HBox layoutX="10.0" layoutY="33.0" prefHeight="17.0" prefWidth="87.0">
+                                 <children>
+                                    <TextField prefHeight="25.0" prefWidth="156.0" text="2">
+                                       <font>
+                                          <Font size="12.0" />
+                                       </font>
+                                    </TextField>
+                                    <AnchorPane prefHeight="24.0" prefWidth="63.0">
+                                       <children>
+                                          <Text layoutX="5.0" layoutY="15.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Very Good" wrappingWidth="85.345703125" />
+                                       </children>
+                                    </AnchorPane>
+                                 </children>
+                              </HBox>
+                              <HBox layoutX="10.0" layoutY="56.0" prefHeight="17.0" prefWidth="87.0">
+                                 <children>
+                                    <TextField prefHeight="25.0" prefWidth="156.0">
+                                       <font>
+                                          <Font size="12.0" />
+                                       </font>
+                                    </TextField>
+                                    <AnchorPane prefHeight="24.0" prefWidth="63.0">
+                                       <children>
+                                          <Text layoutX="5.0" layoutY="15.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Good" wrappingWidth="85.345703125" />
+                                       </children>
+                                    </AnchorPane>
+                                 </children>
+                              </HBox>
+                              <HBox layoutX="10.0" layoutY="79.0" prefHeight="17.0" prefWidth="87.0">
+                                 <children>
+                                    <TextField prefHeight="25.0" prefWidth="156.0" text="1">
+                                       <font>
+                                          <Font size="12.0" />
+                                       </font>
+                                    </TextField>
+                                    <AnchorPane prefHeight="24.0" prefWidth="63.0">
+                                       <children>
+                                          <Text layoutX="5.0" layoutY="15.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Poor" wrappingWidth="85.345703125" />
+                                       </children>
+                                    </AnchorPane>
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                        <CheckBox layoutX="14.0" layoutY="295.0" mnemonicParsing="false" text="Foil">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </CheckBox>
+                     </children></AnchorPane>
+              </content>
+            </Tab>
           <Tab text="Edit">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <Text layoutX="187.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Card Name">
+                        <Text layoutX="185.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Card Name">
                            <font>
                               <Font size="15.0" />
                            </font>
@@ -195,7 +355,7 @@
                         </Text>
                         <TextField layoutX="184.0" layoutY="84.0" prefHeight="28.0" prefWidth="243.0" />
                         <Button layoutX="187.0" layoutY="146.0" mnemonicParsing="false" text="Add Image" />
-                        <Button layoutX="376.0" layoutY="327.0" mnemonicParsing="false" text="Clear" />
+                        <Button layoutX="375.0" layoutY="327.0" mnemonicParsing="false" text="New Card" />
                         <Button layoutX="187.0" layoutY="327.0" mnemonicParsing="false" prefWidth="86.0" text="Save Card" />
                         <CheckBox layoutX="19.0" layoutY="331.0" mnemonicParsing="false" text="Foil">
                            <font>
@@ -205,167 +365,6 @@
                      </children></AnchorPane>
             </content>
           </Tab>
-            <Tab text="View">
-              <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                     <children>
-                        <Pane layoutX="227.0" layoutY="116.0" prefHeight="200.0" prefWidth="143.0">
-                           <children>
-                              <ImageView fitHeight="200.0" fitWidth="140.0" layoutX="2.0">
-                                 <image>
-                                    <Image url="@../3118.jpg" />
-                                 </image>
-                              </ImageView>
-                           </children>
-                        </Pane>
-                        <Button layoutX="256.0" layoutY="326.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="86.0" text="Edit Card" />
-                        <TextField layoutX="193.0" layoutY="80.0" prefHeight="28.0" prefWidth="243.0" text="7th Edition" />
-                        <Text layoutX="193.0" layoutY="76.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Set Name">
-                           <font>
-                              <Font size="15.0" />
-                           </font>
-                        </Text>
-                        <TextField layoutX="193.0" layoutY="33.0" prefHeight="28.0" prefWidth="243.0" text="Thorn Elemental" />
-                        <Text layoutX="193.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Card Name">
-                           <font>
-                              <Font size="15.0" />
-                           </font>
-                        </Text>
-                        <VBox layoutX="14.0" layoutY="41.0" prefHeight="73.0" prefWidth="107.0">
-                           <children>
-                              <CheckBox mnemonicParsing="false" text="Mythic Rare" />
-                              <CheckBox mnemonicParsing="false" selected="true" text="Rare" />
-                              <CheckBox mnemonicParsing="false" text="Uncommon" />
-                              <CheckBox mnemonicParsing="false" text="Common" />
-                           </children>
-                        </VBox>
-                        <Text layoutX="14.0" layoutY="37.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Card Rarity">
-                           <font>
-                              <Font size="15.0" />
-                           </font>
-                        </Text>
-                        <Text layoutX="14.0" layoutY="138.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Condition">
-                           <font>
-                              <Font size="15.0" />
-                           </font>
-                        </Text>
-                        <VBox layoutX="14.0" layoutY="142.0" prefHeight="115.0" prefWidth="129.0">
-                           <children>
-                              <HBox prefHeight="17.0" prefWidth="87.0">
-                                 <children>
-                                    <TextField prefHeight="25.0" prefWidth="156.0" text="1">
-                                       <font>
-                                          <Font size="12.0" />
-                                       </font>
-                                    </TextField>
-                                    <AnchorPane prefHeight="24.0" prefWidth="63.0">
-                                       <children>
-                                          <Text layoutX="5.0" layoutY="15.0" strokeType="OUTSIDE" strokeWidth="0.0" text="New Mint/ Mint" wrappingWidth="85.345703125">
-                                             <font>
-                                                <Font size="11.0" />
-                                             </font>
-                                          </Text>
-                                       </children>
-                                    </AnchorPane>
-                                 </children>
-                              </HBox>
-                              <HBox layoutX="10.0" layoutY="10.0" prefHeight="17.0" prefWidth="87.0">
-                                 <children>
-                                    <TextField prefHeight="25.0" prefWidth="156.0">
-                                       <font>
-                                          <Font size="12.0" />
-                                       </font>
-                                    </TextField>
-                                    <AnchorPane prefHeight="24.0" prefWidth="63.0">
-                                       <children>
-                                          <Text layoutX="5.0" layoutY="15.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Excellent" wrappingWidth="85.345703125" />
-                                       </children>
-                                    </AnchorPane>
-                                 </children>
-                              </HBox>
-                              <HBox layoutX="10.0" layoutY="33.0" prefHeight="17.0" prefWidth="87.0">
-                                 <children>
-                                    <TextField prefHeight="25.0" prefWidth="156.0" text="2">
-                                       <font>
-                                          <Font size="12.0" />
-                                       </font>
-                                    </TextField>
-                                    <AnchorPane prefHeight="24.0" prefWidth="63.0">
-                                       <children>
-                                          <Text layoutX="5.0" layoutY="15.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Very Good" wrappingWidth="85.345703125" />
-                                       </children>
-                                    </AnchorPane>
-                                 </children>
-                              </HBox>
-                              <HBox layoutX="10.0" layoutY="56.0" prefHeight="17.0" prefWidth="87.0">
-                                 <children>
-                                    <TextField prefHeight="25.0" prefWidth="156.0">
-                                       <font>
-                                          <Font size="12.0" />
-                                       </font>
-                                    </TextField>
-                                    <AnchorPane prefHeight="24.0" prefWidth="63.0">
-                                       <children>
-                                          <Text layoutX="5.0" layoutY="15.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Good" wrappingWidth="85.345703125" />
-                                       </children>
-                                    </AnchorPane>
-                                 </children>
-                              </HBox>
-                              <HBox layoutX="10.0" layoutY="79.0" prefHeight="17.0" prefWidth="87.0">
-                                 <children>
-                                    <TextField prefHeight="25.0" prefWidth="156.0" text="1">
-                                       <font>
-                                          <Font size="12.0" />
-                                       </font>
-                                    </TextField>
-                                    <AnchorPane prefHeight="24.0" prefWidth="63.0">
-                                       <children>
-                                          <Text layoutX="5.0" layoutY="15.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Poor" wrappingWidth="85.345703125" />
-                                       </children>
-                                    </AnchorPane>
-                                 </children>
-                              </HBox>
-                           </children>
-                        </VBox>
-                        <CheckBox layoutX="14.0" layoutY="295.0" mnemonicParsing="false" text="Foil">
-                           <font>
-                              <Font size="15.0" />
-                           </font>
-                        </CheckBox>
-                     </children></AnchorPane>
-              </content>
-            </Tab>
-            <Tab text="Set List">
-              <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                     <children>
-                        <Label layoutX="14.0" layoutY="10.0" prefHeight="27.0" prefWidth="184.0" text="Battle for Zendikar">
-                           <font>
-                              <Font name="System Bold" size="18.0" />
-                           </font>
-                        </Label>
-                        <TableView layoutX="14.0" layoutY="41.0" prefHeight="290.0" prefWidth="420.0">
-                          <columns>
-                            <TableColumn prefWidth="257.0" text="Card Name" />
-                            <TableColumn prefWidth="61.0" text="Rarity" />
-                              <TableColumn minWidth="8.0" prefWidth="55.0" text="Foil" />
-                              <TableColumn minWidth="1.0" prefWidth="46.0" text="Total" />
-                          </columns>
-                        </TableView>
-                        <Button layoutX="409.0" layoutY="11.0" mnemonicParsing="false" text="+">
-                           <font>
-                              <Font name="System Bold" size="12.0" />
-                           </font>
-                        </Button>
-                        <Button layoutX="363.0" layoutY="337.0" mnemonicParsing="false" text="Delete Set" />
-                        <Button layoutX="347.0" layoutY="11.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="62.0" text="Edit Title">
-                           <font>
-                              <Font size="11.0" />
-                           </font>
-                        </Button>
-                     </children></AnchorPane>
-              </content>
-            </Tab>
         </tabs>
       </TabPane>
    </center>
