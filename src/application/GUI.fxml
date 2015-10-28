@@ -13,7 +13,23 @@
         <tabs>
           <Tab text="Search">
             <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TableView layoutX="10.0" layoutY="42.0" prefHeight="290.0" prefWidth="429.0">
+                          <columns>
+                            <TableColumn prefWidth="156.0" text="Card Name" />
+                              <TableColumn prefWidth="129.0" text="Set" />
+                              <TableColumn prefWidth="54.0" text="Rarity" />
+                              <TableColumn minWidth="8.0" prefWidth="42.0" text="Foil" />
+                              <TableColumn minWidth="1.0" prefWidth="47.0" text="Total" />
+                          </columns>
+                        </TableView>
+                        <Label layoutX="14.0" layoutY="14.0" prefHeight="20.0" prefWidth="402.0" text="Search results for: &quot;battle&quot;">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                        </Label>
+                     </children></AnchorPane>
             </content>
           </Tab>
           <Tab text="Edit">
@@ -73,7 +89,33 @@
             </Tab>
             <Tab text="Set List">
               <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Label layoutX="14.0" layoutY="10.0" prefHeight="27.0" prefWidth="184.0" text="Battle for Zendikar">
+                           <font>
+                              <Font name="System Bold" size="18.0" />
+                           </font>
+                        </Label>
+                        <TableView layoutX="14.0" layoutY="41.0" prefHeight="290.0" prefWidth="420.0">
+                          <columns>
+                            <TableColumn prefWidth="257.0" text="Card Name" />
+                            <TableColumn prefWidth="61.0" text="Rarity" />
+                              <TableColumn minWidth="8.0" prefWidth="55.0" text="Foil" />
+                              <TableColumn minWidth="1.0" prefWidth="46.0" text="Total" />
+                          </columns>
+                        </TableView>
+                        <Button layoutX="409.0" layoutY="11.0" mnemonicParsing="false" text="+">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Button>
+                        <Button layoutX="363.0" layoutY="337.0" mnemonicParsing="false" text="Delete Set" />
+                        <Button layoutX="347.0" layoutY="11.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="62.0" text="Edit Title">
+                           <font>
+                              <Font size="11.0" />
+                           </font>
+                        </Button>
+                     </children></AnchorPane>
               </content>
             </Tab>
         </tabs>
