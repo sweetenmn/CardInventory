@@ -7,8 +7,7 @@ public class Database {
 	private int cardCount;
 	private int setCount;
 
-	public Database() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
-		System.out.println("here");
+	public Database() throws ClassNotFoundException {
 		Class.forName("org.sqlite.JDBC");
 
 		Connection connection = null;
