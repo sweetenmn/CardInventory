@@ -1,17 +1,15 @@
 package application;
 
-import java.util.ArrayList;
-
 public class Parser {
 	
 	public Parser(){
 		
 	}
 	
-	public String getCardString(ArrayList<String> cardInfo){
+	public String getCardString(String[] cardInfo){
 		String cardString = "";
-		for (String s: cardInfo){
-			cardString += (s + "&&");
+		for (int i = 0; i < cardInfo.length; i++){
+			cardString += (cardInfo[i] + "&&");
 		}
 		return cardString;
 	}

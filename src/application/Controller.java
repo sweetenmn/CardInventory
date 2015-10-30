@@ -17,33 +17,13 @@ public class Controller {
 	@FXML
 	Button addToSet;
 	@FXML
-	Button incNM;
-	@FXML
-	Button decNM; 
-	@FXML
-	Button incE; 
-	@FXML
-	Button decE;
-	@FXML
-	Button incVG; 
-	@FXML
-	Button decVG; 
-	@FXML
-	Button incG;
-	@FXML
-	Button decG;
-	@FXML
-	Button incP; 
-	@FXML
-	Button decP;
-	@FXML
 	TextField searchBar;
 	@FXML
 	TextField viewName;
 	@FXML
 	TextField viewSet; 
 	@FXML
-	TextField viewExc; 
+	TextField viewE; 
 	@FXML
 	TextField viewNM;
 	@FXML
@@ -82,14 +62,90 @@ public class Controller {
 	Tab viewTab;
 	@FXML
 	Tab editTab;
+	@FXML
+	CheckBox searchSets;
+	Database database;
+	Parser parser;
 	
 	public void initialize(){
+		parser = new Parser();
 		try{
-			
-			Database db = new Database();
-		} catch( Exception e){
-			System.out.println("DB not found");
+			database = new Database();
+		} catch(Exception e){
+			System.out.println("Database not found.");
 		}
 		
 	}
+	
+	//So many little functions
+	//How can we generalize but still set up event handlers?
+	@FXML
+	void incExcellent(){editE.setText(inc(editE.getText()));}
+	@FXML
+	void incNearMint(){editNM.setText(inc(editNM.getText()));}	
+	@FXML
+	void incVeryGood(){editVG.setText(inc(editVG.getText()));}
+	@FXML
+	void incGood(){editG.setText(inc(editG.getText()));}
+	@FXML
+	void incPoor(){editP.setText(inc(editP.getText()));}
+	@FXML
+	void decExcellent(){editE.setText(dec(editE.getText()));}
+	@FXML
+	void decNearMint(){editNM.setText(dec(editNM.getText()));}
+	@FXML
+	void decVeryGood(){editVG.setText(dec(editVG.getText()));}
+	@FXML
+	void decGood(){editG.setText(dec(editG.getText()));}
+	@FXML
+	void decPoor(){editP.setText(dec(editP.getText()));}
+	
+	private String inc(String value){
+		if (value.equals("")){
+			value = "0";
+		}
+		return String.valueOf(Integer.valueOf(value) + 1);
+	}
+	private String dec(String value){
+		if (!value.equals("0") && !value.equals("")){
+			return String.valueOf(Integer.valueOf(value) - 1);			
+		}
+		return value;
+	}
+	@FXML
+	void saveCard(){
+		//need to get info out of check boxes somehow
+		String[] cardInfo = new String[]{getFrom(editName), getFrom(editSet), "Common", "No",
+				getFrom(editNM), getFrom(editE), getFrom(editVG), getFrom(editG),
+				getFrom(editP)};
+		System.out.println(cardInfo[1]);
+		System.out.println(parser.getCardString(cardInfo));
+		Card newCard = new Card(parser.getCardString(cardInfo), parser);
+		try {
+			database.addCard(newCard);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	private String getFrom(TextField field){
+		if (field != editName && field != editSet){
+			if (field.getText().equals("")){
+				return "0";
+			}
+		}
+		return field.getText();
+	}
+	
+	@FXML
+	void uncheckOther(){
+		//for check boxes, to ensure only one is clicked at a time
+		//going to have to declare them in controller to do the event handler
+	}
+	
+	
+	
+	
+	
 }
