@@ -71,36 +71,5 @@ public class Database {
 		}
 	}
 
-	public String addSet(String SetName) {
-		//TODO: assign the set a unique ID
-		//statement.executeUpdate("insert into Set values()")
-		setCount += 1;
-
-		return("insert into Set values('S" + setCount + "', '" + SetName + "')");
-
-	}
-
-	public String getSetID(String SetName) {
-		return ("SELECT SetId FROM SetTable WHERE SetName = '"+ SetName + "'");
-	}
-
-	public String getCardID(String CardName) {
-		return ("SELECT CardId FROM Card WHERE CardName = '" + CardName + "'");
-	}
-
-	public String addCard(String CardName, String SetName) {
-		cardCount += 1;
-
-		return ("insert into Card values('C" + cardCount + "', '" + CardName + "', 'S" + getSetID(SetName) + "')");
-	}
-
-	public String getSet(String SetName) {
-
-		return("");
-	}
-
-	public String getCard(String CardName) {
-		return("SELECT CardName FROM Card ()");
-	}
 }
 
