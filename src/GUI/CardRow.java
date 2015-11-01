@@ -2,13 +2,13 @@ package GUI;
 
 import javafx.beans.property.SimpleStringProperty;
 
-public class CardRow {
-	private final SimpleStringProperty name, rarity, set, total, foil;
+public class CardRow extends TableRow {
+	private final SimpleStringProperty name, rarity, total, foil;
 	
-	public CardRow(String name, String rarity, String set, String total, String foil){
+	public CardRow(String name, String setName, String rarity, String total, String foil){
+		super(setName);
 		this.name = new SimpleStringProperty(name);
 		this.rarity = new SimpleStringProperty(rarity);
-		this.set = new SimpleStringProperty(set);
 		this.total = new SimpleStringProperty(total);
 		this.foil = new SimpleStringProperty(foil);
 	}
@@ -22,7 +22,7 @@ public class CardRow {
 	}
 	
 	public void setSet(String newSet){
-		set.set(newSet);
+		setName.set(newSet);
 	}
 	
 	public void setTotal(String newTotal){
@@ -40,7 +40,7 @@ public class CardRow {
 		return rarity.get();
 	}
 	public String getSet(){
-		return set.get();
+		return setName.get();
 	}
 	public String getTotal(){
 		return total.get();

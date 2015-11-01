@@ -11,36 +11,41 @@
    <center>
       <TabPane prefHeight="400.0" prefWidth="450.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
         <tabs>
-          <Tab text="Search">
+          <Tab fx:id="searchTab" text="Search">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <TableView layoutX="10.0" layoutY="42.0" prefHeight="290.0" prefWidth="429.0">
+                        <TableView fx:id="searchCardTableView" layoutX="10.0" layoutY="42.0" prefHeight="291.0" prefWidth="431.0">
                           <columns>
-                            <TableColumn prefWidth="156.0" text="Card Name" />
-                              <TableColumn prefWidth="129.0" text="Set" />
-                              <TableColumn prefWidth="107.0" text="Rarity" />
-                              <TableColumn minWidth="1.0" prefWidth="36.0" text="Total" />
+                            <TableColumn fx:id="searchCardName" prefWidth="156.0" text="Card Name" />
+                              <TableColumn fx:id="searchCardSet" prefWidth="129.0" text="Set" />
+                              <TableColumn fx:id="searchCardRarity" prefWidth="107.0" text="Rarity" />
+                              <TableColumn fx:id="searchCardTotal" minWidth="1.0" prefWidth="36.0" text="Total" />
                           </columns>
                         </TableView>
-                        <Label layoutX="14.0" layoutY="14.0" prefHeight="20.0" prefWidth="402.0" text="Search results for: &quot;battle&quot;">
+                        <Label fx:id="searchTerm" layoutX="14.0" layoutY="14.0" prefHeight="20.0" prefWidth="402.0" text="Search results for: &quot;&quot;">
                            <font>
                               <Font size="13.0" />
                            </font>
                         </Label>
+                        <TableView fx:id="searchSetTableView" layoutX="10.0" layoutY="42.0" prefHeight="291.0" prefWidth="427.0" visible="false">
+                          <columns>
+                            <TableColumn fx:id="searchSet" prefWidth="426.0" text="Set" />
+                          </columns>
+                        </TableView>
                      </children></AnchorPane>
             </content>
           </Tab>
-            <Tab text="Set List">
+            <Tab fx:id="setTab" text="Set List">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <Label layoutX="14.0" layoutY="10.0" prefHeight="27.0" prefWidth="184.0" text="Battle for Zendikar">
+                        <Label fx:id="setTitle" layoutX="14.0" layoutY="10.0" prefHeight="27.0" prefWidth="184.0" text="Battle for Zendikar">
                            <font>
                               <Font name="System Bold" size="18.0" />
                            </font>
                         </Label>
-                        <TableView layoutX="14.0" layoutY="41.0" prefHeight="290.0" prefWidth="420.0">
+                        <TableView fx:id="setTableView" layoutX="14.0" layoutY="41.0" prefHeight="290.0" prefWidth="420.0">
                           <columns>
                             <TableColumn prefWidth="257.0" text="Card Name" />
                             <TableColumn prefWidth="61.0" text="Rarity" />
@@ -48,13 +53,13 @@
                               <TableColumn minWidth="1.0" prefWidth="46.0" text="Total" />
                           </columns>
                         </TableView>
-                        <Button layoutX="409.0" layoutY="11.0" mnemonicParsing="false" text="+">
+                        <Button fx:id="addToSet" layoutX="409.0" layoutY="11.0" mnemonicParsing="false" text="+">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
                         </Button>
                         <Button layoutX="363.0" layoutY="337.0" mnemonicParsing="false" text="Delete Set" />
-                        <Button layoutX="347.0" layoutY="11.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="62.0" text="Edit Title">
+                        <Button fx:id="editTitle" layoutX="347.0" layoutY="11.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="62.0" text="Edit Title">
                            <font>
                               <Font size="11.0" />
                            </font>
@@ -62,7 +67,7 @@
                      </children></AnchorPane>
               </content>
             </Tab>
-            <Tab text="View">
+            <Tab fx:id="viewTab" text="View">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
@@ -76,13 +81,13 @@
                            </children>
                         </Pane>
                         <Button layoutX="256.0" layoutY="326.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="86.0" text="Edit Card" />
-                        <TextField layoutX="193.0" layoutY="80.0" prefHeight="28.0" prefWidth="243.0" text="7th Edition" />
+                        <TextField fx:id="viewSet" layoutX="193.0" layoutY="80.0" prefHeight="28.0" prefWidth="243.0" text="7th Edition" />
                         <Text layoutX="193.0" layoutY="76.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Set Name">
                            <font>
                               <Font size="15.0" />
                            </font>
                         </Text>
-                        <TextField layoutX="193.0" layoutY="33.0" prefHeight="28.0" prefWidth="243.0" text="Thorn Elemental" />
+                        <TextField fx:id="viewName" layoutX="193.0" layoutY="33.0" prefHeight="28.0" prefWidth="243.0" text="Thorn Elemental" />
                         <Text layoutX="193.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Card Name">
                            <font>
                               <Font size="15.0" />
@@ -110,7 +115,7 @@
                            <children>
                               <HBox prefHeight="17.0" prefWidth="87.0">
                                  <children>
-                                    <TextField prefHeight="25.0" prefWidth="156.0" text="1">
+                                    <TextField fx:id="viewNM" prefHeight="25.0" prefWidth="156.0" text="1">
                                        <font>
                                           <Font size="12.0" />
                                        </font>
@@ -128,7 +133,7 @@
                               </HBox>
                               <HBox layoutX="10.0" layoutY="10.0" prefHeight="17.0" prefWidth="87.0">
                                  <children>
-                                    <TextField prefHeight="25.0" prefWidth="156.0">
+                                    <TextField fx:id="viewE" prefHeight="25.0" prefWidth="156.0">
                                        <font>
                                           <Font size="12.0" />
                                        </font>
@@ -142,7 +147,7 @@
                               </HBox>
                               <HBox layoutX="10.0" layoutY="33.0" prefHeight="17.0" prefWidth="87.0">
                                  <children>
-                                    <TextField prefHeight="25.0" prefWidth="156.0" text="2">
+                                    <TextField fx:id="viewVG" prefHeight="25.0" prefWidth="156.0" text="2">
                                        <font>
                                           <Font size="12.0" />
                                        </font>
@@ -156,7 +161,7 @@
                               </HBox>
                               <HBox layoutX="10.0" layoutY="56.0" prefHeight="17.0" prefWidth="87.0">
                                  <children>
-                                    <TextField prefHeight="25.0" prefWidth="156.0">
+                                    <TextField fx:id="viewGood" prefHeight="25.0" prefWidth="156.0">
                                        <font>
                                           <Font size="12.0" />
                                        </font>
@@ -170,7 +175,7 @@
                               </HBox>
                               <HBox layoutX="10.0" layoutY="79.0" prefHeight="17.0" prefWidth="87.0">
                                  <children>
-                                    <TextField prefHeight="25.0" prefWidth="156.0" text="1">
+                                    <TextField fx:id="viewPoor" prefHeight="25.0" prefWidth="156.0" text="1">
                                        <font>
                                           <Font size="12.0" />
                                        </font>
@@ -192,7 +197,7 @@
                      </children></AnchorPane>
               </content>
             </Tab>
-          <Tab text="Edit">
+          <Tab fx:id="editTab" text="Edit">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
@@ -201,12 +206,12 @@
                               <Font size="15.0" />
                            </font>
                         </Text>
-                        <Text layoutX="17.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Card Rarity">
+                        <Text layoutX="14.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Rarity">
                            <font>
                               <Font size="15.0" />
                            </font>
                         </Text>
-                        <TextField layoutX="184.0" layoutY="32.0" prefHeight="28.0" prefWidth="243.0" />
+                        <TextField fx:id="editName" layoutX="184.0" layoutY="32.0" prefHeight="28.0" prefWidth="243.0" />
                         <Text layoutX="184.0" layoutY="81.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Set Name">
                            <font>
                               <Font size="15.0" />
@@ -224,17 +229,17 @@
                            <children>
                               <HBox prefHeight="17.0" prefWidth="87.0">
                                  <children>
-                                    <Button mnemonicParsing="false" prefHeight="20.0" prefWidth="20.0" text="-">
+                                    <Button fx:id="decNM" mnemonicParsing="false" onAction="#decNearMint" prefHeight="20.0" prefWidth="20.0" text="-">
                                        <font>
                                           <Font name="System Bold" size="12.0" />
                                        </font>
                                     </Button>
-                                    <TextField prefHeight="25.0" prefWidth="156.0">
+                                    <TextField fx:id="editNM" prefHeight="25.0" prefWidth="156.0">
                                        <font>
                                           <Font size="12.0" />
                                        </font>
                                     </TextField>
-                                    <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="24.0" text="+">
+                                    <Button fx:id="incNM" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#incNearMint" prefHeight="23.0" prefWidth="24.0" text="+">
                                        <font>
                                           <Font name="System Bold" size="10.0" />
                                        </font>
@@ -252,17 +257,17 @@
                               </HBox>
                               <HBox layoutX="10.0" layoutY="10.0" prefHeight="17.0" prefWidth="87.0">
                                  <children>
-                                    <Button mnemonicParsing="false" prefHeight="20.0" prefWidth="20.0" text="-">
+                                    <Button fx:id="decE" mnemonicParsing="false" onAction="#decExcellent" prefHeight="20.0" prefWidth="20.0" text="-">
                                        <font>
                                           <Font name="System Bold" size="12.0" />
                                        </font>
                                     </Button>
-                                    <TextField prefHeight="25.0" prefWidth="156.0">
+                                    <TextField fx:id="editE" prefHeight="25.0" prefWidth="156.0">
                                        <font>
                                           <Font size="12.0" />
                                        </font>
                                     </TextField>
-                                    <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="24.0" text="+">
+                                    <Button fx:id="incE" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#incExcellent" prefHeight="23.0" prefWidth="24.0" text="+">
                                        <font>
                                           <Font name="System Bold" size="10.0" />
                                        </font>
@@ -276,17 +281,17 @@
                               </HBox>
                               <HBox layoutX="10.0" layoutY="33.0" prefHeight="17.0" prefWidth="87.0">
                                  <children>
-                                    <Button mnemonicParsing="false" prefHeight="20.0" prefWidth="20.0" text="-">
+                                    <Button fx:id="decVG" mnemonicParsing="false" onAction="#decVeryGood" prefHeight="20.0" prefWidth="20.0" text="-">
                                        <font>
                                           <Font name="System Bold" size="12.0" />
                                        </font>
                                     </Button>
-                                    <TextField prefHeight="25.0" prefWidth="156.0">
+                                    <TextField fx:id="editVG" prefHeight="25.0" prefWidth="156.0">
                                        <font>
                                           <Font size="12.0" />
                                        </font>
                                     </TextField>
-                                    <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="24.0" text="+">
+                                    <Button fx:id="incVG" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#incVeryGood" prefHeight="23.0" prefWidth="24.0" text="+">
                                        <font>
                                           <Font name="System Bold" size="10.0" />
                                        </font>
@@ -300,17 +305,17 @@
                               </HBox>
                               <HBox layoutX="10.0" layoutY="56.0" prefHeight="17.0" prefWidth="87.0">
                                  <children>
-                                    <Button mnemonicParsing="false" prefHeight="20.0" prefWidth="20.0" text="-">
+                                    <Button fx:id="decG" mnemonicParsing="false" onAction="#decGood" prefHeight="20.0" prefWidth="20.0" text="-">
                                        <font>
                                           <Font name="System Bold" size="12.0" />
                                        </font>
                                     </Button>
-                                    <TextField prefHeight="25.0" prefWidth="156.0">
+                                    <TextField fx:id="editG" prefHeight="25.0" prefWidth="156.0">
                                        <font>
                                           <Font size="12.0" />
                                        </font>
                                     </TextField>
-                                    <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="24.0" text="+">
+                                    <Button fx:id="incG" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#incGood" prefHeight="23.0" prefWidth="24.0" text="+">
                                        <font>
                                           <Font name="System Bold" size="10.0" />
                                        </font>
@@ -324,17 +329,17 @@
                               </HBox>
                               <HBox layoutX="10.0" layoutY="79.0" prefHeight="17.0" prefWidth="87.0">
                                  <children>
-                                    <Button mnemonicParsing="false" prefHeight="20.0" prefWidth="20.0" text="-">
+                                    <Button fx:id="decP" mnemonicParsing="false" onAction="#decPoor" prefHeight="20.0" prefWidth="20.0" text="-">
                                        <font>
                                           <Font name="System Bold" size="12.0" />
                                        </font>
                                     </Button>
-                                    <TextField prefHeight="25.0" prefWidth="156.0">
+                                    <TextField fx:id="editP" prefHeight="25.0" prefWidth="156.0">
                                        <font>
                                           <Font size="12.0" />
                                        </font>
                                     </TextField>
-                                    <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="24.0" text="+">
+                                    <Button fx:id="incP" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#incPoor" prefHeight="23.0" prefWidth="24.0" text="+">
                                        <font>
                                           <Font name="System Bold" size="10.0" />
                                        </font>
@@ -348,15 +353,15 @@
                               </HBox>
                            </children>
                         </VBox>
-                        <Text layoutX="19.0" layoutY="164.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Condition">
+                        <Text layoutX="16.0" layoutY="164.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Condition">
                            <font>
                               <Font size="15.0" />
                            </font>
                         </Text>
-                        <TextField layoutX="184.0" layoutY="84.0" prefHeight="28.0" prefWidth="243.0" />
-                        <Button layoutX="187.0" layoutY="146.0" mnemonicParsing="false" text="Add Image" />
+                        <TextField fx:id="editSet" layoutX="184.0" layoutY="84.0" prefHeight="28.0" prefWidth="243.0" />
+                        <Button fx:id="addImage" layoutX="187.0" layoutY="146.0" mnemonicParsing="false" text="Add Image" />
                         <Button layoutX="375.0" layoutY="327.0" mnemonicParsing="false" text="New Card" />
-                        <Button layoutX="187.0" layoutY="327.0" mnemonicParsing="false" prefWidth="86.0" text="Save Card" />
+                        <Button layoutX="187.0" layoutY="327.0" mnemonicParsing="false" onAction="#saveCard" prefWidth="86.0" text="Save Card" />
                         <CheckBox layoutX="19.0" layoutY="331.0" mnemonicParsing="false" text="Foil">
                            <font>
                               <Font size="15.0" />
@@ -371,8 +376,8 @@
    <top>
       <Pane prefHeight="30.0" prefWidth="450.0" BorderPane.alignment="CENTER">
          <children>
-            <TextField layoutX="7.0" layoutY="4.0" prefHeight="25.0" prefWidth="214.0" promptText="Search by card" />
-            <CheckBox layoutX="266.0" layoutY="9.0" mnemonicParsing="false" text="Sets">
+            <TextField fx:id="searchBar" layoutX="7.0" layoutY="4.0" prefHeight="25.0" prefWidth="214.0" promptText="Search by card" />
+            <CheckBox fx:id="searchSets" layoutX="266.0" layoutY="9.0" mnemonicParsing="false" text="Sets">
                <font>
                   <Font size="10.0" />
                </font>

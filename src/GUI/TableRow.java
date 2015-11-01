@@ -2,10 +2,10 @@ package GUI;
 
 import javafx.beans.property.SimpleStringProperty;
 
-public class SetTableRow {
-	private SimpleStringProperty setName;
+public class TableRow {
+	protected SimpleStringProperty setName;
 	
-	public SetTableRow(String setName){
+	public TableRow(String setName){
 		this.setName = new SimpleStringProperty(setName);
 	}
 	

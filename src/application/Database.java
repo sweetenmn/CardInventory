@@ -59,6 +59,7 @@ public class Database {
 
 			//updates the database with given command
 			statement.executeUpdate(command);
+			
 
 		} catch (SQLException e) {
 			// if the error message is "out of memory",

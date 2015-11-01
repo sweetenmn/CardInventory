@@ -1,11 +1,18 @@
 package application;
 
+import java.util.ArrayList;
+
 import Creation.Cards;
+import GUI.CardRow;
+import GUI.Table;
+import GUI.TableRow;
+import GUI.TableType;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 
@@ -52,9 +59,11 @@ public class Controller {
 	@FXML
 	Label setTitle;
 	@FXML
-	TableView<String> setTable;
+	TableView<CardRow> setTableView;
 	@FXML
-	TableView<String> searchTable;
+	TableView<TableRow> searchCardTableView;
+	@FXML
+	TableView<TableRow> searchSetTableView;
 	@FXML
 	Tab searchTab;
 	@FXML
@@ -68,10 +77,29 @@ public class Controller {
 	Database database;
 	Parser parser;
 	Cards cards;
+	Table searchCardTable;
+	Table searchSetTable;
+	@FXML
+	TableColumn<TableRow, String> searchCardName;
+	@FXML
+	TableColumn<TableRow, String> searchCardSet;
+	@FXML
+	TableColumn<TableRow, String> searchCardRarity;
+	@FXML
+	TableColumn<TableRow, String> searchCardTotal;
+	@FXML
+	TableColumn<TableRow, String> searchSet;
+	
 	
 	public void initialize(){
 		parser = new Parser();
 		cards = new Cards();
+		ArrayList<TableColumn<TableRow, String>> search = new ArrayList<TableColumn<TableRow,String>>();
+		search.add(searchCardName);
+		search.add(searchCardSet);
+		search.add(searchCardRarity);
+		search.add(searchCardTotal);
+		searchCardTable = new Table(TableType.CARD_SEARCH, searchCardTableView, search);
 		
 		try{
 			database = new Database();
@@ -126,6 +154,7 @@ public class Controller {
 		System.out.println(parser.getCardString(cardInfo));
 		Card newCard = new Card(parser.getCardString(cardInfo), parser);
 		database.UpdateDb(cards.addCard(getFrom(editName), getFrom(editSet)));
+		updateView();
 	}
 	
 	private String getFrom(TextField field){
@@ -135,6 +164,18 @@ public class Controller {
 			}
 		}
 		return field.getText();
+	}
+	
+	private int toInt(String str){
+		return Integer.valueOf(str);
+	}
+	
+	public void updateView(){
+		int total = (toInt(getFrom(editNM)) + toInt(getFrom(editE)) +
+				toInt(getFrom(editVG)) + toInt(getFrom(editG)) +
+				toInt(getFrom(editP)));
+		searchCardTable.add(new CardRow(getFrom(editName),getFrom(editSet), "Common", String.valueOf(total), "No"));
+		
 	}
 	
 	@FXML
