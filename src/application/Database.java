@@ -20,8 +20,12 @@ public class Database {
 
 			DatabaseMetaData md = connection.getMetaData();
 			ResultSet rs = md.getTables(null, null, "%", null);
+			int rscount = 0;
+			while (rs.next()){
+				rscount += 1;
+			}
 
-			if (rs.getFetchSize() == 0) {
+			if (rscount != 4) {
 				statement.executeUpdate("CREATE TABLE SetTable (SetId TEXT, SetName TEXT)");
 				statement.executeUpdate("CREATE TABLE Card (CardId TEXT, cardName TEXT, SetId TEXT)");
 				statement.executeUpdate("CREATE TABLE Rarity (CardId TEXT, Rarity TEXT, Foil TEXT)");
@@ -72,4 +76,3 @@ public class Database {
 	}
 
 }
-
