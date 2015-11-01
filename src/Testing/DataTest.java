@@ -1,5 +1,6 @@
 package Testing;
 
+import Creation.*;
 import application.Database;
 import org.junit.Test;
 
@@ -9,13 +10,38 @@ import org.junit.Test;
 public class DataTest {
 
     Database database;
+    Cards c = new Cards();
+    Sets s = new Sets();
+
+    public void newDb(String DBName) throws ClassNotFoundException{
+        database = new Database(DBName);
+    }
+
 
     @Test
-    public void test() {
-        database.addSet("7th Edition");
-        database.addCard("Thorn Elemental", "7th Edition");
+    public void test() throws ClassNotFoundException{
+        String dbName = "TEST";
+        newDb("TEST");
+        String n = "New Set";
+        String nc = "Card1";
+        int cardc;
 
-        assert "Thorn Elemental".equals("Thorn Elemental");
+        database.UpdateDb(s.addSet(n), dbName);
+        String cc = database.GetValues(c.NextCardID(), dbName, "CardId");
+
+        if (Integer.valueOf(cc) != null) {
+            cardc = Integer.valueOf(cc);
+        } else {
+            cardc = 0;
+        }
+
+        database.UpdateDb(c.addCard(nc, n, cardc), dbName);
+        database.UpdateDb(c.addCard("Card2", n, cardc), dbName);
+
+        System.out.println(database.GetValues(s.getSet("New Set"), dbName, "SetId"));
+        System.out.println(database.GetValues(c.getCard("Card2"), dbName, "SetId"));
+        System.out.println(database.GetValues(c.getCard("Card1"), dbName, "SetId"));
+
     }
 
 
