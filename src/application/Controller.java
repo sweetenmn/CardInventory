@@ -93,10 +93,12 @@ public class Controller {
 	TableColumn<TableRow, String> searchCardTotal;
 	@FXML
 	TableColumn<TableRow, String> searchSet;
+	int count;
 	
 	
 	public void initialize(){
 		parser = new Parser();
+		count = 0;
 		ArrayList<TableColumn<TableRow, String>> search = new ArrayList<TableColumn<TableRow,String>>();
 		search.add(searchCardName);
 		search.add(searchCardSet);
@@ -149,14 +151,16 @@ public class Controller {
 	}
 	@FXML
 	void saveCard(){
+		count += 1;
 		//need to get info out of check boxes somehow
 		String[] cardInfo = new String[]{getFrom(editName), getFrom(editSet), "Common", "No",
 				getFrom(editNM), getFrom(editE), getFrom(editVG), getFrom(editG),
 				getFrom(editP)};
-		Card newCard = new Card(parser.getCardString(cardInfo), parser);
-		database.updateDB(cards.addCard(getFrom(editName), getFrom(editSet)));
+	//	Card newCard = new Card(parser.getCardString(cardInfo), parser);
+		database.updateDB(cards.addCard(getFrom(editName), getFrom(editSet), count));
+		System.out.println("NAME: " + getFrom(editName));
 		database.updateDB(sets.addSet(getFrom(editSet)));
-		updateView(newCard);
+	//	updateView(newCard);
 	}
 	
 	private String getFrom(TextField field){

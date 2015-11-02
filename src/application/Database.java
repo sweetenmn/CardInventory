@@ -16,7 +16,7 @@ public class Database {
 
 		try {
 			// create a database connection
-			connection = DriverManager.getConnection("jdbc:sqlite:"+dbName);
+			connection = DriverManager.getConnection("jdbc:sqlite:"+this.dbName);
 			Statement statement = connection.createStatement();
 			statement.setQueryTimeout(30);  // set timeout to 30 sec.
 
@@ -28,7 +28,7 @@ public class Database {
 			}
 
 			if (rsCount != 4) {
-				statement.executeUpdate("CREATE TABLE Card (CardId INTEGER, CardName TEXT, SetId INTEGER)");
+				statement.executeUpdate("CREATE TABLE CardTable (CardId INTEGER, CardName TEXT, SetId INTEGER)");
 				statement.executeUpdate("CREATE TABLE SetTable (SetId INTEGER, SetName TEXT)");
 
 				statement.executeUpdate("CREATE TABLE Rarity (CardId INTEGER, Rarity TEXT, Foil TEXT)");
@@ -119,11 +119,13 @@ public class Database {
 	public ResultSet getResults(String command){
 		Connection connection = null;
 		try {
+			System.out.println("Trying");
 			connection = DriverManager.getConnection("jdbc:sqlite:"+ dbName);
 			Statement statement = connection.createStatement();
 			statement.setQueryTimeout(30);
 			System.out.println(command);
 			System.out.println(statement.executeQuery(command));
+			System.out.println("Trying2");
 			return statement.executeQuery(command);
 
 		} catch (SQLException e) {

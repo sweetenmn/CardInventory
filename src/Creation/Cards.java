@@ -6,19 +6,18 @@ package Creation;
 public class Cards {
 
     public String getCardID(String CardName) {
-        return ("SELECT CardId FROM Card WHERE CardName = '" + CardName + "'");
+        return ("SELECT CardId FROM CardTable WHERE CardName = '" + CardName + "'");
     }
 
-    public String addCard(String CardName, String SetName) {
-        int cardCount = 0;
-        cardCount += 1;
+    public String addCard(String CardName, String SetName, int count) {
 
         int setId = SetName.hashCode();
+        System.out.println("INSERT INTO CardTable VALUES (" + count + ", '" + CardName + "', " + setId + ")");
 
-        return ("insert into Card values('C" + cardCount + "', '" + CardName + "', '" + setId + "')");
+        return ("INSERT INTO CardTable VALUES (" + count + ", '" + CardName + "', " + setId + ")");
     }
 
     public String getCard(String CardName) {
-        return("SELECT * FROM Card WHERE CardName = '" + CardName + "'");
+        return("SELECT * FROM CardTable WHERE CardName = '" + CardName + "'");
     }
 }

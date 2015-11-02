@@ -32,10 +32,12 @@ public class SearchResults {
 	private void setResults(){
 		Parser parser = new Parser();
 		Sets sets = new Sets();
-		ResultSet results = db.getResults("SELECT CardName FROM CARD");
+		ResultSet results = db.getResults("SELECT * FROM CardTable");
 		try {
 			while (results.next()){
-				if (results.getString(1).contains(query)){
+				System.out.println(results.findColumn("CardName"));
+				System.out.println(results.getString(2));
+				if (results.getString("CardName").contains(query)){
 					String name = results.getString(1);
 					int id = results.getInt("SetId");
 					String setName = db.getResults(sets.getSetName(id)).getString("SetName");
