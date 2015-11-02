@@ -102,7 +102,7 @@ public class Database {
 		Class.forName("org.sqlite.JDBC");
 		Connection connection = null;
 		ResultSet set = null;
-		try {
+		try (Connection connection = DriverManager.getConnection("jdbc:sqlite:"+ dbName)){
 			connection = DriverManager.getConnection("jdbc:sqlite:"+ dbName);
 			Statement statement = connection.createStatement();
 			statement.setQueryTimeout(30);
