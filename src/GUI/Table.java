@@ -56,7 +56,7 @@ public class Table {
 		entries.add(newEntry);
 	}
 	
-	public void displayResultsFor(String query, Database db){
+	public void displayResultsFor(String query, Database db) throws ClassNotFoundException{
 		SearchResults results = new SearchResults(query, type, db);
 		entries = results.getResults();
 		table.setItems(entries);

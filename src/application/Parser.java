@@ -2,7 +2,6 @@ package application;
 
 public class Parser {
 	
-	
 	public String getCardString(String[] cardInfo){
 		String cardString = "";
 		for (int i = 0; i < cardInfo.length; i++){

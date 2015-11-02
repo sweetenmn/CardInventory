@@ -19,7 +19,7 @@ public class SearchResults {
 	private String query;
 	private Database db;
 	
-	public SearchResults(String query, TableType type, Database db){
+	public SearchResults(String query, TableType type, Database db) throws ClassNotFoundException{
 		this.query = query;
 		this.db = db;
 		setResults();
@@ -29,23 +29,24 @@ public class SearchResults {
 		return entries;
 	}
 	
-	private void setResults(){
+	private void setResults() throws ClassNotFoundException{
 		Parser parser = new Parser();
 		Sets sets = new Sets();
-		ResultSet results = db.getResults("SELECT * FROM CardTable");
+		
 		try {
-			while (results.next()){
-				System.out.println(results.findColumn("CardName"));
-				System.out.println(results.getString(2));
-				if (results.getString("CardName").contains(query)){
-					String name = results.getString(1);
-					int id = results.getInt("SetId");
-					String setName = db.getResults(sets.getSetName(id)).getString("SetName");
-					String[] cardInfo = new String[]{name, setName, "Common", "No",
-							"1", "5", "0", "0", "0"};
-					Card newCard = new Card(parser.getCardString(cardInfo), parser);
-					entries.add(new CardRow(newCard));
-					System.out.println(results.getString("CardName"));
+			
+			ResultSet results = db.getResults("SELECT * FROM CardTable");
+			if (!results.isClosed()){
+				while (results.next()){
+					if (results.getString("CardName").contains(query)){
+						String name = results.getString(2);
+						int id = results.getInt("SetId");
+						String setName = db.getResults(sets.getSetName(id)).getString("SetName");
+						String[] cardInfo = new String[]{name, setName, "Common", "No",
+								"1", "5", "0", "0", "0"};
+						Card newCard = new Card(parser.getCardString(cardInfo), parser);
+						entries.add(new CardRow(newCard));
+					}
 				}
 			}
 		} catch (SQLException e) {

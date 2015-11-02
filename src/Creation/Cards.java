@@ -9,12 +9,11 @@ public class Cards {
         return ("SELECT CardId FROM CardTable WHERE CardName = '" + CardName + "'");
     }
 
-    public String addCard(String CardName, String SetName, int count) {
+    public String addCard(String CardName, String SetName) {
 
         int setId = SetName.hashCode();
-        System.out.println("INSERT INTO CardTable VALUES (" + count + ", '" + CardName + "', " + setId + ")");
 
-        return ("INSERT INTO CardTable VALUES (" + count + ", '" + CardName + "', " + setId + ")");
+        return ("INSERT INTO CardTable VALUES (NULL, '" + CardName + "', " + setId + ")");
     }
 
     public String getCard(String CardName) {

@@ -157,7 +157,7 @@ public class Controller {
 				getFrom(editNM), getFrom(editE), getFrom(editVG), getFrom(editG),
 				getFrom(editP)};
 	//	Card newCard = new Card(parser.getCardString(cardInfo), parser);
-		database.updateDB(cards.addCard(getFrom(editName), getFrom(editSet), count));
+		database.updateDB(cards.addCard(getFrom(editName), getFrom(editSet)));
 		System.out.println("NAME: " + getFrom(editName));
 		database.updateDB(sets.addSet(getFrom(editSet)));
 	//	updateView(newCard);
@@ -178,7 +178,12 @@ public class Controller {
 	
 	public void search(){
 		System.out.println(searchBar.getText());
-		searchCardTable.displayResultsFor(searchBar.getText(), database);
+		try{
+			
+			searchCardTable.displayResultsFor(searchBar.getText(), database);
+		} catch (ClassNotFoundException e){
+			e.printStackTrace();
+		}
 	}
 	
 	@FXML
