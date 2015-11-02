@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
 
-<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Controller">
+<BorderPane fx:id="canvas" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Controller">
    <center>
       <TabPane prefHeight="400.0" prefWidth="450.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
         <tabs>
@@ -23,7 +23,7 @@
                               <TableColumn fx:id="searchCardTotal" minWidth="1.0" prefWidth="36.0" text="Total" />
                           </columns>
                         </TableView>
-                        <Label fx:id="searchTerm" layoutX="14.0" layoutY="14.0" prefHeight="20.0" prefWidth="402.0" text="Search results for: &quot;&quot;">
+                        <Label fx:id="searchTerm" layoutX="14.0" layoutY="14.0" prefHeight="20.0" prefWidth="402.0">
                            <font>
                               <Font size="13.0" />
                            </font>
@@ -219,10 +219,10 @@
                         </Text>
                         <VBox layoutX="14.0" layoutY="32.0" prefHeight="73.0" prefWidth="107.0">
                            <children>
-                              <CheckBox mnemonicParsing="false" text="Mythic Rare" />
-                              <CheckBox mnemonicParsing="false" text="Rare" />
-                              <CheckBox mnemonicParsing="false" text="Uncommon" />
-                              <CheckBox mnemonicParsing="false" text="Common" />
+                              <CheckBox fx:id="mythicRare" mnemonicParsing="false" text="Mythic Rare" />
+                              <CheckBox fx:id="rare" mnemonicParsing="false" text="Rare" />
+                              <CheckBox fx:id="uncommon" mnemonicParsing="false" text="Uncommon" />
+                              <CheckBox fx:id="common" mnemonicParsing="false" text="Common" />
                            </children>
                         </VBox>
                         <VBox layoutX="14.0" layoutY="172.0" prefHeight="113.0" prefWidth="156.0">
@@ -362,11 +362,12 @@
                         <Button fx:id="addImage" layoutX="187.0" layoutY="146.0" mnemonicParsing="false" text="Add Image" />
                         <Button layoutX="375.0" layoutY="327.0" mnemonicParsing="false" text="New Card" />
                         <Button layoutX="187.0" layoutY="327.0" mnemonicParsing="false" onAction="#saveCard" prefWidth="86.0" text="Save Card" />
-                        <CheckBox layoutX="19.0" layoutY="331.0" mnemonicParsing="false" text="Foil">
+                        <CheckBox fx:id="foilBox" layoutX="19.0" layoutY="331.0" mnemonicParsing="false" text="Foil">
                            <font>
                               <Font size="15.0" />
                            </font>
                         </CheckBox>
+                        <Label layoutX="157.0" layoutY="304.0" prefHeight="17.0" prefWidth="146.0" text="Card added successfully" visible="false" />
                      </children></AnchorPane>
             </content>
           </Tab>

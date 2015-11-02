@@ -5,14 +5,12 @@ package Creation;
  */
 public class Cards {
 
-    public String getCardID(String CardName) {
-        return ("SELECT CardId FROM CardTable WHERE CardName = '" + CardName + "'");
+    public String getCardID(String CardName, String SetName) {
+        return ("SELECT CardId FROM CardTable WHERE CardName = '" + CardName + "' AND SetID = " + SetName.hashCode());
     }
 
     public String addCard(String CardName, String SetName) {
-
         int setId = SetName.hashCode();
-
         return ("INSERT INTO CardTable VALUES (NULL, '" + CardName + "', " + setId + ")");
     }
 

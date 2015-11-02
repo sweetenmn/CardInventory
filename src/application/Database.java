@@ -5,6 +5,7 @@ import java.sql.*;
 
 public class Database {
 	String dbName;
+	Connection connection;
 
 	public Database(String dbName) throws ClassNotFoundException {
 		this.dbName = dbName + ".db";
@@ -12,13 +13,13 @@ public class Database {
 
 		int rsCount = 0;
 
-		Connection connection = null;
+		connection = null;
 
 		try {
 			// create a database connection
-			connection = DriverManager.getConnection("jdbc:sqlite:"+this.dbName);
+			connection = DriverManager.getConnection("jdbc:sqlite:" + this.dbName);
 			Statement statement = connection.createStatement();
-			statement.setQueryTimeout(30);  // set timeout to 30 sec.
+			statement.setQueryTimeout(30); 
 
 			DatabaseMetaData md = connection.getMetaData();
 			ResultSet rs = md.getTables(null, null, "%", null);
@@ -36,15 +37,12 @@ public class Database {
 						"VeryGood INTEGER, Good INTEGER, Poor INTEGER)");
 			}
 		} catch (SQLException e) {
-			// if the error message is "out of memory",
-			// it probably means no database file is found
 			System.err.println(e.getMessage());
 		} finally {
 			try {
 				if (connection != null)
 					connection.close();
 			} catch (SQLException e) {
-				// connection close failed.
 				System.err.println(e);
 			}
 		}
@@ -52,7 +50,7 @@ public class Database {
 	}
 
 	public void updateDB(String command) {
-		Connection connection = null;
+		connection = null;
 
 		try {
 			connection = DriverManager.getConnection("jdbc:sqlite:"+ dbName);
@@ -100,21 +98,28 @@ public class Database {
 	
 	public ResultSet getResults(String command) throws ClassNotFoundException{
 		Class.forName("org.sqlite.JDBC");
-		Connection connection = null;
+		connection = null;
 		ResultSet set = null;
-		try (Connection connection = DriverManager.getConnection("jdbc:sqlite:"+ dbName)){
+		try {
 			connection = DriverManager.getConnection("jdbc:sqlite:"+ dbName);
 			Statement statement = connection.createStatement();
 			statement.setQueryTimeout(30);
 			set = statement.executeQuery(command);
-		//	connection.close
 		} catch (SQLException e) {
 			System.err.println(e.getMessage());
 		} 
 		return set;
-
-		
-		
+	}
+	
+	public void closeConnection(){
+		if (connection != null){
+			try {
+				connection.close();
+			} catch (SQLException e) {
+				System.out.println("Failed to close connection.");
+				e.printStackTrace();
+			}
+		}
 	}
 
 }

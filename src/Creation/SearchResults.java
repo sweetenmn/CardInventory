@@ -2,7 +2,6 @@ package Creation;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 import application.Card;
 import application.Database;
@@ -32,25 +31,43 @@ public class SearchResults {
 	private void setResults() throws ClassNotFoundException{
 		Parser parser = new Parser();
 		Sets sets = new Sets();
-		
+		Cards cards=  new Cards();
+		Rarity rarities = new Rarity();
+		Conditions conditions = new Conditions();
+		String name, setName, rarity, foil = "";
+		String nm, exc, vg, gd, p = "";
 		try {
-			
-			ResultSet results = db.getResults("SELECT * FROM CardTable");
-			if (!results.isClosed()){
-				while (results.next()){
-					if (results.getString("CardName").contains(query)){
-						String name = results.getString(2);
-						int id = results.getInt("SetId");
-						String setName = db.getResults(sets.getSetName(id)).getString("SetName");
-						String[] cardInfo = new String[]{name, setName, "Common", "No",
-								"1", "5", "0", "0", "0"};
+			//Break up into sub functions--use join?
+			ResultSet queryResults = db.getResults("SELECT * FROM CardTable");
+			if (!queryResults.isClosed()){
+				while (queryResults.next()){
+					if (queryResults.getString("CardName").toLowerCase().contains(query.toLowerCase())){
+						name = queryResults.getString("CardName");
+						int id = queryResults.getInt("SetId");
+						setName = db.getResults(sets.getSetName(id)).getString("SetName");
+						ResultSet cardresult = db.getResults(cards.getCardID(name, setName));
+						cardresult.next();
+						int cardID = cardresult.getInt("CardID");
+						ResultSet rarityInfo = db.getResults(rarities.getRarity(cardID));
+						rarityInfo.next();
+						rarity = rarityInfo.getString("Rarity");
+						foil = rarityInfo.getString("Foil");
+						ResultSet condInfo = db.getResults(conditions.getConditions(cardID));
+						nm = condInfo.getString("NewMint");
+						exc = condInfo.getString("Excellent");
+						vg = condInfo.getString("VeryGood");
+						gd = condInfo.getString("Good");
+						p = condInfo.getString("Poor");
+						
+						String[] cardInfo = new String[]{name, setName, rarity, foil,
+								nm, exc, vg, gd, p};
 						Card newCard = new Card(parser.getCardString(cardInfo), parser);
 						entries.add(new CardRow(newCard));
 					}
 				}
 			}
+		
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
