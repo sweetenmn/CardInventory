@@ -32,7 +32,7 @@ public class Database {
 				statement.executeUpdate("CREATE TABLE SetTable (SetId INTEGER, SetName TEXT)");
 
 				statement.executeUpdate("CREATE TABLE Rarity (CardId INTEGER, Rarity TEXT, Foil TEXT)");
-				statement.executeUpdate("CREATE TABLE Condition (CardId TEXT, NewMint INTEGER, Excellent INTEGER, " +
+				statement.executeUpdate("CREATE TABLE Condition (CardId INTEGER, NewMint INTEGER, Excellent INTEGER, " +
 						"VeryGood INTEGER, Good INTEGER, Poor INTEGER)");
 			}
 		} catch (SQLException e) {
