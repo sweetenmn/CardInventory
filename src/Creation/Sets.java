@@ -7,19 +7,18 @@ public class Sets {
 
     public String addSet(String SetName) {
         //TODO: assign the set a unique ID
-        int setCount = 0;
-        setCount += 1;
-
-        return("insert into Set values('S" + setCount + "', '" + SetName + "')");
+    	System.out.println("here3");
+        return("INSERT INTO SetTable VALUES(" + String.valueOf(SetName.hashCode()) + ", '" + SetName + "')");
     }
 
     public String getSetID(String SetName) {
-        int setId = SetName.hashCode();
-        return ("SELECT SetId FROM SetTable WHERE SetName = '"+ setId + "'");
+    	System.out.println("here1");
+        return ("SELECT SetId FROM SetTable WHERE SetName = '" + SetName + "'");
     }
 
-    public String getSet(String SetName) {
-
-        return("SELECT * FROM SetTable WHERE SetName = '"+ SetName + "'");
+    public String getSetName(int setID) {
+    	System.out.println("here");
+        return("SELECT SetName FROM SetTable WHERE SetID = "+ String.valueOf(setID));
     }
+    
 }

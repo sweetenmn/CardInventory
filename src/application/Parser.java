@@ -2,9 +2,6 @@ package application;
 
 public class Parser {
 	
-	public Parser(){
-		
-	}
 	
 	public String getCardString(String[] cardInfo){
 		String cardString = "";

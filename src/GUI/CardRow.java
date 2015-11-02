@@ -1,16 +1,18 @@
 package GUI;
 
+import application.Card;
 import javafx.beans.property.SimpleStringProperty;
 
 public class CardRow extends TableRow {
 	private final SimpleStringProperty name, rarity, total, foil;
 	
-	public CardRow(String name, String setName, String rarity, String total, String foil){
-		super(setName);
-		this.name = new SimpleStringProperty(name);
-		this.rarity = new SimpleStringProperty(rarity);
-		this.total = new SimpleStringProperty(total);
-		this.foil = new SimpleStringProperty(foil);
+	//public CardRow(String name, String setName, String rarity, String total, String foil){
+	public CardRow(Card card){
+		super(card.getSet());
+		this.name = new SimpleStringProperty(card.getName());
+		this.rarity = new SimpleStringProperty(card.getRarity());
+		this.total = new SimpleStringProperty(card.getTotal());
+		this.foil = new SimpleStringProperty(card.getFoil());
 	}
 	
 	public void setName(String newName){

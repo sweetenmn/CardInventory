@@ -382,7 +382,7 @@
                   <Font size="10.0" />
                </font>
             </CheckBox>
-            <Button layoutX="211.0" layoutY="4.0" mnemonicParsing="false" text="Search" />
+            <Button fx:id="searchButton" layoutX="211.0" layoutY="4.0" mnemonicParsing="false" onAction="#search" text="Search" />
          </children>
       </Pane>
    </top>

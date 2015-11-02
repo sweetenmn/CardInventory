@@ -33,6 +33,10 @@ public class Card {
 	public String getGCount(){return g;}
 	public String getPCount(){return p;}
 	
+	public String getTotal(){return (String.valueOf(toInt(nm) + 
+			toInt(exc) + toInt(vg) + toInt(g) + toInt(p)));
+	}
+	
 	public void changeName(String name){
 		this.name = name;
 	}
@@ -47,6 +51,11 @@ public class Card {
 	public void changeFoil(String foil){
 		this.foil = foil;
 	}
+	
+	private int toInt(String str){
+		return Integer.valueOf(str);
+	}
+
 	
 
 }
