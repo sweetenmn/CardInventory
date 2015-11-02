@@ -5,8 +5,10 @@ import sun.tools.java.ClassNotFound;
 import java.sql.*;
 
 public class Database {
+	String dbName;
 
 	public Database(String dbName) throws ClassNotFoundException {
+		this.dbName = dbName;
 		Class.forName("org.sqlite.JDBC");
 
 		int rsCount = 0;
@@ -27,10 +29,10 @@ public class Database {
 			}
 
 			if (rsCount != 4) {
-				statement.executeUpdate("CREATE TABLE SetTable (SetId TEXT, SetName TEXT)");
-				statement.executeUpdate("CREATE TABLE Card (CardId TEXT, CardName TEXT, SetId TEXT)");
-				statement.executeUpdate("CREATE TABLE Rarity (CardId TEXT, Rarity TEXT, Foil TEXT)");
-				statement.executeUpdate("CREATE TABLE Condition (CardId TEXT, NewMint INTEGER, Excellent INTEGER, " +
+				statement.executeUpdate("CREATE TABLE SetTable (SetId INTEGER, SetName TEXT)");
+				statement.executeUpdate("CREATE TABLE Card (CardId INTEGER, CardName TEXT, SetId INTEGER)");
+				statement.executeUpdate("CREATE TABLE Rarity (CardId INTEGER, Rarity TEXT, Foil TEXT)");
+				statement.executeUpdate("CREATE TABLE Condition (CardId INTEGER, NewMint INTEGER, Excellent INTEGER, " +
 						"VeryGood INTEGER, Good INTEGER, Poor INTEGER)");
 			}
 		} catch (SQLException e) {
@@ -49,7 +51,7 @@ public class Database {
 
 	}
 
-	public void UpdateDb(String command, String dbName) {
+	public void UpdateDb(String command) {
 		Connection connection = null;
 
 		try {
@@ -77,7 +79,7 @@ public class Database {
 		}
 	}
 
-	public String GetValues(String command, String dbName, String Column) {
+	public String GetValues(String command, String Column) {
 		Connection connection = null;
 
 		String value = null;
@@ -91,7 +93,7 @@ public class Database {
 			//updates the database with given command
 			ResultSet rs = statement.executeQuery(command);
 
-			while (rs.next()) {
+			if (rs.next()) {
 				value = rs.getString(Column);
 			}
 

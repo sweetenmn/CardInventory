@@ -20,27 +20,15 @@ public class DataTest {
 
     @Test
     public void test() throws ClassNotFoundException{
-        String dbName = "TEST";
         newDb("TEST");
         String n = "New Set";
         String nc = "Card1";
-        int cardc;
+        int cardc = 0;
 
-        database.UpdateDb(s.addSet(n), dbName);
-        String cc = database.GetValues(c.NextCardID(), dbName, "CardId");
+        database.UpdateDb(s.addSet(n));
+        database.UpdateDb(c.addCard(nc, n, 10));
 
-        if (Integer.valueOf(cc) != null) {
-            cardc = Integer.valueOf(cc);
-        } else {
-            cardc = 0;
-        }
-
-        database.UpdateDb(c.addCard(nc, n, cardc), dbName);
-        database.UpdateDb(c.addCard("Card2", n, cardc), dbName);
-
-        System.out.println(database.GetValues(s.getSet("New Set"), dbName, "SetId"));
-        System.out.println(database.GetValues(c.getCard("Card2"), dbName, "SetId"));
-        System.out.println(database.GetValues(c.getCard("Card1"), dbName, "SetId"));
+        database.UpdateDb(c.getCardID(nc));
 
     }
 

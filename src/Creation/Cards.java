@@ -11,7 +11,8 @@ public class Cards {
         if (Integer.toString(CardCount) == null) {
             CardCount = 0;
         }
-        return ("INSERT INTO Card VALUES('" + String.valueOf(CardCount + 1) + "', '" + CardName + "', '" + setId + "')");
+        CardCount += 1;
+        return ("INSERT INTO Card VALUES(" + CardCount + ", '" + CardName + "', " + setId + ")");
     }
 
     public String getCardID(String CardName) {
@@ -23,6 +24,6 @@ public class Cards {
     }
 
     public String NextCardID() {
-        return ("SELECT MAX(CardID) FROM Card");
+        return ("SELECT MAX(CardId) AS newID FROM Card");
     }
 }
