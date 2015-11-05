@@ -3,18 +3,16 @@ package Creation;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import application.Card;
 import application.Database;
-import application.Parser;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import GUI.CardRow;
-import GUI.TableRow;
+import GUI.DataRow;
 import GUI.TableType;
 
 public class SearchResults {
 	
-	private ObservableList<TableRow> entries = FXCollections.observableArrayList();
+	private ObservableList<DataRow> entries = FXCollections.observableArrayList();
 	private String query;
 	private Database db;
 	
@@ -24,18 +22,16 @@ public class SearchResults {
 		setResults();
 	}
 	
-	public ObservableList<TableRow> getResults(){
+	public ObservableList<DataRow> getResults(){
 		return entries;
 	}
 	
 	private void setResults() throws ClassNotFoundException{
-		Parser parser = new Parser();
-		Sets sets = new Sets();
-		Cards cards=  new Cards();
-		Rarity rarities = new Rarity();
-		Conditions conditions = new Conditions();
+		SetDB sets = new SetDB();
+		CardDB cards=  new CardDB();
+		RarityDB rarities = new RarityDB();
+		ConditionDB conditions = new ConditionDB();
 		String name, setName, rarity, foil = "";
-		String nm, exc, vg, gd, p = "";
 		try {
 			//Break up into sub functions--use join?
 			ResultSet queryResults = db.getResults("SELECT * FROM CardTable");
@@ -53,15 +49,10 @@ public class SearchResults {
 						rarity = rarityInfo.getString("Rarity");
 						foil = rarityInfo.getString("Foil");
 						ResultSet condInfo = db.getResults(conditions.getConditions(cardID));
-						nm = condInfo.getString("NewMint");
-						exc = condInfo.getString("Excellent");
-						vg = condInfo.getString("VeryGood");
-						gd = condInfo.getString("Good");
-						p = condInfo.getString("Poor");
-						
-						String[] cardInfo = new String[]{name, setName, rarity, foil,
-								nm, exc, vg, gd, p};
-						Card newCard = new Card(parser.getCardString(cardInfo), parser);
+						int[] conditionList = new int[]{condInfo.getInt("NewMint"),
+								condInfo.getInt("Excellent"), condInfo.getInt("VeryGood"),
+								condInfo.getInt("Good"), condInfo.getInt("Poor")};
+						Card newCard = new Card(name, setName, rarity, foil, conditionList);
 						entries.add(new CardRow(newCard));
 					}
 				}

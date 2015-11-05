@@ -31,7 +31,6 @@ public class Database {
 			if (rsCount != 4) {
 				statement.executeUpdate("CREATE TABLE CardTable (CardId INTEGER PRIMARY KEY, CardName TEXT, SetId INTEGER)");
 				statement.executeUpdate("CREATE TABLE SetTable (SetId INTEGER, SetName TEXT)");
-
 				statement.executeUpdate("CREATE TABLE Rarity (CardId INTEGER, Rarity TEXT, Foil TEXT)");
 				statement.executeUpdate("CREATE TABLE Condition (CardId TEXT, NewMint INTEGER, Excellent INTEGER, " +
 						"VeryGood INTEGER, Good INTEGER, Poor INTEGER)");
@@ -51,20 +50,17 @@ public class Database {
 
 	public void updateDB(String command) {
 		connection = null;
-
 		try {
 			connection = DriverManager.getConnection("jdbc:sqlite:"+ dbName);
 			Statement statement = connection.createStatement();
 			statement.setQueryTimeout(30);
 			statement.executeUpdate(command);
-
 		} catch (SQLException e) {
 			System.err.println(e.getMessage());
 		} finally {
 			try {
 				if (connection != null)
 					connection.close();
-
 			} catch (SQLException e) {
 				System.err.println(e);
 			}

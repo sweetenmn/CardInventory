@@ -7,53 +7,69 @@ import Creation.SearchResults;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 public class Table {
-	private TableView<TableRow> table;
+	private TableView<DataRow> table;
 	private TableType type;
-	private ObservableList<TableRow> entries = FXCollections.observableArrayList();
+	private ObservableList<DataRow> entries = FXCollections.observableArrayList();
 	
-	public Table(TableType type, TableView<TableRow> table, ArrayList<TableColumn<TableRow,String>> columns){
+	public Table(TableType type, TableView<DataRow> table, ArrayList<TableColumn<DataRow,String>> columns){
 		this.table = table;
 		this.type = type;
 		createTable(columns);
+		handleEvents();
+		
 		
 	}
 	
-	public TableView<TableRow> getTable(){
+	public TableView<DataRow> getTable(){
 		return table;
 	}
 	
-	public void createTable(ArrayList<TableColumn<TableRow, String>> columns){
+	public void createTable(ArrayList<TableColumn<DataRow, String>> columns){
 		if (type == TableType.CARD_SEARCH){
 			columns.get(0).setCellValueFactory(
-					new PropertyValueFactory<TableRow, String>("name"));
+					new PropertyValueFactory<DataRow, String>("name"));
 			columns.get(1).setCellValueFactory(
-					new PropertyValueFactory<TableRow, String>("setName"));
+					new PropertyValueFactory<DataRow, String>("setName"));
 			columns.get(2).setCellValueFactory(
-					new PropertyValueFactory<TableRow, String>("rarity"));
+					new PropertyValueFactory<DataRow, String>("rarity"));
 			columns.get(3).setCellValueFactory(
-					new PropertyValueFactory<TableRow, String>("total"));
+					new PropertyValueFactory<DataRow, String>("total"));
 		} else if (type == TableType.SET_SEARCH){
 			columns.get(0).setCellValueFactory(
-					new PropertyValueFactory<TableRow, String>("setName"));
+					new PropertyValueFactory<DataRow, String>("setName"));
 		} else if (type == TableType.SET_LIST){
 			columns.get(0).setCellValueFactory(
-					new PropertyValueFactory<TableRow, String>("name"));
+					new PropertyValueFactory<DataRow, String>("name"));
 			columns.get(1).setCellValueFactory(
-					new PropertyValueFactory<TableRow, String>("rarity"));
+					new PropertyValueFactory<DataRow, String>("rarity"));
 			columns.get(2).setCellValueFactory(
-					new PropertyValueFactory<TableRow, String>("foil"));
+					new PropertyValueFactory<DataRow, String>("foil"));
 			columns.get(3).setCellValueFactory(
-					new PropertyValueFactory<TableRow, String>("total"));
+					new PropertyValueFactory<DataRow, String>("total"));
 			
 		}
 	}
 	
-	public void add(TableRow newEntry){
+	public void add(DataRow newEntry){
 		entries.add(newEntry);
+	}
+	
+	private void handleEvents(){
+		table.setRowFactory( tv -> {
+		    TableRow<DataRow> row = new TableRow<>();
+		    row.setOnMouseClicked(event -> {
+		        if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
+		            String rowData = row.getItem().getSetName();
+		            System.out.println(rowData);
+		        }
+		    });
+		    return row ;
+		});
 	}
 	
 	public void displayResultsFor(String query, Database db) throws ClassNotFoundException{

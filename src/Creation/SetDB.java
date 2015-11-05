@@ -3,7 +3,7 @@ package Creation;
 /**
  * Created by reedmershon on 10/30/15.
  */
-public class Sets {
+public class SetDB {
 
     public String addSet(String SetName) {
         //TODO: assign the set a unique ID
