@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
 
-<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Controller">
+<BorderPane fx:id="canvas" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Controller">
    <center>
       <TabPane prefHeight="400.0" prefWidth="450.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
         <tabs>
@@ -23,7 +23,7 @@
                               <TableColumn fx:id="searchCardTotal" minWidth="1.0" prefWidth="36.0" text="Total" />
                           </columns>
                         </TableView>
-                        <Label fx:id="searchTerm" layoutX="14.0" layoutY="14.0" prefHeight="20.0" prefWidth="402.0" text="Search results for: &quot;&quot;">
+                        <Label fx:id="searchTerm" layoutX="14.0" layoutY="14.0" prefHeight="20.0" prefWidth="402.0">
                            <font>
                               <Font size="13.0" />
                            </font>
@@ -71,19 +71,23 @@
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <Pane fx:id="ImagePane" layoutX="227.0" layoutY="116.0" prefHeight="207.0" prefWidth="149.0">
+                        <Pane layoutX="227.0" layoutY="116.0" prefHeight="200.0" prefWidth="143.0">
                            <children>
-                              <ImageView fitHeight="200.0" fitWidth="140.0" layoutX="2.0" visible="false" />
+                              <ImageView fitHeight="200.0" fitWidth="140.0" layoutX="2.0">
+                                 <image>
+                                    <Image url="@../3118.jpg" />
+                                 </image>
+                              </ImageView>
                            </children>
                         </Pane>
-                        <Button layoutX="259.0" layoutY="326.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="86.0" text="Edit Card" />
-                        <TextField fx:id="viewSet" layoutX="193.0" layoutY="80.0" prefHeight="28.0" prefWidth="243.0" />
+                        <Button layoutX="256.0" layoutY="326.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="86.0" text="Edit Card" />
+                        <TextField fx:id="viewSet" layoutX="193.0" layoutY="80.0" prefHeight="28.0" prefWidth="243.0" text="7th Edition" />
                         <Text layoutX="193.0" layoutY="76.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Set Name">
                            <font>
                               <Font size="15.0" />
                            </font>
                         </Text>
-                        <TextField fx:id="viewName" layoutX="193.0" layoutY="33.0" prefHeight="28.0" prefWidth="243.0" />
+                        <TextField fx:id="viewName" layoutX="193.0" layoutY="33.0" prefHeight="28.0" prefWidth="243.0" text="Thorn Elemental" />
                         <Text layoutX="193.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Card Name">
                            <font>
                               <Font size="15.0" />
@@ -92,7 +96,7 @@
                         <VBox layoutX="14.0" layoutY="41.0" prefHeight="73.0" prefWidth="107.0">
                            <children>
                               <CheckBox mnemonicParsing="false" text="Mythic Rare" />
-                              <CheckBox mnemonicParsing="false" text="Rare" />
+                              <CheckBox mnemonicParsing="false" selected="true" text="Rare" />
                               <CheckBox mnemonicParsing="false" text="Uncommon" />
                               <CheckBox mnemonicParsing="false" text="Common" />
                            </children>
@@ -111,7 +115,7 @@
                            <children>
                               <HBox prefHeight="17.0" prefWidth="87.0">
                                  <children>
-                                    <TextField fx:id="viewNM" prefHeight="25.0" prefWidth="156.0">
+                                    <TextField fx:id="viewNM" prefHeight="25.0" prefWidth="156.0" text="1">
                                        <font>
                                           <Font size="12.0" />
                                        </font>
@@ -143,7 +147,7 @@
                               </HBox>
                               <HBox layoutX="10.0" layoutY="33.0" prefHeight="17.0" prefWidth="87.0">
                                  <children>
-                                    <TextField fx:id="viewVG" prefHeight="25.0" prefWidth="156.0">
+                                    <TextField fx:id="viewVG" prefHeight="25.0" prefWidth="156.0" text="2">
                                        <font>
                                           <Font size="12.0" />
                                        </font>
@@ -171,7 +175,7 @@
                               </HBox>
                               <HBox layoutX="10.0" layoutY="79.0" prefHeight="17.0" prefWidth="87.0">
                                  <children>
-                                    <TextField fx:id="viewPoor" prefHeight="25.0" prefWidth="156.0">
+                                    <TextField fx:id="viewPoor" prefHeight="25.0" prefWidth="156.0" text="1">
                                        <font>
                                           <Font size="12.0" />
                                        </font>
@@ -215,10 +219,10 @@
                         </Text>
                         <VBox layoutX="14.0" layoutY="32.0" prefHeight="73.0" prefWidth="107.0">
                            <children>
-                              <CheckBox mnemonicParsing="false" text="Mythic Rare" />
-                              <CheckBox mnemonicParsing="false" text="Rare" />
-                              <CheckBox mnemonicParsing="false" text="Uncommon" />
-                              <CheckBox mnemonicParsing="false" text="Common" />
+                              <CheckBox fx:id="mythicRare" mnemonicParsing="false" text="Mythic Rare" />
+                              <CheckBox fx:id="rare" mnemonicParsing="false" text="Rare" />
+                              <CheckBox fx:id="uncommon" mnemonicParsing="false" text="Uncommon" />
+                              <CheckBox fx:id="common" mnemonicParsing="false" text="Common" />
                            </children>
                         </VBox>
                         <VBox layoutX="14.0" layoutY="172.0" prefHeight="113.0" prefWidth="156.0">
@@ -358,11 +362,12 @@
                         <Button fx:id="addImage" layoutX="187.0" layoutY="146.0" mnemonicParsing="false" text="Add Image" />
                         <Button layoutX="375.0" layoutY="327.0" mnemonicParsing="false" text="New Card" />
                         <Button layoutX="187.0" layoutY="327.0" mnemonicParsing="false" onAction="#saveCard" prefWidth="86.0" text="Save Card" />
-                        <CheckBox layoutX="19.0" layoutY="331.0" mnemonicParsing="false" text="Foil">
+                        <CheckBox fx:id="foilBox" layoutX="19.0" layoutY="331.0" mnemonicParsing="false" text="Foil">
                            <font>
                               <Font size="15.0" />
                            </font>
                         </CheckBox>
+                        <Label layoutX="157.0" layoutY="304.0" prefHeight="17.0" prefWidth="146.0" text="Card added successfully" visible="false" />
                      </children></AnchorPane>
             </content>
           </Tab>
@@ -373,7 +378,7 @@
       <Pane prefHeight="30.0" prefWidth="450.0" BorderPane.alignment="CENTER">
          <children>
             <TextField fx:id="searchBar" layoutX="7.0" layoutY="4.0" prefHeight="25.0" prefWidth="214.0" promptText="Search by card" />
-            <CheckBox fx:id="searchSets" layoutX="279.0" layoutY="10.0" mnemonicParsing="false" text="Sets">
+            <CheckBox fx:id="searchSets" layoutX="266.0" layoutY="9.0" mnemonicParsing="false" text="Sets">
                <font>
                   <Font size="10.0" />
                </font>

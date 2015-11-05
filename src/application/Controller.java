@@ -2,14 +2,17 @@ package application;
 
 import java.util.ArrayList;
 
-import Creation.Cards;
-import Creation.ImageOpener;
-import Creation.Sets;
+import Creation.Card;
+import Creation.CardDB;
+import Creation.ConditionDB;
+import Creation.RarityDB;
+import Creation.SetDB;
 import GUI.CardRow;
 import GUI.Table;
-import GUI.TableRow;
+import GUI.DataRow;
 import GUI.TableType;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -17,9 +20,13 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.Pane;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.BorderPane;
 
 public class Controller {
+	
+	@FXML
+	BorderPane canvas;
 	
 	@FXML
 	Button addImage;
@@ -66,9 +73,9 @@ public class Controller {
 	@FXML
 	TableView<CardRow> setTableView;
 	@FXML
-	TableView<TableRow> searchCardTableView;
+	TableView<DataRow> searchCardTableView;
 	@FXML
-	TableView<TableRow> searchSetTableView;
+	TableView<DataRow> searchSetTableView;
 	@FXML
 	Tab searchTab;
 	@FXML
@@ -79,44 +86,86 @@ public class Controller {
 	Tab editTab;
 	@FXML
 	CheckBox searchSets;
-    @FXML
-    Pane ImagePane;
+	@FXML
+	CheckBox mythicRare;
+	@FXML
+	CheckBox rare;
+	@FXML
+	CheckBox uncommon;
+	@FXML
+	CheckBox common;
+	@FXML
+	CheckBox foilBox;
+	ArrayList<CheckBox> boxes = new ArrayList<CheckBox>();
+	ArrayList<Node> nodes = new ArrayList<Node>();
+
 	Database database;
-	Parser parser;
-	Cards cards = new Cards();
-	Sets sets = new Sets();
-    ImageOpener IO = new ImageOpener();
+	CardDB cards = new CardDB();
+	SetDB sets = new SetDB();
+	RarityDB rarities = new RarityDB();
+	ConditionDB conditionsDB = new ConditionDB();
 	Table searchCardTable;
 	Table searchSetTable;
-	@FXML
-	TableColumn<TableRow, String> searchCardName;
-	@FXML
-	TableColumn<TableRow, String> searchCardSet;
-	@FXML
-	TableColumn<TableRow, String> searchCardRarity;
-	@FXML
-	TableColumn<TableRow, String> searchCardTotal;
-	@FXML
-	TableColumn<TableRow, String> searchSet;
-	int count;
+	String newRarity = "";
 	
+	@FXML
+	TableColumn<DataRow, String> searchCardName;
+	@FXML
+	TableColumn<DataRow, String> searchCardSet;
+	@FXML
+	TableColumn<DataRow, String> searchCardRarity;
+	@FXML
+	TableColumn<DataRow, String> searchCardTotal;
+	@FXML
+	TableColumn<DataRow, String> searchSet;
 	
 	public void initialize(){
-		parser = new Parser();
-		count = 0;
-		ArrayList<TableColumn<TableRow, String>> search = new ArrayList<TableColumn<TableRow,String>>();
-		search.add(searchCardName);
-		search.add(searchCardSet);
-		search.add(searchCardRarity);
-		search.add(searchCardTotal);
-		searchCardTable = new Table(TableType.CARD_SEARCH, searchCardTableView, search);
-		
+		canvas.setOnKeyPressed(key -> handlePress(key.getCode()));
+		createDatabase();
+		createTables();
+		addBoxes();
+	}
+	
+	public void createDatabase(){
 		try{
 			database = new Database("CardInventory");
 		} catch(Exception e){
 			System.out.println("Database not found.");
 		}
+	}
+	
+	public void createTables(){
+		ArrayList<TableColumn<DataRow, String>> search = addColumns();
+		searchCardTable = new Table(TableType.CARD_SEARCH, searchCardTableView, search);
+	}
+	
+	private ArrayList<TableColumn<DataRow, String>> addColumns(){
+		ArrayList<TableColumn<DataRow, String>> search = new ArrayList<TableColumn<DataRow,String>>();
+		search.add(searchCardName);
+		search.add(searchCardSet);
+		search.add(searchCardRarity);
+		search.add(searchCardTotal);
+		return search;
+	}
+	
+	private void addBoxes(){
+		boxes.add(mythicRare);
+		boxes.add(rare);
+		boxes.add(uncommon);
+		boxes.add(common);
+		for (CheckBox c: boxes){
+			c.setOnAction(k -> {
+			newRarity = c.getText();
+			uncheckOther();
+			});
+		}
 		
+	}
+	
+	void handlePress(KeyCode code){
+		if (code == KeyCode.ENTER){
+			search();
+		}
 	}
 	
 	//So many little functions
@@ -156,25 +205,38 @@ public class Controller {
 	}
 	@FXML
 	void saveCard(){
-		count += 1;
-		//need to get info out of check boxes somehow
-		String[] cardInfo = new String[]{getFrom(editName), getFrom(editSet), "Common", "No",
-				getFrom(editNM), getFrom(editE), getFrom(editVG), getFrom(editG),
-				getFrom(editP)};
-	//	Card newCard = new Card(parser.getCardString(cardInfo), parser);
-		database.updateDB(cards.addCard(getFrom(editName), getFrom(editSet)));
-		System.out.println("NAME: " + getFrom(editName));
-		database.updateDB(sets.addSet(getFrom(editSet)));
-	//	updateView(newCard);
+		String newName = getFrom(editName);
+		String newSet = getFrom(editSet);
+		int[] conditions = new int[]{getInt(editNM), getInt(editE),
+				getInt(editVG), getInt(editG), getInt(editP)};                   
+		Card newCard = new Card(newName, newSet, newRarity, isFoil(), conditions);
+		newCard.sendToDatabase(database);
+		
+	}
+	
+	private String isFoil(){
+		if (foilBox.isSelected()){ 
+			return "Yes";
+		} else {
+			return "No";
+		}
 	}
 	
 	private String getFrom(TextField field){
-		if (field != editName && field != editSet){
-			if (field.getText().equals("")){
+		if (field.getText().equals("")){
+			//remove final &&
+			if (field != editName && field != editSet && field != searchBar){
 				return "0";
+			} else {
+				//generate exception
+				return field.getText();
 			}
 		}
 		return field.getText();
+	}
+	
+	private int getInt(TextField field){
+		return Integer.valueOf(getFrom(field));
 	}
 	
 	public void updateView(Card card){
@@ -182,22 +244,43 @@ public class Controller {
 	}
 	
 	public void search(){
-		System.out.println(searchBar.getText());
-		try{
-			
-			searchCardTable.displayResultsFor(searchBar.getText(), database);
-		} catch (ClassNotFoundException e){
-			e.printStackTrace();
+		if (searchSets.isSelected()){
+			searchSets();
+		} else {
+			searchCards();
 		}
 	}
 	
-	@FXML
-	void uncheckOther(){
-		//for check boxes, to ensure only one is clicked at a time
-		//going to have to declare them in controller to do the event handler
+	public void searchSets(){
+		
 	}
-
-
+	
+	public void searchCards(){
+		try{	
+			searchCardTable.displayResultsFor(getFrom(searchBar), database);
+			displayQuery(getFrom(searchBar));
+		} catch (ClassNotFoundException e){
+			e.printStackTrace();
+		}		
+	}
+	
+	public void displayQuery(String query){
+		if (query.equals("")){
+			searchTerm.setText("Search for all entries:");
+		} else {
+			searchTerm.setText("Search results for: '" + searchBar.getText() + "'");
+		}
+	}
+	
+	private void uncheckOther(){
+		for (CheckBox c: boxes){
+			if (!c.getText().equals(newRarity)){
+				c.setSelected(false);
+			} 
+		}
+		
+	}
+	
 	
 	
 	
