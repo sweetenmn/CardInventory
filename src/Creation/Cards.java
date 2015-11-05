@@ -5,22 +5,17 @@ package Creation;
  */
 public class Cards {
 
-    public String addCard(String CardName, String SetName, int CardCount) {
-        int setId = SetName.hashCode();
-
-        if (Integer.toString(CardCount) == null) {
-            CardCount = 0;
-        }
-        CardCount += 1;
-        return ("INSERT INTO Card VALUES(" + CardCount + ", '" + CardName + "', " + setId + ")");
+    public String getCardID(String CardName, String SetName) {
+        return ("SELECT CardId FROM CardTable WHERE CardName = '" + CardName + "' AND SetID = " + SetName.hashCode());
     }
 
-    public String getCardID(String CardName) {
-        return ("SELECT CardId FROM Card WHERE CardName = '" + CardName + "'");
+    public String addCard(String CardName, String SetName) {
+        int setId = SetName.hashCode();
+        return ("INSERT INTO CardTable VALUES (NULL, '" + CardName + "', " + setId + ")");
     }
 
     public String getCard(String CardName) {
-        return("SELECT * FROM Card WHERE CardName = '" + CardName + "'");
+        return("SELECT * FROM CardTable WHERE CardName = '" + CardName + "'");
     }
 
     public String NextCardID() {
