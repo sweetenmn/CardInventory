@@ -60,16 +60,31 @@ public class Table {
 	}
 	
 	private void handleEvents(){
-		table.setRowFactory( tv -> {
+		table.setRowFactory(k -> {
 		    TableRow<DataRow> row = new TableRow<>();
 		    row.setOnMouseClicked(event -> {
 		        if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
+		        	//swap to view whatever
+		        	//swapView()
 		            String rowData = row.getItem().getSetName();
 		            System.out.println(rowData);
 		        }
 		    });
 		    return row ;
 		});
+	}
+	
+	private void swapView(){
+		switch(type){
+		case CARD_SEARCH: case SET_LIST:
+			//view card
+			//get the correct tab/class from the enum??
+			break;
+		case SET_SEARCH:
+			//view set list
+			break;
+			
+		}
 	}
 	
 	public void displayResultsFor(String query, Database db) throws ClassNotFoundException{
