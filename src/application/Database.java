@@ -1,10 +1,5 @@
 package application;
 
-<<<<<<< HEAD
-import sun.tools.java.ClassNotFound;
-=======
->>>>>>> refs/remotes/origin/11/1
-
 import java.sql.*;
 
 public class Database {
@@ -70,7 +65,6 @@ public class Database {
 			}
 		}
 
-		return (value);
 	}
 
 	public String GetValues(String command, String Column) {

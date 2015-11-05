@@ -159,7 +159,6 @@ public class Controller {
 			uncheckOther();
 			});
 		}
-		
 	}
 	
 	void handlePress(KeyCode code){
