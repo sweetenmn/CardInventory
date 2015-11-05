@@ -1,18 +1,18 @@
 package application;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
-import Creation.Cards;
-import Creation.Conditions;
-import Creation.Rarity;
-import Creation.Sets;
+import Creation.Card;
+import Creation.CardDB;
+import Creation.ConditionDB;
+import Creation.RarityDB;
+import Creation.SetDB;
 import GUI.CardRow;
 import GUI.Table;
-import GUI.TableRow;
+import GUI.DataRow;
 import GUI.TableType;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -22,7 +22,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
 
 public class Controller {
 	
@@ -74,9 +73,9 @@ public class Controller {
 	@FXML
 	TableView<CardRow> setTableView;
 	@FXML
-	TableView<TableRow> searchCardTableView;
+	TableView<DataRow> searchCardTableView;
 	@FXML
-	TableView<TableRow> searchSetTableView;
+	TableView<DataRow> searchSetTableView;
 	@FXML
 	Tab searchTab;
 	@FXML
@@ -98,43 +97,50 @@ public class Controller {
 	@FXML
 	CheckBox foilBox;
 	ArrayList<CheckBox> boxes = new ArrayList<CheckBox>();
+	ArrayList<Node> nodes = new ArrayList<Node>();
+
 	Database database;
-	Parser parser;
-	Cards cards = new Cards();
-	Sets sets = new Sets();
-	Rarity rarities = new Rarity();
-	Conditions conditions = new Conditions();
+	CardDB cards = new CardDB();
+	SetDB sets = new SetDB();
+	RarityDB rarities = new RarityDB();
+	ConditionDB conditionsDB = new ConditionDB();
 	Table searchCardTable;
 	Table searchSetTable;
-	@FXML
-	TableColumn<TableRow, String> searchCardName;
-	@FXML
-	TableColumn<TableRow, String> searchCardSet;
-	@FXML
-	TableColumn<TableRow, String> searchCardRarity;
-	@FXML
-	TableColumn<TableRow, String> searchCardTotal;
-	@FXML
-	TableColumn<TableRow, String> searchSet;
-	@FXML
 	String newRarity = "";
 	
+	@FXML
+	TableColumn<DataRow, String> searchCardName;
+	@FXML
+	TableColumn<DataRow, String> searchCardSet;
+	@FXML
+	TableColumn<DataRow, String> searchCardRarity;
+	@FXML
+	TableColumn<DataRow, String> searchCardTotal;
+	@FXML
+	TableColumn<DataRow, String> searchSet;
+	
 	public void initialize(){
-		parser = new Parser();
-		canvas.setOnKeyPressed(k -> handlePress(k.getCode()));
-		ArrayList<TableColumn<TableRow, String>> search = addColumns();
+		canvas.setOnKeyPressed(key -> handlePress(key.getCode()));
+		createDatabase();
+		createTables();
 		addBoxes();
-		searchCardTable = new Table(TableType.CARD_SEARCH, searchCardTableView, search);
+	}
+	
+	public void createDatabase(){
 		try{
 			database = new Database("CardInventory");
 		} catch(Exception e){
 			System.out.println("Database not found.");
 		}
-		
 	}
 	
-	private ArrayList<TableColumn<TableRow, String>> addColumns(){
-		ArrayList<TableColumn<TableRow, String>> search = new ArrayList<TableColumn<TableRow,String>>();
+	public void createTables(){
+		ArrayList<TableColumn<DataRow, String>> search = addColumns();
+		searchCardTable = new Table(TableType.CARD_SEARCH, searchCardTableView, search);
+	}
+	
+	private ArrayList<TableColumn<DataRow, String>> addColumns(){
+		ArrayList<TableColumn<DataRow, String>> search = new ArrayList<TableColumn<DataRow,String>>();
 		search.add(searchCardName);
 		search.add(searchCardSet);
 		search.add(searchCardRarity);
@@ -199,32 +205,17 @@ public class Controller {
 	}
 	@FXML
 	void saveCard(){
-		database.updateDB(cards.addCard(getFrom(editName), getFrom(editSet)));
-		database.updateDB(sets.addSet(getFrom(editSet)));
-		ResultSet set;
-		int setID = 0;
-		try {
-			set = database.getResults(cards.getCardID(getFrom(editName), getFrom(editSet)));
-			setID = set.getInt("CardId");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			database.closeConnection();
-		}
-		if (newRarity == ""){
-			newRarity = "None";
-		}
-		database.updateDB(rarities.setRarity(setID,
-				newRarity, isFoil()));
-		database.updateDB(conditions.setConditions(setID, getInt(editNM),
-				getInt(editE), getInt(editVG), getInt(editG), getInt(editP)));
+		String newName = getFrom(editName);
+		String newSet = getFrom(editSet);
+		int[] conditions = new int[]{getInt(editNM), getInt(editE),
+				getInt(editVG), getInt(editG), getInt(editP)};                   
+		Card newCard = new Card(newName, newSet, newRarity, isFoil(), conditions);
+		newCard.sendToDatabase(database);
 		
 	}
 	
 	private String isFoil(){
-		if (foilBox.isSelected()){
+		if (foilBox.isSelected()){ 
 			return "Yes";
 		} else {
 			return "No";
@@ -232,9 +223,13 @@ public class Controller {
 	}
 	
 	private String getFrom(TextField field){
-		if (field != editName && field != editSet){
-			if (field.getText().equals("")){
+		if (field.getText().equals("")){
+			//remove final &&
+			if (field != editName && field != editSet && field != searchBar){
 				return "0";
+			} else {
+				//generate exception
+				return field.getText();
 			}
 		}
 		return field.getText();
@@ -249,11 +244,31 @@ public class Controller {
 	}
 	
 	public void search(){
+		if (searchSets.isSelected()){
+			searchSets();
+		} else {
+			searchCards();
+		}
+	}
+	
+	public void searchSets(){
+		
+	}
+	
+	public void searchCards(){
 		try{	
-			searchCardTable.displayResultsFor(searchBar.getText(), database);
-			searchTerm.setText("Search results for: '" + searchBar.getText() + "'");
+			searchCardTable.displayResultsFor(getFrom(searchBar), database);
+			displayQuery(getFrom(searchBar));
 		} catch (ClassNotFoundException e){
 			e.printStackTrace();
+		}		
+	}
+	
+	public void displayQuery(String query){
+		if (query.equals("")){
+			searchTerm.setText("Search for all entries:");
+		} else {
+			searchTerm.setText("Search results for: '" + searchBar.getText() + "'");
 		}
 	}
 	

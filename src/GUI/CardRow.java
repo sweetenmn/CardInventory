@@ -1,9 +1,9 @@
 package GUI;
 
-import application.Card;
+import Creation.Card;
 import javafx.beans.property.SimpleStringProperty;
 
-public class CardRow extends TableRow {
+public class CardRow extends DataRow {
 	private final SimpleStringProperty name, rarity, total, foil;
 	
 	//public CardRow(String name, String setName, String rarity, String total, String foil){
@@ -35,20 +35,10 @@ public class CardRow extends TableRow {
 		foil.set(newFoil);
 	}
 	
-	public String getName(){
-		return name.get();
-	}
-	public String getRarity(){
-		return rarity.get();
-	}
-	public String getSet(){
-		return setName.get();
-	}
-	public String getTotal(){
-		return total.get();
-	}
-	public String getFoil(){
-		return foil.get();
-	}
+	public String getName(){return name.get();}
+	public String getRarity(){return rarity.get();}
+	public String getSet(){return setName.get();}
+	public String getTotal(){return total.get();}
+	public String getFoil(){return foil.get();}
 
 }
