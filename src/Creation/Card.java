@@ -3,7 +3,11 @@ package Creation;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import application.Database;
+import Database.CardDB;
+import Database.ConditionDB;
+import Database.Database;
+import Database.RarityDB;
+import Database.SetDB;
 
 public class Card {
 	String name, set, rarity, foil;
@@ -24,12 +28,12 @@ public class Card {
 	}
 	
 	public void sendToDatabase(Database database){
-		database.updateDB(cards.addCard(name, set));
 		database.updateDB(setDB.addSet(set));
-		int setID = getSetID(database);
+		database.updateDB(cards.addCard(name, set));
 		setNonEmptyRarity();
-		database.updateDB(rarityDB.setRarity(setID,	rarity, foil));
-		database.updateDB(conditionDB.setConditions(setID, conditions));		
+		int cardID = getCardID(database);
+		database.updateDB(rarityDB.setRarity(cardID, rarity, foil));
+		database.updateDB(conditionDB.setConditions(cardID, conditions));
 	}
 	
 	private void setConditions(){
@@ -41,11 +45,11 @@ public class Card {
 		
 	}
 	
-	private int getSetID(Database database){
+	private int getCardID(Database database){
 		ResultSet rs;
 		int setID = 0;
 		try {
-			rs = database.getResults(cards.getCardID(name, set));
+			rs = database.getResults(cards.getCardID(name, set.hashCode()));
 			setID = rs.getInt("CardId");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -57,7 +61,7 @@ public class Card {
 	}
 	
 	private void setNonEmptyRarity(){
-		if (rarity == ""){ 
+		if (rarity.equals("")){ 
 			rarity = "None"; 
 		}
 	}
@@ -66,6 +70,7 @@ public class Card {
 	public String getSet(){return set;}
 	public String getRarity(){return rarity;}
 	public String getFoil(){return foil;}
+	public boolean isFoil(){return foil.equals("Yes");}
 	
 	public int getNMCount(){return nm;}
 	public int getEXCCount(){return exc;}

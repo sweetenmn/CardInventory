@@ -3,25 +3,28 @@ package application;
 import java.util.ArrayList;
 
 import Creation.Card;
-import Creation.CardDB;
-import Creation.ConditionDB;
-import Creation.RarityDB;
-import Creation.SetDB;
+import Database.CardDB;
+import Database.ConditionDB;
+import Database.Database;
+import Database.RarityDB;
+import Database.SetDB;
 import GUI.CardRow;
 import GUI.Table;
 import GUI.DataRow;
 import GUI.TableType;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.text.Text;
 
 public class Controller {
 	
@@ -39,9 +42,11 @@ public class Controller {
 	@FXML
 	TextField searchBar;
 	@FXML
-	TextField viewName;
+	Text viewName;
 	@FXML
-	TextField viewSet; 
+	Text viewSet; 
+	@FXML
+	Text viewRarity;
 	@FXML
 	TextField viewE; 
 	@FXML
@@ -67,23 +72,7 @@ public class Controller {
 	@FXML
 	TextField editP;
 	@FXML
-	Label searchTerm;
-	@FXML
-	Label setTitle;
-	@FXML
-	TableView<CardRow> setTableView;
-	@FXML
-	TableView<DataRow> searchCardTableView;
-	@FXML
-	TableView<DataRow> searchSetTableView;
-	@FXML
-	Tab searchTab;
-	@FXML
-	Tab setTab; 
-	@FXML
-	Tab viewTab;
-	@FXML
-	Tab editTab;
+	Text addedCard;
 	@FXML
 	CheckBox searchSets;
 	@FXML
@@ -95,9 +84,21 @@ public class Controller {
 	@FXML
 	CheckBox common;
 	@FXML
-	CheckBox foilBox;
+	Label searchTerm;
+	@FXML
+	Label setTitle;
+
+	@FXML
+	TableView<CardRow> setTableView;
+	@FXML
+	TableView<DataRow> searchCardTableView;
+	@FXML
+	TableView<DataRow> searchSetTableView;
+	@FXML
+	TabPane tabs;
+	@FXML
+	CheckBox editFoil;
 	ArrayList<CheckBox> boxes = new ArrayList<CheckBox>();
-	ArrayList<Node> nodes = new ArrayList<Node>();
 
 	Database database;
 	CardDB cards = new CardDB();
@@ -135,16 +136,24 @@ public class Controller {
 	}
 	
 	public void createTables(){
-		ArrayList<TableColumn<DataRow, String>> search = addColumns();
-		searchCardTable = new Table(TableType.CARD_SEARCH, searchCardTableView, search);
+		ArrayList<TableColumn<DataRow, String>> searchCard = addCardSearchColumns();
+		ArrayList<TableColumn<DataRow, String>> searchSet = addSetSearchColumns();
+		searchCardTable = new Table(this, TableType.CARD_SEARCH, searchCardTableView, searchCard);
+		searchSetTable = new Table(this, TableType.SET_SEARCH, searchSetTableView, searchSet);
 	}
 	
-	private ArrayList<TableColumn<DataRow, String>> addColumns(){
+	private ArrayList<TableColumn<DataRow, String>> addCardSearchColumns(){
 		ArrayList<TableColumn<DataRow, String>> search = new ArrayList<TableColumn<DataRow,String>>();
 		search.add(searchCardName);
 		search.add(searchCardSet);
 		search.add(searchCardRarity);
 		search.add(searchCardTotal);
+		return search;
+	}
+	
+	private ArrayList<TableColumn<DataRow, String>> addSetSearchColumns(){
+		ArrayList<TableColumn<DataRow, String>> search = new ArrayList<TableColumn<DataRow,String>>();
+		search.add(searchSet);
 		return search;
 	}
 	
@@ -159,7 +168,6 @@ public class Controller {
 			uncheckOther();
 			});
 		}
-		
 	}
 	
 	void handlePress(KeyCode code){
@@ -211,11 +219,13 @@ public class Controller {
 				getInt(editVG), getInt(editG), getInt(editP)};                   
 		Card newCard = new Card(newName, newSet, newRarity, isFoil(), conditions);
 		newCard.sendToDatabase(database);
+		addedCard.setText("Added '" + newName + "'" );
+		addedCard.setVisible(true);
 		
 	}
 	
 	private String isFoil(){
-		if (foilBox.isSelected()){ 
+		if (editFoil.isSelected()){ 
 			return "Yes";
 		} else {
 			return "No";
@@ -223,6 +233,9 @@ public class Controller {
 	}
 	
 	private String getFrom(TextField field){
+		if (field.getText().equals(null)){
+			field.setText("");
+		}
 		if (field.getText().equals("")){
 			//remove final &&
 			if (field != editName && field != editSet && field != searchBar){
@@ -231,8 +244,10 @@ public class Controller {
 				//generate exception
 				return field.getText();
 			}
+		} else {
+			
+			return field.getText();
 		}
-		return field.getText();
 	}
 	
 	private int getInt(TextField field){
@@ -249,16 +264,26 @@ public class Controller {
 		} else {
 			searchCards();
 		}
+		SingleSelectionModel<Tab> selectionModel = tabs.getSelectionModel();
+		selectionModel.select(0);
+		displayQuery(getFrom(searchBar));
 	}
 	
 	public void searchSets(){
-		
+		searchCardTableView.setVisible(false);
+		searchSetTableView.setVisible(true);
+		try {
+			searchSetTable.displayResultsFor(getFrom(searchBar), database);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void searchCards(){
-		try{	
+		searchSetTableView.setVisible(false);
+		searchCardTableView.setVisible(true);
+		try{
 			searchCardTable.displayResultsFor(getFrom(searchBar), database);
-			displayQuery(getFrom(searchBar));
 		} catch (ClassNotFoundException e){
 			e.printStackTrace();
 		}		
@@ -281,8 +306,61 @@ public class Controller {
 		
 	}
 	
+	public void swapToView(CardRow data){
+		Card card = data.getCard();
+		updateViewFields(card);
+		SingleSelectionModel<Tab> selectionModel = tabs.getSelectionModel();
+		selectionModel.select(2);
+	
+	}
+	
+	public void updateViewFields(Card card){
+		if (card.isFoil()){
+			viewName.setText("Foil " + card.getName());
+		} else {
+			viewName.setText(card.getName());
+		}
+		viewSet.setText(card.getSet());
+		viewNM.setText(toString(card.getNMCount()));
+		viewE.setText(toString(card.getEXCCount()));
+		viewVG.setText(toString(card.getVGCount()));
+		viewGood.setText(toString(card.getGCount()));
+		viewPoor.setText(toString(card.getPCount()));
+		viewRarity.setText(card.getRarity());
+		
+	}
 	
 	
+	public void swapToList(DataRow data){
+		//view set list
+	}
+	
+	private String toString(int num){
+		return String.valueOf(num);
+	}
+	
+	public void swapSearchPrompt(){
+		if (searchBar.getPromptText().endsWith("card")){
+			searchBar.setPromptText("Search by set");
+		} else {
+			searchBar.setPromptText("Search by card");
+		}
+	}
+	
+	public void newCard(){
+		editName.clear();
+		editSet.clear();
+		editNM.clear();
+		editE.clear();
+		editVG.clear();
+		editG.clear();
+		editP.clear();
+		for (CheckBox c: boxes){
+			c.setSelected(false);
+		}
+		editFoil.setSelected(false);
+		addedCard.setVisible(false);
+	}
 	
 	
 	

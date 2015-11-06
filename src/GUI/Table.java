@@ -2,8 +2,9 @@ package GUI;
 
 import java.util.ArrayList;
 
-import application.Database;
-import Creation.SearchResults;
+import application.Controller;
+import Database.Database;
+import Database.SearchResults;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
@@ -15,14 +16,15 @@ public class Table {
 	private TableView<DataRow> table;
 	private TableType type;
 	private ObservableList<DataRow> entries = FXCollections.observableArrayList();
+	private Controller controller;
 	
-	public Table(TableType type, TableView<DataRow> table, ArrayList<TableColumn<DataRow,String>> columns){
+	public Table(Controller controller, TableType type, TableView<DataRow> table,
+			ArrayList<TableColumn<DataRow,String>> columns){
 		this.table = table;
 		this.type = type;
+		this.controller = controller;
 		createTable(columns);
 		handleEvents();
-		
-		
 	}
 	
 	public TableView<DataRow> getTable(){
@@ -32,7 +34,7 @@ public class Table {
 	public void createTable(ArrayList<TableColumn<DataRow, String>> columns){
 		if (type == TableType.CARD_SEARCH){
 			columns.get(0).setCellValueFactory(
-					new PropertyValueFactory<DataRow, String>("name"));
+					new PropertyValueFactory<DataRow, String>("displayName"));
 			columns.get(1).setCellValueFactory(
 					new PropertyValueFactory<DataRow, String>("setName"));
 			columns.get(2).setCellValueFactory(
@@ -60,16 +62,29 @@ public class Table {
 	}
 	
 	private void handleEvents(){
-		table.setRowFactory( tv -> {
+		table.setRowFactory(k -> {
 		    TableRow<DataRow> row = new TableRow<>();
 		    row.setOnMouseClicked(event -> {
 		        if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
-		            String rowData = row.getItem().getSetName();
-		            System.out.println(rowData);
+		        	setOnEvent(row);
 		        }
 		    });
 		    return row ;
 		});
+	}
+	
+	private void setOnEvent(TableRow<DataRow> row){
+		switch(type){
+		case CARD_SEARCH: case SET_LIST:
+			CardRow cardRow = (CardRow) row.getItem();
+			controller.swapToView(cardRow);
+			break;
+		case SET_SEARCH:
+			DataRow setRow = row.getItem();
+			controller.swapToList(setRow);
+			break;
+		
+		}
 	}
 	
 	public void displayResultsFor(String query, Database db) throws ClassNotFoundException{

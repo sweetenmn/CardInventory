@@ -1,9 +1,4 @@
-package application;
-
-<<<<<<< HEAD
-import sun.tools.java.ClassNotFound;
-=======
->>>>>>> refs/remotes/origin/11/1
+package Database;
 
 import java.sql.*;
 
@@ -20,10 +15,9 @@ public class Database {
 		connection = null;
 
 		try {
-			// create a database connection
 			connection = DriverManager.getConnection("jdbc:sqlite:" + this.dbName);
 			Statement statement = connection.createStatement();
-			statement.setQueryTimeout(30); 
+			statement.setQueryTimeout(10); 
 
 			DatabaseMetaData md = connection.getMetaData();
 			ResultSet rs = md.getTables(null, null, "%", null);
@@ -70,11 +64,10 @@ public class Database {
 			}
 		}
 
-		return (value);
 	}
 
 	public String GetValues(String command, String Column) {
-		Connection connection = null;
+		connection = null;
 		String value = null;
 		try {
 			connection = DriverManager.getConnection("jdbc:sqlite:"+ dbName);
@@ -105,7 +98,7 @@ public class Database {
 		try {
 			connection = DriverManager.getConnection("jdbc:sqlite:"+ dbName);
 			Statement statement = connection.createStatement();
-			statement.setQueryTimeout(30);
+			statement.setQueryTimeout(10);
 			set = statement.executeQuery(command);
 		} catch (SQLException e) {
 			System.err.println(e.getMessage());

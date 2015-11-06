@@ -1,12 +1,12 @@
-package Creation;
+package Database;
 
 /**
  * Created by reedmershon on 10/30/15.
  */
 public class CardDB {
 
-    public String getCardID(String CardName, String SetName) {
-        return ("SELECT CardId FROM CardTable WHERE CardName = '" + CardName + "' AND SetID = " + SetName.hashCode());
+    public String getCardID(String CardName, int setID) {
+        return ("SELECT CardId FROM CardTable WHERE CardName = '" + CardName + "' AND SetID = " + setID);
     }
 
     public String addCard(String CardName, String SetName) {

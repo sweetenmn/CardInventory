@@ -4,17 +4,30 @@ import Creation.Card;
 import javafx.beans.property.SimpleStringProperty;
 
 public class CardRow extends DataRow {
-	private final SimpleStringProperty name, rarity, total, foil;
+	private final SimpleStringProperty displayName, name, rarity, total, foil;
+	private Card card;
 	
-	//public CardRow(String name, String setName, String rarity, String total, String foil){
 	public CardRow(Card card){
 		super(card.getSet());
+		this.card = card;
 		this.name = new SimpleStringProperty(card.getName());
 		this.rarity = new SimpleStringProperty(card.getRarity());
 		this.total = new SimpleStringProperty(card.getTotal());
 		this.foil = new SimpleStringProperty(card.getFoil());
+		this.displayName = new SimpleStringProperty(getDisplayName());
 	}
 	
+	public Card getCard(){
+		return card;
+	}
+	
+	public String getDisplayName(){
+		if(card.isFoil()){
+			return "Foil " + name.get();
+		} else {
+			return name.get();
+		}
+	}
 	public void setName(String newName){
 		name.set(newName);
 	}
