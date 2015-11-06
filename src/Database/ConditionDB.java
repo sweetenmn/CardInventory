@@ -1,4 +1,4 @@
-package Creation;
+package Database;
 
 public class ConditionDB {
 
