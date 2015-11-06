@@ -10,21 +10,18 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
 
 public class Table {
 	private TableView<DataRow> table;
 	private TableType type;
 	private ObservableList<DataRow> entries = FXCollections.observableArrayList();
-	private Controller controller;
 	
-	public Table(Controller controller, TableType type, TableView<DataRow> table,
+	public Table(TableType type, TableView<DataRow> table,
 			ArrayList<TableColumn<DataRow,String>> columns){
 		this.table = table;
 		this.type = type;
-		this.controller = controller;
 		createTable(columns);
-		handleEvents();
+		
 	}
 	
 	public TableView<DataRow> getTable(){
@@ -32,48 +29,58 @@ public class Table {
 	}
 	
 	public void createTable(ArrayList<TableColumn<DataRow, String>> columns){
-		if (type == TableType.CARD_SEARCH){
-			columns.get(0).setCellValueFactory(
-					new PropertyValueFactory<DataRow, String>("displayName"));
-			columns.get(1).setCellValueFactory(
-					new PropertyValueFactory<DataRow, String>("setName"));
-			columns.get(2).setCellValueFactory(
-					new PropertyValueFactory<DataRow, String>("rarity"));
-			columns.get(3).setCellValueFactory(
-					new PropertyValueFactory<DataRow, String>("total"));
-		} else if (type == TableType.SET_SEARCH){
-			columns.get(0).setCellValueFactory(
-					new PropertyValueFactory<DataRow, String>("setName"));
-		} else if (type == TableType.SET_LIST){
-			columns.get(0).setCellValueFactory(
-					new PropertyValueFactory<DataRow, String>("name"));
-			columns.get(1).setCellValueFactory(
-					new PropertyValueFactory<DataRow, String>("rarity"));
-			columns.get(2).setCellValueFactory(
-					new PropertyValueFactory<DataRow, String>("foil"));
-			columns.get(3).setCellValueFactory(
-					new PropertyValueFactory<DataRow, String>("total"));
-			
+		switch(type){
+		case CARD_SEARCH: 
+			setUpCardSearch(columns);
+			break;
+		case SET_LIST:
+			setUpSetCardList(columns);
+			break;
+		case SET_SEARCH:
+			setUpSetSearch(columns);
+			break;
 		}
 	}
 	
+	private void setUpSetSearch(ArrayList<TableColumn<DataRow, String>> columns){
+		setColumn(columns.get(0), ColumnType.SET_NAME);
+	}
+	
+	private void setUpSetCardList(ArrayList<TableColumn<DataRow, String>> columns){
+		setColumn(columns.get(0), ColumnType.DISPLAY_NAME);
+		setColumn(columns.get(1), ColumnType.SET_NAME);
+		setColumn(columns.get(2), ColumnType.TOTAL);
+	}
+	
+	private void setUpCardSearch(ArrayList<TableColumn<DataRow, String>> columns){
+		setColumn(columns.get(0), ColumnType.DISPLAY_NAME);
+		setColumn(columns.get(1), ColumnType.SET_NAME);
+		setColumn(columns.get(2), ColumnType.RARITY);
+		setColumn(columns.get(3), ColumnType.TOTAL);
+	}
+	
+
 	public void add(DataRow newEntry){
 		entries.add(newEntry);
 	}
 	
-	private void handleEvents(){
+	private void setColumn(TableColumn<DataRow, String> column, ColumnType columnType){
+		column.setCellValueFactory(columnType.factory());
+	}
+	
+	public void handleEvents(Controller controller){
 		table.setRowFactory(k -> {
 		    TableRow<DataRow> row = new TableRow<>();
 		    row.setOnMouseClicked(event -> {
-		        if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
-		        	setOnEvent(row);
+		        if (event.getClickCount() == 2 && (!row.isEmpty()) ) {
+		        	setOnEvent(row, controller);
 		        }
 		    });
 		    return row ;
 		});
 	}
 	
-	private void setOnEvent(TableRow<DataRow> row){
+	private void setOnEvent(TableRow<DataRow> row, Controller controller){
 		switch(type){
 		case CARD_SEARCH: case SET_LIST:
 			CardRow cardRow = (CardRow) row.getItem();

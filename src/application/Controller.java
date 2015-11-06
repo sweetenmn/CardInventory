@@ -30,7 +30,6 @@ public class Controller {
 	
 	@FXML
 	BorderPane canvas;
-	
 	@FXML
 	Button addImage;
 	@FXML
@@ -99,6 +98,7 @@ public class Controller {
 	@FXML
 	CheckBox editFoil;
 	ArrayList<CheckBox> boxes = new ArrayList<CheckBox>();
+	SingleSelectionModel<Tab> selectionModel;
 
 	Database database;
 	CardDB cards = new CardDB();
@@ -122,6 +122,7 @@ public class Controller {
 	
 	public void initialize(){
 		canvas.setOnKeyPressed(key -> handlePress(key.getCode()));
+		selectionModel = tabs.getSelectionModel();
 		createDatabase();
 		createTables();
 		addBoxes();
@@ -138,8 +139,10 @@ public class Controller {
 	public void createTables(){
 		ArrayList<TableColumn<DataRow, String>> searchCard = addCardSearchColumns();
 		ArrayList<TableColumn<DataRow, String>> searchSet = addSetSearchColumns();
-		searchCardTable = new Table(this, TableType.CARD_SEARCH, searchCardTableView, searchCard);
-		searchSetTable = new Table(this, TableType.SET_SEARCH, searchSetTableView, searchSet);
+		searchCardTable = new Table(TableType.CARD_SEARCH, searchCardTableView, searchCard);
+		searchSetTable = new Table(TableType.SET_SEARCH, searchSetTableView, searchSet);
+		searchCardTable.handleEvents(this);
+		searchSetTable.handleEvents(this);
 	}
 	
 	private ArrayList<TableColumn<DataRow, String>> addCardSearchColumns(){
@@ -164,48 +167,48 @@ public class Controller {
 		boxes.add(common);
 		for (CheckBox c: boxes){
 			c.setOnAction(k -> {
-			newRarity = c.getText();
-			uncheckOther();
+				newRarity = c.getText();
+				uncheckOtherBoxes();
 			});
 		}
 	}
 	
 	void handlePress(KeyCode code){
-		if (code == KeyCode.ENTER){
-			search();
-		}
+		if (code == KeyCode.ENTER){ search(); }
 	}
 	
 	//So many little functions
 	//How can we generalize but still set up event handlers?
 	@FXML
-	void incExcellent(){editE.setText(inc(editE.getText()));}
+	void incExcellent(){editE.setText(inc(editE));}
 	@FXML
-	void incNearMint(){editNM.setText(inc(editNM.getText()));}	
+	void incNearMint(){editNM.setText(inc(editNM));}	
 	@FXML
-	void incVeryGood(){editVG.setText(inc(editVG.getText()));}
+	void incVeryGood(){editVG.setText(inc(editVG));}
 	@FXML
-	void incGood(){editG.setText(inc(editG.getText()));}
+	void incGood(){editG.setText(inc(editG));}
 	@FXML
-	void incPoor(){editP.setText(inc(editP.getText()));}
+	void incPoor(){editP.setText(inc(editP));}
 	@FXML
-	void decExcellent(){editE.setText(dec(editE.getText()));}
+	void decExcellent(){editE.setText(dec(editE));}
 	@FXML
-	void decNearMint(){editNM.setText(dec(editNM.getText()));}
+	void decNearMint(){editNM.setText(dec(editNM));}
 	@FXML
-	void decVeryGood(){editVG.setText(dec(editVG.getText()));}
+	void decVeryGood(){editVG.setText(dec(editVG));}
 	@FXML
-	void decGood(){editG.setText(dec(editG.getText()));}
+	void decGood(){editG.setText(dec(editG));}
 	@FXML
-	void decPoor(){editP.setText(dec(editP.getText()));}
+	void decPoor(){editP.setText(dec(editP));}
 	
-	private String inc(String value){
+	private String inc(TextField numberField){
+		String value = numberField.getText();
 		if (value.equals("")){
 			value = "0";
 		}
 		return String.valueOf(Integer.valueOf(value) + 1);
 	}
-	private String dec(String value){
+	private String dec(TextField numberField){
+		String value = numberField.getText();
 		if (!value.equals("0") && !value.equals("")){
 			return String.valueOf(Integer.valueOf(value) - 1);			
 		}
@@ -264,14 +267,11 @@ public class Controller {
 		} else {
 			searchCards();
 		}
-		SingleSelectionModel<Tab> selectionModel = tabs.getSelectionModel();
 		selectionModel.select(0);
 		displayQuery(getFrom(searchBar));
 	}
 	
 	public void searchSets(){
-		searchCardTableView.setVisible(false);
-		searchSetTableView.setVisible(true);
 		try {
 			searchSetTable.displayResultsFor(getFrom(searchBar), database);
 		} catch (ClassNotFoundException e) {
@@ -280,13 +280,23 @@ public class Controller {
 	}
 	
 	public void searchCards(){
-		searchSetTableView.setVisible(false);
-		searchCardTableView.setVisible(true);
 		try{
 			searchCardTable.displayResultsFor(getFrom(searchBar), database);
 		} catch (ClassNotFoundException e){
 			e.printStackTrace();
 		}		
+	}
+	
+	public void viewSetSearch(){
+		searchCardTableView.setVisible(false);
+		searchSetTableView.setVisible(true);
+		
+	}
+	
+	public void viewCardSearch(){
+		searchSetTableView.setVisible(false);
+		searchCardTableView.setVisible(true);
+		
 	}
 	
 	public void displayQuery(String query){
@@ -297,7 +307,7 @@ public class Controller {
 		}
 	}
 	
-	private void uncheckOther(){
+	private void uncheckOtherBoxes(){
 		for (CheckBox c: boxes){
 			if (!c.getText().equals(newRarity)){
 				c.setSelected(false);
@@ -309,7 +319,6 @@ public class Controller {
 	public void swapToView(CardRow data){
 		Card card = data.getCard();
 		updateViewFields(card);
-		SingleSelectionModel<Tab> selectionModel = tabs.getSelectionModel();
 		selectionModel.select(2);
 	
 	}
@@ -342,12 +351,26 @@ public class Controller {
 	public void swapSearchPrompt(){
 		if (searchBar.getPromptText().endsWith("card")){
 			searchBar.setPromptText("Search by set");
+			viewSetSearch();
 		} else {
 			searchBar.setPromptText("Search by card");
+			viewCardSearch();
 		}
+		highlightSearchText();
 	}
 	
+	private void highlightSearchText(){
+		searchBar.requestFocus();
+		searchBar.selectAll();
+	}
+	
+	@FXML
 	public void newCard(){
+		clearEditFields();
+		uncheckEditBoxes();
+	}
+	
+	private void clearEditFields(){
 		editName.clear();
 		editSet.clear();
 		editNM.clear();
@@ -355,11 +378,16 @@ public class Controller {
 		editVG.clear();
 		editG.clear();
 		editP.clear();
+		addedCard.setVisible(false);
+	}
+	
+	private void uncheckEditBoxes(){
 		for (CheckBox c: boxes){
 			c.setSelected(false);
 		}
 		editFoil.setSelected(false);
 		addedCard.setVisible(false);
+		
 	}
 	
 	
