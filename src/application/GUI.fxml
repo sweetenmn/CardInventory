@@ -9,7 +9,7 @@
 
 <BorderPane fx:id="canvas" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Controller">
    <center>
-      <TabPane prefHeight="400.0" prefWidth="450.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+      <TabPane fx:id="tabs" prefHeight="400.0" prefWidth="450.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
         <tabs>
           <Tab fx:id="searchTab" text="Search">
             <content>
@@ -19,8 +19,8 @@
                           <columns>
                             <TableColumn fx:id="searchCardName" prefWidth="156.0" text="Card Name" />
                               <TableColumn fx:id="searchCardSet" prefWidth="129.0" text="Set" />
-                              <TableColumn fx:id="searchCardRarity" prefWidth="107.0" text="Rarity" />
-                              <TableColumn fx:id="searchCardTotal" minWidth="1.0" prefWidth="36.0" text="Total" />
+                              <TableColumn fx:id="searchCardRarity" prefWidth="102.0" text="Rarity" />
+                              <TableColumn fx:id="searchCardTotal" minWidth="1.0" prefWidth="41.0" text="Total" />
                           </columns>
                         </TableView>
                         <Label fx:id="searchTerm" layoutX="14.0" layoutY="14.0" prefHeight="20.0" prefWidth="402.0">
@@ -40,7 +40,7 @@
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <Label fx:id="setTitle" layoutX="14.0" layoutY="10.0" prefHeight="27.0" prefWidth="184.0" text="Battle for Zendikar">
+                        <Label fx:id="setTitle" layoutX="14.0" layoutY="10.0" prefHeight="27.0" prefWidth="331.0" text="Set Name">
                            <font>
                               <Font name="System Bold" size="18.0" />
                            </font>
@@ -71,58 +71,48 @@
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <Pane layoutX="227.0" layoutY="116.0" prefHeight="200.0" prefWidth="143.0">
+                        <Pane layoutX="154.0" layoutY="93.0" prefHeight="200.0" prefWidth="143.0">
                            <children>
-                              <ImageView fitHeight="200.0" fitWidth="140.0" layoutX="2.0">
+                              <ImageView fitHeight="200.0" fitWidth="143.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@../3118.jpg" />
+                                    <Image url="@../../Magic_card_back.jpg" />
                                  </image>
                               </ImageView>
                            </children>
                         </Pane>
-                        <Button layoutX="256.0" layoutY="326.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="86.0" text="Edit Card" />
-                        <TextField fx:id="viewSet" layoutX="193.0" layoutY="80.0" prefHeight="28.0" prefWidth="243.0" text="7th Edition" />
-                        <Text layoutX="193.0" layoutY="76.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Set Name">
+                        <Button layoutX="182.0" layoutY="315.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="86.0" text="Edit Card" />
+                        <Text fx:id="viewSet" layoutY="79.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Set Name" textAlignment="CENTER" wrappingWidth="450.0">
+                           <font>
+                              <Font size="21.0" />
+                           </font>
+                        </Text>
+                        <Text fx:id="viewName" layoutX="1.0" layoutY="50.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Card Name" textAlignment="CENTER" wrappingWidth="450.0">
+                           <font>
+                              <Font size="25.0" />
+                           </font>
+                        </Text>
+                        <Text fx:id="viewRarity" layoutX="297.0" layoutY="191.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Card Rarity" textAlignment="CENTER" wrappingWidth="152.86865234375">
                            <font>
                               <Font size="15.0" />
                            </font>
                         </Text>
-                        <TextField fx:id="viewName" layoutX="193.0" layoutY="33.0" prefHeight="28.0" prefWidth="243.0" text="Thorn Elemental" />
-                        <Text layoutX="193.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Card Name">
+                        <Text layoutX="14.0" layoutY="132.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Condition">
                            <font>
                               <Font size="15.0" />
                            </font>
                         </Text>
-                        <VBox layoutX="14.0" layoutY="41.0" prefHeight="73.0" prefWidth="107.0">
-                           <children>
-                              <CheckBox mnemonicParsing="false" text="Mythic Rare" />
-                              <CheckBox mnemonicParsing="false" selected="true" text="Rare" />
-                              <CheckBox mnemonicParsing="false" text="Uncommon" />
-                              <CheckBox mnemonicParsing="false" text="Common" />
-                           </children>
-                        </VBox>
-                        <Text layoutX="14.0" layoutY="37.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Card Rarity">
-                           <font>
-                              <Font size="15.0" />
-                           </font>
-                        </Text>
-                        <Text layoutX="14.0" layoutY="138.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Condition">
-                           <font>
-                              <Font size="15.0" />
-                           </font>
-                        </Text>
-                        <VBox layoutX="14.0" layoutY="142.0" prefHeight="115.0" prefWidth="129.0">
+                        <VBox layoutX="14.0" layoutY="136.0" prefHeight="115.0" prefWidth="129.0">
                            <children>
                               <HBox prefHeight="17.0" prefWidth="87.0">
                                  <children>
-                                    <TextField fx:id="viewNM" prefHeight="25.0" prefWidth="156.0" text="1">
+                                    <TextField fx:id="viewNM" editable="false" prefHeight="25.0" prefWidth="36.0">
                                        <font>
                                           <Font size="12.0" />
                                        </font>
                                     </TextField>
                                     <AnchorPane prefHeight="24.0" prefWidth="63.0">
                                        <children>
-                                          <Text layoutX="5.0" layoutY="15.0" strokeType="OUTSIDE" strokeWidth="0.0" text="New Mint/ Mint" wrappingWidth="85.345703125">
+                                          <Text layoutX="3.0" layoutY="15.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Near Mint/Mint" wrappingWidth="85.345703125">
                                              <font>
                                                 <Font size="11.0" />
                                              </font>
@@ -133,67 +123,62 @@
                               </HBox>
                               <HBox layoutX="10.0" layoutY="10.0" prefHeight="17.0" prefWidth="87.0">
                                  <children>
-                                    <TextField fx:id="viewE" prefHeight="25.0" prefWidth="156.0">
+                                    <TextField fx:id="viewE" editable="false" prefHeight="25.0" prefWidth="36.0">
                                        <font>
                                           <Font size="12.0" />
                                        </font>
                                     </TextField>
                                     <AnchorPane prefHeight="24.0" prefWidth="63.0">
                                        <children>
-                                          <Text layoutX="5.0" layoutY="15.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Excellent" wrappingWidth="85.345703125" />
+                                          <Text layoutX="3.0" layoutY="15.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Excellent" wrappingWidth="85.345703125" />
                                        </children>
                                     </AnchorPane>
                                  </children>
                               </HBox>
                               <HBox layoutX="10.0" layoutY="33.0" prefHeight="17.0" prefWidth="87.0">
                                  <children>
-                                    <TextField fx:id="viewVG" prefHeight="25.0" prefWidth="156.0" text="2">
+                                    <TextField fx:id="viewVG" editable="false" prefHeight="25.0" prefWidth="36.0">
                                        <font>
                                           <Font size="12.0" />
                                        </font>
                                     </TextField>
                                     <AnchorPane prefHeight="24.0" prefWidth="63.0">
                                        <children>
-                                          <Text layoutX="5.0" layoutY="15.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Very Good" wrappingWidth="85.345703125" />
+                                          <Text layoutX="3.0" layoutY="15.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Very Good" wrappingWidth="85.345703125" />
                                        </children>
                                     </AnchorPane>
                                  </children>
                               </HBox>
                               <HBox layoutX="10.0" layoutY="56.0" prefHeight="17.0" prefWidth="87.0">
                                  <children>
-                                    <TextField fx:id="viewGood" prefHeight="25.0" prefWidth="156.0">
+                                    <TextField fx:id="viewGood" editable="false" prefHeight="25.0" prefWidth="36.0">
                                        <font>
                                           <Font size="12.0" />
                                        </font>
                                     </TextField>
                                     <AnchorPane prefHeight="24.0" prefWidth="63.0">
                                        <children>
-                                          <Text layoutX="5.0" layoutY="15.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Good" wrappingWidth="85.345703125" />
+                                          <Text layoutX="3.0" layoutY="15.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Good" wrappingWidth="85.345703125" />
                                        </children>
                                     </AnchorPane>
                                  </children>
                               </HBox>
                               <HBox layoutX="10.0" layoutY="79.0" prefHeight="17.0" prefWidth="87.0">
                                  <children>
-                                    <TextField fx:id="viewPoor" prefHeight="25.0" prefWidth="156.0" text="1">
+                                    <TextField fx:id="viewPoor" editable="false" prefHeight="25.0" prefWidth="36.0">
                                        <font>
                                           <Font size="12.0" />
                                        </font>
                                     </TextField>
                                     <AnchorPane prefHeight="24.0" prefWidth="63.0">
                                        <children>
-                                          <Text layoutX="5.0" layoutY="15.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Poor" wrappingWidth="85.345703125" />
+                                          <Text layoutX="2.0" layoutY="15.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Poor" wrappingWidth="85.345703125" />
                                        </children>
                                     </AnchorPane>
                                  </children>
                               </HBox>
                            </children>
                         </VBox>
-                        <CheckBox layoutX="14.0" layoutY="295.0" mnemonicParsing="false" text="Foil">
-                           <font>
-                              <Font size="15.0" />
-                           </font>
-                        </CheckBox>
                      </children></AnchorPane>
               </content>
             </Tab>
@@ -361,13 +346,17 @@
                         <TextField fx:id="editSet" layoutX="184.0" layoutY="84.0" prefHeight="28.0" prefWidth="243.0" />
                         <Button fx:id="addImage" layoutX="187.0" layoutY="146.0" mnemonicParsing="false" text="Add Image" />
                         <Button layoutX="375.0" layoutY="327.0" mnemonicParsing="false" text="New Card" />
-                        <Button layoutX="187.0" layoutY="327.0" mnemonicParsing="false" onAction="#saveCard" prefWidth="86.0" text="Save Card" />
-                        <CheckBox fx:id="foilBox" layoutX="19.0" layoutY="331.0" mnemonicParsing="false" text="Foil">
+                        <Button layoutX="182.0" layoutY="327.0" mnemonicParsing="false" onAction="#saveCard" prefWidth="86.0" text="Save Card" />
+                        <CheckBox fx:id="editFoil" layoutX="19.0" layoutY="331.0" mnemonicParsing="false" text="Foil">
                            <font>
                               <Font size="15.0" />
                            </font>
                         </CheckBox>
-                        <Label layoutX="157.0" layoutY="304.0" prefHeight="17.0" prefWidth="146.0" text="Card added successfully" visible="false" />
+                        <Text fx:id="addedCard" layoutY="316.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Added card" textAlignment="CENTER" visible="false" wrappingWidth="450.0">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                        </Text>
                      </children></AnchorPane>
             </content>
           </Tab>
@@ -377,8 +366,8 @@
    <top>
       <Pane prefHeight="30.0" prefWidth="450.0" BorderPane.alignment="CENTER">
          <children>
-            <TextField fx:id="searchBar" layoutX="7.0" layoutY="4.0" prefHeight="25.0" prefWidth="214.0" promptText="Search by card" />
-            <CheckBox fx:id="searchSets" layoutX="266.0" layoutY="9.0" mnemonicParsing="false" text="Sets">
+            <TextField fx:id="searchBar" layoutX="7.0" layoutY="4.0" prefHeight="25.0" prefWidth="205.0" promptText="Search by card" />
+            <CheckBox fx:id="searchSets" layoutX="266.0" layoutY="9.0" mnemonicParsing="false" onAction="#swapSearchPrompt" text="Sets">
                <font>
                   <Font size="10.0" />
                </font>
