@@ -84,7 +84,7 @@ public class SearchResults {
 			String name = getNameFrom(results);
 			int setID = getSetIDFrom(results);
 			String set = getSetName(setID);
-			int cardID = getCardID(name, setID);
+			int cardID = getCardID(name, set);
 			String rarity = getRarity(cardID);
 			String foil = getFoil(cardID);
 			int[] conditions = getConditions(cardID);
@@ -111,10 +111,10 @@ public class SearchResults {
 		return set;
 	}
 	
-	private int getCardID(String name, int setID) 
+	private int getCardID(String name, String set) 
 			throws ClassNotFoundException, SQLException{
 		CardDB cards = new CardDB();
-		int cardID = db.getResults(cards.getCardID(name, setID)).getInt("CardID");
+		int cardID = db.getResults(cards.getCardID(name, set, db)).getInt("CardID");
 		db.closeConnection();
 		return cardID;
 	}

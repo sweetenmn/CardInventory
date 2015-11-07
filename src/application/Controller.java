@@ -221,7 +221,12 @@ public class Controller {
 		int[] conditions = new int[]{getInt(editNM), getInt(editE),
 				getInt(editVG), getInt(editG), getInt(editP)};                   
 		Card newCard = new Card(newName, newSet, newRarity, isFoil(), conditions);
-		newCard.sendToDatabase(database);
+		try {
+			newCard.sendToDatabase(database);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		addedCard.setText("Added '" + newName + "'" );
 		addedCard.setVisible(true);
 		

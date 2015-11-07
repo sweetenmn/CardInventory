@@ -27,9 +27,9 @@ public class Card {
 		setConditions();
 	}
 	
-	public void sendToDatabase(Database database){
+	public void sendToDatabase(Database database) throws ClassNotFoundException{
 		database.updateDB(setDB.addSet(set));
-		database.updateDB(cards.addCard(name, set));
+		database.updateDB(cards.addCard(name, set, database));
 		setNonEmptyRarity();
 		int cardID = getCardID(database);
 		database.updateDB(rarityDB.setRarity(cardID, rarity, foil));
@@ -49,7 +49,7 @@ public class Card {
 		ResultSet rs;
 		int setID = 0;
 		try {
-			rs = database.getResults(cards.getCardID(name, set.hashCode()));
+			rs = database.getResults(cards.getCardID(name, set, database));
 			setID = rs.getInt("CardId");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
