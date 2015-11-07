@@ -12,7 +12,6 @@ public class SetDB {
 
     public String getSetID(String setName) {
         return ("SELECT SetId FROM SetTable WHERE SetName = '"+ setName + "'");
-        
     }
 
     public String getSetName(int setID) {

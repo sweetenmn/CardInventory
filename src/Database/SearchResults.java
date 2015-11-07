@@ -61,7 +61,17 @@ public class SearchResults {
 		
 	}
 	
-	private void setListResults(){
+	private void setListResults() throws ClassNotFoundException{
+		SetDB sets = new SetDB();
+		try {
+			ResultSet queryResults = db.getResults(sets.getSetID(query));
+			if (!queryResults.isClosed()){
+				setCardList(queryResults.getInt("SetID"));
+				db.closeConnection();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		
 	}
 	
@@ -81,17 +91,29 @@ public class SearchResults {
 	
 	private void setSingleResult(ResultSet results) throws SQLException, ClassNotFoundException{
 		if (results.getString("CardName").toLowerCase().contains(query.toLowerCase())){
-			String name = getNameFrom(results);
-			int setID = getSetIDFrom(results);
-			String set = getSetName(setID);
-			int cardID = getCardID(name, set);
-			String rarity = getRarity(cardID);
-			String foil = getFoil(cardID);
-			int[] conditions = getConditions(cardID);
-			Card newCard = new Card(name, set, rarity, foil, conditions);
-			entries.add(new CardRow(newCard));
-			
+			addWholeCard(results);	
 		}
+		
+	}
+	
+	private void setCardList(int setID) throws SQLException, ClassNotFoundException{
+		ResultSet cardList = db.getResults("SELECT * FROM CardTable WHERE SetId = " + String.valueOf(setID));
+		while (cardList.next()){
+			addWholeCard(cardList);
+		}
+		
+	}
+	
+	private void addWholeCard(ResultSet results) throws SQLException, ClassNotFoundException{
+		String name = getNameFrom(results);
+		int setID = getSetIDFrom(results);
+		String set = getSetName(setID);
+		int cardID = getCardID(name, set);
+		String rarity = getRarity(cardID);
+		String foil = getFoil(cardID);
+		int[] conditions = getConditions(cardID);
+		Card newCard = new Card(name, set, rarity, foil, conditions);
+		entries.add(new CardRow(newCard));
 		
 	}
 	

@@ -48,7 +48,7 @@ public class Table {
 	
 	private void setUpSetCardList(ArrayList<TableColumn<DataRow, String>> columns){
 		setColumn(columns.get(0), ColumnType.DISPLAY_NAME);
-		setColumn(columns.get(1), ColumnType.SET_NAME);
+		setColumn(columns.get(1), ColumnType.RARITY);
 		setColumn(columns.get(2), ColumnType.TOTAL);
 	}
 	

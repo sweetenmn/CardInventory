@@ -47,10 +47,9 @@
                         </Label>
                         <TableView fx:id="setTableView" layoutX="14.0" layoutY="41.0" prefHeight="290.0" prefWidth="420.0">
                           <columns>
-                            <TableColumn prefWidth="257.0" text="Card Name" />
-                            <TableColumn prefWidth="61.0" text="Rarity" />
-                              <TableColumn minWidth="8.0" prefWidth="55.0" text="Foil" />
-                              <TableColumn minWidth="1.0" prefWidth="46.0" text="Total" />
+                            <TableColumn fx:id="setListCard" prefWidth="257.0" text="Card Name" />
+                            <TableColumn fx:id="setListRarity" prefWidth="97.0" text="Rarity" />
+                              <TableColumn fx:id="setListTotal" minWidth="1.0" prefWidth="64.0" text="Total" />
                           </columns>
                         </TableView>
                         <Button fx:id="addToSet" layoutX="409.0" layoutY="11.0" mnemonicParsing="false" text="+">

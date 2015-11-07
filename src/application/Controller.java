@@ -88,7 +88,7 @@ public class Controller {
 	Label setTitle;
 
 	@FXML
-	TableView<CardRow> setTableView;
+	TableView<DataRow> setTableView;
 	@FXML
 	TableView<DataRow> searchCardTableView;
 	@FXML
@@ -107,6 +107,7 @@ public class Controller {
 	ConditionDB conditionsDB = new ConditionDB();
 	Table searchCardTable;
 	Table searchSetTable;
+	Table setListTable;
 	String newRarity = "";
 	
 	@FXML
@@ -119,6 +120,13 @@ public class Controller {
 	TableColumn<DataRow, String> searchCardTotal;
 	@FXML
 	TableColumn<DataRow, String> searchSet;
+	@FXML
+	TableColumn<DataRow, String> setListCard;
+	@FXML
+	TableColumn<DataRow, String> setListRarity;
+	@FXML
+	TableColumn<DataRow, String> setListTotal;
+	
 	
 	public void initialize(){
 		canvas.setOnKeyPressed(key -> handlePress(key.getCode()));
@@ -139,10 +147,13 @@ public class Controller {
 	public void createTables(){
 		ArrayList<TableColumn<DataRow, String>> searchCard = addCardSearchColumns();
 		ArrayList<TableColumn<DataRow, String>> searchSet = addSetSearchColumns();
+		ArrayList<TableColumn<DataRow, String>> setList = addSetListColumns();
 		searchCardTable = new Table(TableType.CARD_SEARCH, searchCardTableView, searchCard);
 		searchSetTable = new Table(TableType.SET_SEARCH, searchSetTableView, searchSet);
+		setListTable = new Table(TableType.SET_LIST, setTableView, setList);
 		searchCardTable.handleEvents(this);
 		searchSetTable.handleEvents(this);
+		setListTable.handleEvents(this);
 	}
 	
 	private ArrayList<TableColumn<DataRow, String>> addCardSearchColumns(){
@@ -157,6 +168,14 @@ public class Controller {
 	private ArrayList<TableColumn<DataRow, String>> addSetSearchColumns(){
 		ArrayList<TableColumn<DataRow, String>> search = new ArrayList<TableColumn<DataRow,String>>();
 		search.add(searchSet);
+		return search;
+	}
+	
+	private ArrayList<TableColumn<DataRow, String>> addSetListColumns(){
+		ArrayList<TableColumn<DataRow, String>> search = new ArrayList<TableColumn<DataRow,String>>();
+		search.add(setListCard);
+		search.add(setListRarity);
+		search.add(setListTotal);
 		return search;
 	}
 	
@@ -324,6 +343,7 @@ public class Controller {
 	public void swapToView(CardRow data){
 		Card card = data.getCard();
 		updateViewFields(card);
+		canvas.requestFocus();
 		selectionModel.select(2);
 	
 	}
@@ -346,7 +366,15 @@ public class Controller {
 	
 	
 	public void swapToList(DataRow data){
-		//view set list
+		try {
+			selectionModel.select(1);
+			canvas.requestFocus();
+			setListTable.displayResultsFor(data.getSetName(), database);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 	
 	private String toString(int num){
