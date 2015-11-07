@@ -246,6 +246,7 @@ public class Controller {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		database.closeConnection();
 		addedCard.setText("Added '" + newName + "'" );
 		addedCard.setVisible(true);
 		
@@ -393,8 +394,10 @@ public class Controller {
 	}
 	
 	private void highlightSearchText(){
-		searchBar.requestFocus();
-		searchBar.selectAll();
+		if (!searchBar.getText().isEmpty()){
+			searchBar.requestFocus();
+			searchBar.selectAll();
+		}
 	}
 	
 	@FXML

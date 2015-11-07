@@ -57,6 +57,7 @@ public class Card {
 			e.printStackTrace();
 		}
 		database.closeConnection();
+		database.closeConnection();
 		return setID;
 	}
 	
