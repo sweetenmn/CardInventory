@@ -13,6 +13,7 @@ import GUI.Table;
 import GUI.DataRow;
 import GUI.TableType;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -22,6 +23,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
@@ -140,7 +142,7 @@ public class Controller {
 		try{
 			database = new Database("CardInventory");
 		} catch(Exception e){
-			System.out.println("Database not found.");
+			badNews("Unable to create or connect to database.");
 		}
 	}
 	
@@ -235,21 +237,45 @@ public class Controller {
 	}
 	@FXML
 	void saveCard(){
-		String newName = getFrom(editName);
-		String newSet = getFrom(editSet);
-		int[] conditions = new int[]{getInt(editNM), getInt(editE),
-				getInt(editVG), getInt(editG), getInt(editP)};                   
-		Card newCard = new Card(newName, newSet, newRarity, isFoil(), conditions);
-		try {
-			newCard.sendToDatabase(database);
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		Card newCard;
+		try{
+			String newName = getFrom(editName);
+			String newSet = getFrom(editSet);
+			int[] conditions = new int[]{getInt(editNM), getInt(editE),
+					getInt(editVG), getInt(editG), getInt(editP)};         
+			checkFields();
+			newCard = new Card(newName, newSet, newRarity, isFoil(), conditions);
+			try {
+				newCard.sendToDatabase(database);
+			} catch (ClassNotFoundException e) {
+				badNews("Failed to add card to database.");
+			}
+			database.closeConnection();
+			addedCard.setText("Added '" + newName + "'" );
+			addedCard.setVisible(true);
+		} catch (IllegalArgumentException c){
+			badNews("Please the name and set of your card.");
+		} catch (NullPointerException e){
+			badNews("Please select a card rarity.");
 		}
-		database.closeConnection();
-		addedCard.setText("Added '" + newName + "'" );
-		addedCard.setVisible(true);
-		
+	}
+	
+	void badNews(String message) {
+		Alert badNum = new Alert(AlertType.ERROR);
+		badNum.setContentText(message);
+		badNum.show();
+	}
+	
+	private void checkFields(){
+		boolean rarityChecked = false;
+		for (CheckBox c: boxes){
+			if (c.isSelected()){
+				rarityChecked = true;
+			}
+		}
+		if (rarityChecked == false){
+			throw (new NullPointerException());
+		}
 	}
 	
 	private String isFoil(){
@@ -261,19 +287,15 @@ public class Controller {
 	}
 	
 	private String getFrom(TextField field){
-		if (field.getText().equals(null)){
-			field.setText("");
-		}
 		if (field.getText().equals("")){
-			//remove final &&
-			if (field != editName && field != editSet && field != searchBar){
+			if (field == editName || field == editSet){
+				throw (new IllegalArgumentException());
+			} else if (field != searchBar){
 				return "0";
 			} else {
-				//generate exception
 				return field.getText();
 			}
 		} else {
-			
 			return field.getText();
 		}
 	}
@@ -300,7 +322,7 @@ public class Controller {
 		try {
 			searchSetTable.displayResultsFor(getFrom(searchBar), database);
 		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+			badNews("Unable to display results for " + getFrom(searchBar) + ".");
 		}
 	}
 	
@@ -372,8 +394,7 @@ public class Controller {
 			canvas.requestFocus();
 			setListTable.displayResultsFor(data.getSetName(), database);
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			badNews("Unable to show list for set " + data.getSetName() + ".");
 		}
 		
 	}
@@ -407,13 +428,9 @@ public class Controller {
 	}
 	
 	private void clearEditFields(){
-		editName.clear();
-		editSet.clear();
-		editNM.clear();
-		editE.clear();
-		editVG.clear();
-		editG.clear();
-		editP.clear();
+		for (TextField field: editFieldList()){
+			field.clear();
+		}
 		addedCard.setVisible(false);
 	}
 	
@@ -423,7 +440,18 @@ public class Controller {
 		}
 		editFoil.setSelected(false);
 		addedCard.setVisible(false);
-		
+	}
+	
+	private ArrayList<TextField> editFieldList(){
+		ArrayList<TextField> fields = new ArrayList<TextField>();
+		fields.add(editName);
+		fields.add(editSet);
+		fields.add(editNM);
+		fields.add(editE);
+		fields.add(editVG);
+		fields.add(editG);
+		fields.add(editP);
+		return fields;
 	}
 	
 	

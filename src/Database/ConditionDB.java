@@ -1,5 +1,8 @@
 package Database;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class ConditionDB {
 
     public String setConditions(int cardID, int[] conditions) {
@@ -13,7 +16,16 @@ public class ConditionDB {
         		veryGood + ", " + good + ", " + poor + ")");
     }
 
-    public String getConditions(int cardID) {
+    public String getConditionsQuery(int cardID) {
         return("SELECT * FROM Condition WHERE CardId = " + cardID);
     }
+    
+	public int[] getConditions(int cardID, Database db) throws ClassNotFoundException, SQLException{
+		ResultSet condInfo = db.getResults(getConditionsQuery(cardID));
+		int[] conditionList = new int[]{condInfo.getInt("NewMint"),
+				condInfo.getInt("Excellent"), condInfo.getInt("VeryGood"),
+				condInfo.getInt("Good"), condInfo.getInt("Poor")};
+		db.closeConnection();
+		return conditionList;
+	}
 }
