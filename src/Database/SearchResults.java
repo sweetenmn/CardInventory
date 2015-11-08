@@ -53,15 +53,30 @@ public class SearchResults {
 					entries.add(new DataRow(queryResults.getString("SetName")));
 					}
 				}
-				db.closeConnection();
 			}
+			db.closeConnection();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		
 	}
 	
-	private void setListResults(){
+	private void setListResults() throws ClassNotFoundException{
+		try {
+			ResultSet queryResults = db.getResults(
+					"SELECT * FROM SetTable WHERE SetName = '" + query + "'");
+			if (!queryResults.isClosed()){
+				if (queryResults.next()){
+					
+					int setID = queryResults.getInt("SetId");
+					String setName = queryResults.getString("SetName");
+					db.closeConnection();
+					setCardList(setID, setName);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		
 	}
 	
@@ -72,27 +87,48 @@ public class SearchResults {
 				while (queryResults.next()){
 					setSingleResult(queryResults);
 				}
-				db.closeConnection();
 			}
+			db.closeConnection();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 	
 	private void setSingleResult(ResultSet results) throws SQLException, ClassNotFoundException{
+		RarityDB rarities = new RarityDB();
+		SetDB sets = new SetDB();
+		ConditionDB conditionDB = new ConditionDB();
 		if (results.getString("CardName").toLowerCase().contains(query.toLowerCase())){
 			String name = getNameFrom(results);
 			int setID = getSetIDFrom(results);
-			String set = getSetName(setID);
-			int cardID = getCardID(name, setID);
-			String rarity = getRarity(cardID);
-			String foil = getFoil(cardID);
-			int[] conditions = getConditions(cardID);
+			String set = sets.getSetName(setID, db);
+			int cardID = getCardID(name, set);
+			String rarity = rarities.getRarity(cardID, db);
+			String foil = rarities.getFoil(cardID, db);
+			int[] conditions = conditionDB.getConditions(cardID, db);
 			Card newCard = new Card(name, set, rarity, foil, conditions);
 			entries.add(new CardRow(newCard));
-			
 		}
 		
+	}
+	
+	private void setCardList(int setID, String setName) throws SQLException, ClassNotFoundException{
+		RarityDB rarities = new RarityDB();
+		ConditionDB conditionDB = new ConditionDB();
+		ResultSet cardList = db.getResults("SELECT * FROM CardTable WHERE SetId = " + String.valueOf(setID));
+		if(!cardList.isClosed()){
+			while (cardList.next()){
+				String name = getNameFrom(cardList);
+				int cardID = cardList.getInt("CardId");
+				String rarity = rarities.getRarity(cardID, db);
+				String foil = rarities.getFoil(cardID, db);
+				int[] conditions = conditionDB.getConditions(cardID, db);
+				Card newCard = new Card(name, setName, rarity, foil, conditions);
+				entries.add(new CardRow(newCard));
+			}
+			
+		}
+		db.closeConnection();
 	}
 	
 	//Put these in respective rarities, cards, sets etc. classes!s - M
@@ -104,45 +140,16 @@ public class SearchResults {
 		return results.getInt("SetId");
 	}
 	
-	private String getSetName(int setID) throws ClassNotFoundException, SQLException{
-		SetDB sets = new SetDB();
-		String set = db.getResults(sets.getSetName(setID)).getString("SetName");
-		db.closeConnection();
-		return set;
-	}
 	
-	private int getCardID(String name, int setID) 
+	private int getCardID(String name, String set) 
 			throws ClassNotFoundException, SQLException{
 		CardDB cards = new CardDB();
-		int cardID = db.getResults(cards.getCardID(name, setID)).getInt("CardID");
+		int cardID = db.getResults(cards.getCardID(name, set, db)).getInt("CardID");
 		db.closeConnection();
 		return cardID;
 	}
 	
-	private String getRarity(int cardID) throws ClassNotFoundException, SQLException{
-		RarityDB rarities = new RarityDB();
-		ResultSet rarityInfo = db.getResults(rarities.getRarity(cardID));
-		String rarity = rarityInfo.getString("Rarity");
-		db.closeConnection();
-		return rarity;	
-	}
+
 	
-	private String getFoil(int cardID) throws ClassNotFoundException, SQLException{
-		RarityDB rarities = new RarityDB();
-		ResultSet rarityInfo = db.getResults(rarities.getRarity(cardID));
-		String foil = rarityInfo.getString("Foil");
-		db.closeConnection();
-		return foil;
-	}
-	
-	private int[] getConditions(int cardID) throws ClassNotFoundException, SQLException{
-		ConditionDB conditions = new ConditionDB();
-		ResultSet condInfo = db.getResults(conditions.getConditions(cardID));
-		int[] conditionList = new int[]{condInfo.getInt("NewMint"),
-				condInfo.getInt("Excellent"), condInfo.getInt("VeryGood"),
-				condInfo.getInt("Good"), condInfo.getInt("Poor")};
-		db.closeConnection();
-		return conditionList;
-	}
 
 }

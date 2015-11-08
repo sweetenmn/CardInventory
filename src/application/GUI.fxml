@@ -47,10 +47,9 @@
                         </Label>
                         <TableView fx:id="setTableView" layoutX="14.0" layoutY="41.0" prefHeight="290.0" prefWidth="420.0">
                           <columns>
-                            <TableColumn prefWidth="257.0" text="Card Name" />
-                            <TableColumn prefWidth="61.0" text="Rarity" />
-                              <TableColumn minWidth="8.0" prefWidth="55.0" text="Foil" />
-                              <TableColumn minWidth="1.0" prefWidth="46.0" text="Total" />
+                            <TableColumn fx:id="setListCard" prefWidth="257.0" text="Card Name" />
+                            <TableColumn fx:id="setListRarity" prefWidth="97.0" text="Rarity" />
+                              <TableColumn fx:id="setListTotal" minWidth="1.0" prefWidth="64.0" text="Total" />
                           </columns>
                         </TableView>
                         <Button fx:id="addToSet" layoutX="409.0" layoutY="11.0" mnemonicParsing="false" text="+">
@@ -67,7 +66,7 @@
                      </children></AnchorPane>
               </content>
             </Tab>
-            <Tab fx:id="viewTab" text="View">
+            <Tab fx:id="viewTab" text="View Card">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
@@ -182,7 +181,7 @@
                      </children></AnchorPane>
               </content>
             </Tab>
-          <Tab fx:id="editTab" text="Edit">
+          <Tab fx:id="editTab" text="Add/Edit">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
@@ -345,7 +344,7 @@
                         </Text>
                         <TextField fx:id="editSet" layoutX="184.0" layoutY="84.0" prefHeight="28.0" prefWidth="243.0" />
                         <Button fx:id="addImage" layoutX="187.0" layoutY="146.0" mnemonicParsing="false" text="Add Image" />
-                        <Button layoutX="375.0" layoutY="327.0" mnemonicParsing="false" text="New Card" />
+                        <Button layoutX="375.0" layoutY="327.0" mnemonicParsing="false" onAction="#newCard" text="New Card" />
                         <Button layoutX="182.0" layoutY="327.0" mnemonicParsing="false" onAction="#saveCard" prefWidth="86.0" text="Save Card" />
                         <CheckBox fx:id="editFoil" layoutX="19.0" layoutY="331.0" mnemonicParsing="false" text="Foil">
                            <font>

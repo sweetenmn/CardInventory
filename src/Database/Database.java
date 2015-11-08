@@ -28,7 +28,7 @@ public class Database {
 
 			if (rsCount != 4) {
 				statement.executeUpdate("CREATE TABLE CardTable (CardId INTEGER PRIMARY KEY, CardName TEXT, SetId INTEGER)");
-				statement.executeUpdate("CREATE TABLE SetTable (SetId INTEGER, SetName TEXT)");
+				statement.executeUpdate("CREATE TABLE SetTable (SetId INTEGER PRIMARY KEY, SetName TEXT, UNIQUE(SetName))");
 				statement.executeUpdate("CREATE TABLE Rarity (CardId INTEGER, Rarity TEXT, Foil TEXT)");
 				statement.executeUpdate("CREATE TABLE Condition (CardId TEXT, NewMint INTEGER, Excellent INTEGER, " +
 						"VeryGood INTEGER, Good INTEGER, Poor INTEGER)");
