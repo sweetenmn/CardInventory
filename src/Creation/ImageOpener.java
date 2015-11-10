@@ -1,13 +1,10 @@
 package Creation;
 
-import application.Card;
 import javafx.scene.image.Image;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundPosition;
-import javafx.scene.layout.BackgroundRepeat;
-import javafx.scene.layout.BackgroundSize;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 
 /**
@@ -17,18 +14,23 @@ import java.net.URL;
 
 public class ImageOpener {
 
-    public BackgroundImage CardImage;
+    public Image CardImage;
 
-    int backgroundWidth = 149;
-    int backgroundHeight = 207;
+    public Image Open(String name) throws IOException {
+        String strippedname = name.replace(' ', '+');
+        URL imgURL = new URL("http://gatherer.wizards.com/Handlers/Image.ashx?type=card&name=" + strippedname);
 
-    private BackgroundSize BackSize = new BackgroundSize(backgroundWidth, backgroundHeight, false, false, true, false);
+        InputStream inStream = imgURL.openStream();
+        FileOutputStream outStream = new FileOutputStream("CardImage.jpg");
 
-    public BackgroundImage Open(String input) throws IOException {
-        URL imgURL = new URL("http://gatherer.wizards.com/Handlers/Image.ashx?type=card&name=" + input);
-        Image background = new Image(imgURL.toString());
-        CardImage = new BackgroundImage(background, BackgroundRepeat.NO_REPEAT,
-                BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackSize);
+        byte[] b = new byte[2048];
+        int len;
+
+        while((len = inStream.read(b)) != -1) {outStream.write(b, 0, len);}
+        if (inStream != null) {inStream.close();}
+        if (outStream != null) {outStream.close();}
+
+        CardImage = new Image("file:CardImage.jpg");
 
         return CardImage;
     }

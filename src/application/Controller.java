@@ -1,8 +1,10 @@
 package application;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import Creation.Card;
+import Creation.ImageOpener;
 import Database.CardDB;
 import Database.ConditionDB;
 import Database.Database;
@@ -24,9 +26,12 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
+
 
 public class Controller {
 	
@@ -90,6 +95,9 @@ public class Controller {
 	Label setTitle;
 
 	@FXML
+	ImageView Iview;
+
+	@FXML
 	TableView<DataRow> setTableView;
 	@FXML
 	TableView<DataRow> searchCardTableView;
@@ -111,6 +119,8 @@ public class Controller {
 	Table searchSetTable;
 	Table setListTable;
 	String newRarity = "";
+	ImageOpener IO = new ImageOpener();
+	Image img;
 	
 	@FXML
 	TableColumn<DataRow, String> searchCardName;
@@ -371,7 +381,7 @@ public class Controller {
 	
 	}
 	
-	public void updateViewFields(Card card){
+	public void updateViewFields(Card card) {
 		if (card.isFoil()){
 			viewName.setText("Foil " + card.getName());
 		} else {
@@ -384,6 +394,13 @@ public class Controller {
 		viewGood.setText(toString(card.getGCount()));
 		viewPoor.setText(toString(card.getPCount()));
 		viewRarity.setText(card.getRarity());
+		try {
+			img = IO.Open(card.getName());
+			Iview.setImage(img);
+		} catch(IOException ex) {
+			badNews(ex.getMessage());
+		}
+
 		
 	}
 	

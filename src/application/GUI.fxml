@@ -72,7 +72,7 @@
                      <children>
                         <Pane layoutX="154.0" layoutY="93.0" prefHeight="200.0" prefWidth="143.0">
                            <children>
-                              <ImageView fitHeight="200.0" fitWidth="143.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fx:id="Iview" fitHeight="200.0" fitWidth="143.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../../Magic_card_back.jpg" />
                                  </image>
