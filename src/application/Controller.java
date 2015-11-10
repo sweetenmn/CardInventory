@@ -38,9 +38,11 @@ public class Controller {
 	@FXML
 	BorderPane canvas;
 	@FXML
-	Button addImage;
-	@FXML
 	Button editTitle;
+    @FXML
+    Button editCard;
+    @FXML
+    Button saveCard;
 	@FXML
 	Button addToSet;
 	@FXML
@@ -470,7 +472,44 @@ public class Controller {
 		fields.add(editP);
 		return fields;
 	}
-	
-	
+
+    private ArrayList<CheckBox> rarityList() {
+        ArrayList<CheckBox> checkBoxes = new ArrayList<>();
+        checkBoxes.add(mythicRare);
+        checkBoxes.add(rare);
+        checkBoxes.add(uncommon);
+        checkBoxes.add(common);
+        return checkBoxes;
+    }
+
+    @FXML
+	private void swapToEdit() {
+        clearEditFields();
+        if (viewName.getText().contains("Foil")){
+            editFoil.isSelected();
+            editName.setText(viewName.getText());
+        }
+        else {
+            editName.setText(viewName.getText());
+        }
+
+        editSet.setText(viewSet.getText());
+        editNM.setText(viewNM.getText());
+        editE.setText(viewE.getText());
+        editVG.setText(viewVG.getText());
+        editG.setText(viewGood.getText());
+        editP.setText(viewPoor.getText());
+
+        rarityList().forEach((c) -> {
+            if (c.getText() == viewRarity.getText()) {
+                c.isSelected();
+            }
+        });
+
+        selectionModel.select(3);
+
+        //TODO: need to set the save button text to edit when swapping over
+        //TODO: need to setup the edit function!!!!
+	}
 	
 }
