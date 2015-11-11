@@ -52,4 +52,23 @@ public class CardDB {
     public String NextCardID() {
         return ("SELECT MAX(CardId) AS newID FROM Card");
     }
+
+	public String updateCard(String cardName, String setName, Database db) throws ClassNotFoundException{
+		int setID = 0;
+		try {
+			ResultSet rs = db.getResults("SELECT * FROM SetTable WHERE SetName = '" + setName + "'");
+			if (!rs.isClosed()){
+
+				if (rs.next()){
+					setID = rs.getInt("SetId");
+				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		db.closeConnection();
+
+		return ("UPDATE CardTable SET CardName = '" + cardName + "', SetId = " + setID + "");
+	}
 }

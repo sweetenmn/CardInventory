@@ -8,7 +8,7 @@ import java.sql.SQLException;
 public class SetDB {
 
     public String addSet(String setName) {
-	return("INSERT OR IGNORE INTO SetTable VALUES(NULL, '" + setName + "')");
+	    return("INSERT OR IGNORE INTO SetTable VALUES(NULL, '" + setName + "')");
 
 	}
 
@@ -25,5 +25,8 @@ public class SetDB {
 		db.closeConnection();
 		return set;
 	}
-    
+
+    public String updateSet(String setName) {
+        return ("UPDATE OR IGNORE SetTable SET SetName = '" + setName);
+    }
 }

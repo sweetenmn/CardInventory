@@ -266,11 +266,15 @@ public class Controller {
 			addedCard.setText("Added '" + newName + "'" );
 			addedCard.setVisible(true);
 		} catch (IllegalArgumentException c){
-			badNews("Please the name and set of your card.");
+			badNews("Please enter the name and set of your card.");
 		} catch (NullPointerException e){
 			badNews("Please select a card rarity.");
 		}
 	}
+
+    void editCard() {
+
+    }
 	
 	void badNews(String message) {
 		Alert badNum = new Alert(AlertType.ERROR);
@@ -451,6 +455,7 @@ public class Controller {
 			field.clear();
 		}
 		addedCard.setVisible(false);
+        saveCard.setText("Save Card");
 	}
 	
 	private void uncheckEditBoxes(){
@@ -485,6 +490,7 @@ public class Controller {
     @FXML
 	private void swapToEdit() {
         clearEditFields();
+        uncheckEditBoxes();
         if (viewName.getText().contains("Foil")){
             editFoil.isSelected();
             editName.setText(viewName.getText());
@@ -502,11 +508,12 @@ public class Controller {
 
         rarityList().forEach((c) -> {
             if (c.getText() == viewRarity.getText()) {
-                c.isSelected();
+                c.setSelected(true);
             }
         });
 
         selectionModel.select(3);
+        saveCard.setText("Edit Card");
 
         //TODO: need to set the save button text to edit when swapping over
         //TODO: need to setup the edit function!!!!

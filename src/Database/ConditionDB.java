@@ -28,4 +28,15 @@ public class ConditionDB {
 		db.closeConnection();
 		return conditionList;
 	}
+
+	public String updateCondition(int cardID, int[] conditions) {
+		int nearMint = conditions[0];
+		int excellent = conditions[1];
+		int veryGood = conditions[2];
+		int good = conditions[3];
+		int poor = conditions[4];
+		return ("UPDATE Condition Set NewMint = " + nearMint + ", Excellent = " + excellent +", " +
+				"VeryGood = " + veryGood + ", Good = " + good + ", Poor = " + poor + " WHERE CardId = " + cardID);
+
+	}
 }

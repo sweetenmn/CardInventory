@@ -17,6 +17,9 @@ public class ImageOpener {
     public Image CardImage;
 
     public Image Open(String name) throws IOException {
+        if (name.contains("Foil")) {
+            name = name.substring(4, name.length() - 1);
+        }
         String strippedname = name.replace(' ', '+');
         URL imgURL = new URL("http://gatherer.wizards.com/Handlers/Image.ashx?type=card&name=" + strippedname);
 

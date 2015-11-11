@@ -33,4 +33,8 @@ public class RarityDB {
 		db.closeConnection();
 		return rarity;	
 	}
+
+	public String updateRarity(int cardID, String rarity, String foil) {
+		return ("UPDATE Rarity SET Rarity = '" + rarity + "', Foil = '" + foil + "' WHERE CardId = '" + cardID);
+	}
 }
