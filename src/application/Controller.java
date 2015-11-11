@@ -9,15 +9,19 @@ import Database.CardDB;
 import Database.ConditionDB;
 import Database.Database;
 import Database.RarityDB;
+import Database.SearchResults;
 import Database.SetDB;
 import GUI.CardRow;
 import GUI.Table;
 import GUI.DataRow;
 import GUI.TableType;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.control.Tab;
@@ -38,7 +42,7 @@ public class Controller {
 	@FXML
 	BorderPane canvas;
 	@FXML
-	Button editTitle, editCard, saveCard, addToSet, searchButton;
+	Button editTitle, editCard, saveCard, addToSet, searchButton, newSetButton;
 	@FXML
 	TextField searchBar;
 	@FXML
@@ -90,6 +94,9 @@ public class Controller {
 
 	@FXML
 	ImageView Iview;
+	@FXML
+	ChoiceBox<String> setChoice;
+	
 
 	@FXML
 	TableView<DataRow> setTableView;
@@ -114,6 +121,7 @@ public class Controller {
 	String newRarity = "";
 	ImageOpener IO = new ImageOpener();
 	Image img;
+	boolean addToExistingSet = true;
 	
 	@FXML
 	TableColumn<DataRow, String> searchCardName;
@@ -139,6 +147,7 @@ public class Controller {
 		createDatabase();
 		createTables();
 		handleCheckBoxEvents();
+		setChoice("");
 	}
 	
 	public void createDatabase(){
@@ -147,6 +156,21 @@ public class Controller {
 		} catch(Exception e){
 			badNews("Unable to create or connect to database.");
 		}
+	}
+	
+	public void setChoice(String query){
+		SearchResults results = null;
+		try {
+			results = new SearchResults(query, TableType.SET_SEARCH, database);
+		} catch (ClassNotFoundException e) {
+			badNews("Unable to find existing sets.");
+		}
+		ObservableList<DataRow> entries = results.getResults();
+		ObservableList<String> finalEntries = FXCollections.observableArrayList();
+		for (DataRow c: entries){
+			finalEntries.add(c.getSetName());
+		}
+		setChoice.setItems(finalEntries);
 	}
 	
 	public void createTables(){
@@ -246,7 +270,8 @@ public class Controller {
 		Card newCard;
 		try{
 			String newName = getFrom(editName);
-			String newSet = getFrom(editSet);
+			String newSet = getSet();
+			
 			int[] conditions = getConditions();        
 			enforceRarityChecked();
 			newCard = new Card(newName, newSet, newRarity, isFoil(), conditions);
@@ -258,6 +283,20 @@ public class Controller {
 			badNews("Please select a card rarity.");
 		}
 	}
+	
+	private String getSet(){
+		if (addToExistingSet){
+			if (setChoice.valueProperty().get() == null){
+				throw (new IllegalArgumentException());
+			} else {
+				return setChoice.valueProperty().get();
+			}
+		} else {
+			return getFrom(editSet);
+		}
+	}
+	
+
 	private void sendToDatabase(Card newCard){
 		try {
 			newCard.sendToDatabase(database);
@@ -265,6 +304,38 @@ public class Controller {
 			badNews("Failed to add card to database.");
 		}
 		database.closeConnection();
+	}
+	
+	@FXML
+	public void toggleAddNewSet(){
+		if (!addToExistingSet){
+			addingExistingSet();			
+		} else {
+			addingNewSet();			
+		}
+	}
+	
+	private void addingNewSet(){
+		editSet.setVisible(true);
+		newSetButton.setText("x");
+		setChoice.setVisible(false);
+		addToExistingSet = false;	
+	}
+	
+	private void addingExistingSet(){
+		editSet.setVisible(false);
+		newSetButton.setText("+");
+		setChoice.setVisible(true);
+		addToExistingSet = true;	
+		
+		
+	}
+	@FXML
+	public void cancelNewSet(){
+		editSet.clear();
+		editSet.setVisible(false);
+		setChoice.setVisible(true);
+		addToExistingSet = true;
 	}
 	
 	private void displaySuccessMessage(String name){
@@ -479,6 +550,7 @@ public class Controller {
 	
 	@FXML
 	public void newCard(){
+		setChoice("");
 		clearEditFields();
 		uncheckEditBoxes();
 	}
@@ -524,6 +596,7 @@ public class Controller {
     @FXML
 	public void swapToEdit() {
         clearEditFields();
+        addingNewSet();
         if (viewName.getText().contains("Foil")){
             editFoil.setSelected(true);
             editName.setText(viewName.getText().substring(5));
