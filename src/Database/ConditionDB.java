@@ -39,7 +39,7 @@ public class ConditionDB {
 				"VeryGood = " + veryGood + ", Good = " + good + ", Poor = " + poor + " WHERE CardId = " + cardID);
 
 	}
-
+//and this
 	public String deleteCondition(int cardID) {
 		return ("DELETE FROM Condition WHERE CardId = " + cardID);
 	}

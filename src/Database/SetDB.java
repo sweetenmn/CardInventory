@@ -29,7 +29,7 @@ public class SetDB {
     public String updateSet(String setName, int SetID) {
         return ("UPDATE OR IGNORE SetTable SET SetName = '" + setName + "' WHERE SetId = " + SetID);
     }
-
+//try this
     public String deleteSet(int SetID) {
         return ("DELETE FROM SetTable WHERE SetId = " + SetID);
     }

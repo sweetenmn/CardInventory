@@ -28,7 +28,7 @@ public class RarityDB {
 	public String updateRarity(int cardID, String rarity, String foil) {
 		return ("UPDATE Rarity SET Rarity = '" + rarity + "', Foil = '" + foil + "' WHERE CardId = " + cardID);
 	}
-
+	//and this
 	public String deleteRarity(int cardID) {
 		return ("DELETE FROM Rarity WHERE CardId = " + cardID);
 	}
