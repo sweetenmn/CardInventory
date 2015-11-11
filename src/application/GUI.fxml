@@ -344,7 +344,7 @@
                         </Text>
                         <TextField fx:id="editSet" layoutX="184.0" layoutY="84.0" prefHeight="28.0" prefWidth="243.0" />
                         <Button layoutX="375.0" layoutY="327.0" mnemonicParsing="false" onAction="#newCard" text="New Card" />
-                        <Button fx:id="saveCard" layoutX="182.0" layoutY="327.0" mnemonicParsing="false" onAction="#saveCard" prefWidth="86.0" text="Save Card" />
+                        <Button fx:id="saveCard" layoutX="182.0" layoutY="327.0" mnemonicParsing="false" onAction="#editORsave" prefWidth="86.0" text="Save Card" />
                         <CheckBox fx:id="editFoil" layoutX="19.0" layoutY="331.0" mnemonicParsing="false" text="Foil">
                            <font>
                               <Font size="15.0" />

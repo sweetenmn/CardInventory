@@ -26,7 +26,7 @@ public class SetDB {
 		return set;
 	}
 
-    public String updateSet(String setName) {
-        return ("UPDATE OR IGNORE SetTable SET SetName = '" + setName);
+    public String updateSet(String setName, int SetID) {
+        return ("UPDATE OR IGNORE SetTable SET SetName = '" + setName + "', WHERE SetId = " + SetID);
     }
 }

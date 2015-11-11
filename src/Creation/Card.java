@@ -35,6 +35,15 @@ public class Card {
 		database.updateDB(rarityDB.setRarity(cardID, rarity, foil));
 		database.updateDB(conditionDB.setConditions(cardID, conditions));
 	}
+
+	public void updateCardDatabase(Database database) throws ClassNotFoundException {
+		int cardID = getCardID(database);
+		database.updateDB(setDB.updateSet(set, cardID));
+		database.updateDB(cards.updateCard(name, set, cardID, database));
+		setNonEmptyRarity();
+		database.updateDB(rarityDB.updateRarity(cardID, rarity, foil));
+		database.updateDB(conditionDB.updateCondition(cardID, conditions));
+	}
 	
 	private void setConditions(){
 		nm = conditions[0];

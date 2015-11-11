@@ -247,7 +247,16 @@ public class Controller {
 		}
 		return value;
 	}
-	@FXML
+
+    @FXML
+    void editORsave() {
+        if (saveCard.getText().contains("Edit")) {
+            editCard();
+        } else {
+            saveCard();
+        }
+    }
+
 	void saveCard(){
 		Card newCard;
 		try{
@@ -272,8 +281,29 @@ public class Controller {
 		}
 	}
 
-    void editCard() {
 
+    void editCard() {
+        Card newCard;
+        try {
+            String cardName = getFrom(editName);
+            String setName = getFrom(editSet);
+            int[] conditions = new int[]{getInt(editNM), getInt(editE),
+                    getInt(editVG), getInt(editG), getInt(editP)};
+            checkFields();
+            newCard = new Card(cardName, setName, newRarity, isFoil(), conditions);
+            try {
+                newCard.updateCardDatabase(database);
+            } catch (ClassNotFoundException e) {
+                badNews("Failed to update Card");
+            }
+            database.closeConnection();
+            addedCard.setText("Updated '" + editName.getText() + "'");
+            addedCard.setVisible(true);
+        } catch (IllegalArgumentException c) {
+            badNews("Please enter the name and set of your card.");
+        } catch (NullPointerException e) {
+            badNews("Please select a card rarity.");
+        }
     }
 	
 	void badNews(String message) {
@@ -478,22 +508,25 @@ public class Controller {
 		return fields;
 	}
 
-    private ArrayList<CheckBox> rarityList() {
-        ArrayList<CheckBox> checkBoxes = new ArrayList<>();
-        checkBoxes.add(mythicRare);
-        checkBoxes.add(rare);
-        checkBoxes.add(uncommon);
-        checkBoxes.add(common);
-        return checkBoxes;
+    private void setCheckBox(String rarity) {
+        if (rarity.contains("Mythic")) {
+            mythicRare.setSelected(true);
+        } else if (rarity.contentEquals("Rare")) {
+            rare.setSelected(true);
+        } else if (rarity.contentEquals("Uncommon")) {
+            uncommon.setSelected(true);
+        } else if (rarity.contentEquals("Common")) {
+            common.setSelected(true);
+        }
     }
 
     @FXML
-	private void swapToEdit() {
+	public void swapToEdit() {
         clearEditFields();
         uncheckEditBoxes();
         if (viewName.getText().contains("Foil")){
-            editFoil.isSelected();
-            editName.setText(viewName.getText());
+            editFoil.setSelected(true);
+            editName.setText(viewName.getText().substring(5));
         }
         else {
             editName.setText(viewName.getText());
@@ -506,11 +539,9 @@ public class Controller {
         editG.setText(viewGood.getText());
         editP.setText(viewPoor.getText());
 
-        rarityList().forEach((c) -> {
-            if (c.getText() == viewRarity.getText()) {
-                c.setSelected(true);
-            }
-        });
+        setCheckBox(viewRarity.getText());
+        newRarity = viewRarity.getText();
+        System.out.println(viewRarity.getText());
 
         selectionModel.select(3);
         saveCard.setText("Edit Card");
