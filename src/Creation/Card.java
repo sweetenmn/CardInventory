@@ -47,18 +47,17 @@ public class Card {
 	
 	private int getCardID(Database database){
 		ResultSet rs;
-		int setID = 0;
+		int cardID = 0;
 		try {
 			rs = database.getResults(cards.getCardID(name, set, database));
-			setID = rs.getInt("CardId");
+			cardID = rs.getInt("CardId");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		database.closeConnection();
-		database.closeConnection();
-		return setID;
+		return cardID;
 	}
 	
 	private void setNonEmptyRarity(){

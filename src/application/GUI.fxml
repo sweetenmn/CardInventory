@@ -185,7 +185,7 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <Text layoutX="185.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Card Name">
+                        <Text layoutX="177.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Card Name">
                            <font>
                               <Font size="15.0" />
                            </font>
@@ -195,13 +195,14 @@
                               <Font size="15.0" />
                            </font>
                         </Text>
-                        <TextField fx:id="editName" layoutX="184.0" layoutY="32.0" prefHeight="28.0" prefWidth="243.0" />
-                        <Text layoutX="184.0" layoutY="81.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Set Name">
+                        <TextField fx:id="editName" layoutX="176.0" layoutY="33.0" prefHeight="28.0" prefWidth="243.0" />
+                        <ChoiceBox fx:id="setChoice" layoutX="176.0" layoutY="90.0" prefHeight="29.0" prefWidth="244.0" />
+                        <Text layoutX="176.0" layoutY="81.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Set Name">
                            <font>
                               <Font size="15.0" />
                            </font>
                         </Text>
-                        <TextField fx:id="editSet" layoutX="184.0" layoutY="84.0" prefHeight="28.0" prefWidth="243.0" />
+                        <TextField fx:id="editSet" layoutX="177.0" layoutY="90.0" prefHeight="28.0" prefWidth="243.0" visible="false" />
                         <VBox layoutX="14.0" layoutY="32.0" prefHeight="73.0" prefWidth="107.0">
                            <children>
                               <CheckBox fx:id="mythicRare" mnemonicParsing="false" text="Mythic Rare" />
@@ -355,6 +356,11 @@
                               <Font size="13.0" />
                            </font>
                         </Text>
+                        <Button fx:id="newSetButton" layoutX="422.0" layoutY="94.0" mnemonicParsing="false" onAction="#toggleAddNewSet" prefHeight="23.0" prefWidth="24.0" text="+">
+                           <font>
+                              <Font name="System Bold" size="11.0" />
+                           </font>
+                        </Button>
                      </children></AnchorPane>
             </content>
           </Tab>
