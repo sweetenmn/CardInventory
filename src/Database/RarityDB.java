@@ -16,23 +16,14 @@ public class RarityDB {
     	return ("SELECT * FROM Rarity WHERE CardID = " + cardID);
     }
     
-	public String getFoil(int cardID, Database db) throws ClassNotFoundException, SQLException{
+	public String getFromRarities(String query, int cardID, Database db) throws ClassNotFoundException, SQLException{
 		RarityDB rarities = new RarityDB();
 		ResultSet rarityInfo = db.getResults(rarities.getRarityQuery(cardID));
-		String foil = rarityInfo.getString("Foil");
+		String foil = rarityInfo.getString(query);
 		db.closeConnection();
 		return foil;
 	}
 	
-	public String getRarity(int cardID, Database db) throws ClassNotFoundException, SQLException{
-		ResultSet rarityInfo = db.getResults(getRarityQuery(cardID));
-		String rarity = "";
-		if (rarityInfo.next()){
-			rarity = rarityInfo.getString("Rarity");
-		}
-		db.closeConnection();
-		return rarity;	
-	}
 
 	public String updateRarity(int cardID, String rarity, String foil) {
 		return ("UPDATE Rarity SET Rarity = '" + rarity + "', Foil = '" + foil + "' WHERE CardId = " + cardID);

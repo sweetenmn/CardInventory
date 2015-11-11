@@ -9,8 +9,6 @@ import Database.Database;
 import Database.RarityDB;
 import Database.SetDB;
 
-import javax.xml.crypto.Data;
-
 public class Card {
 	String name, set, rarity, foil;
 	int nm, exc, vg, g, p;
@@ -60,17 +58,18 @@ public class Card {
 	
 	private int getCardID(Database database){
 		ResultSet rs;
-		int cardID = 0;
+		int setID = 0;
 		try {
 			rs = database.getResults(cards.getCardID(name, set, database));
-			cardID = rs.getInt("CardId");
+			setID = rs.getInt("CardId");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		database.closeConnection();
-		return cardID;
+		database.closeConnection();
+		return setID;
 	}
 
 	private int getSetID(Database database){
