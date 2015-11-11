@@ -22,9 +22,13 @@ public class ConditionDB {
     
 	public int[] getConditions(int cardID, Database db) throws ClassNotFoundException, SQLException{
 		ResultSet condInfo = db.getResults(getConditionsQuery(cardID));
-		int[] conditionList = new int[]{condInfo.getInt("NewMint"),
-				condInfo.getInt("Excellent"), condInfo.getInt("VeryGood"),
-				condInfo.getInt("Good"), condInfo.getInt("Poor")};
+		int[] conditionList = null;
+		if (condInfo.next()){
+			
+			conditionList = new int[]{condInfo.getInt("NewMint"),
+					condInfo.getInt("Excellent"), condInfo.getInt("VeryGood"),
+					condInfo.getInt("Good"), condInfo.getInt("Poor")};
+		}
 		db.closeConnection();
 		return conditionList;
 	}
@@ -37,6 +41,9 @@ public class ConditionDB {
 		int poor = conditions[4];
 		return ("UPDATE Condition Set NewMint = " + nearMint + ", Excellent = " + excellent +", " +
 				"VeryGood = " + veryGood + ", Good = " + good + ", Poor = " + poor + " WHERE CardId = " + cardID);
-
+	}
+	
+	public String deleteCondition(int cardID) {
+		return ("DELETE FROM Condition WHERE CardId = " + cardID);
 	}
 }

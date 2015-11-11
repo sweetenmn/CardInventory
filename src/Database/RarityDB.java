@@ -17,9 +17,12 @@ public class RarityDB {
     }
     
 	public String getFromRarities(String query, int cardID, Database db) throws ClassNotFoundException, SQLException{
-		RarityDB rarities = new RarityDB();
-		ResultSet rarityInfo = db.getResults(rarities.getRarityQuery(cardID));
-		String foil = rarityInfo.getString(query);
+		String foil = "";
+		ResultSet rarityInfo = db.getResults(getRarityQuery(cardID));
+		if (rarityInfo.next()){
+			
+			foil = rarityInfo.getString(query);
+		}
 		db.closeConnection();
 		return foil;
 	}

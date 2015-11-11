@@ -10,6 +10,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
+import javafx.scene.input.KeyCode;
 
 public class Table {
 	private TableView<DataRow> table;
@@ -76,8 +77,14 @@ public class Table {
 		        	setOnEvent(row, controller);
 		        }
 		    });
+		    row.setOnKeyPressed(key -> handleDelete(key.getCode()));
+		    
 		    return row ;
 		});
+	}
+	
+	private void handleDelete(KeyCode code){
+		if (code == KeyCode.DELETE){System.out.println("Delete");}
 	}
 	
 	private void setOnEvent(TableRow<DataRow> row, Controller controller){
