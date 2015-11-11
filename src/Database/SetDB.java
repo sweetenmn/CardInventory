@@ -30,6 +30,7 @@ public class SetDB {
         return ("UPDATE OR IGNORE SetTable SET SetName = '" + setName + "' WHERE SetId = " + SetID);
     }
 
+    //Here's the delete function
     public String deleteSet(int SetID) {
         return ("DELETE FROM SetTable WHERE SetId = " + SetID);
     }
