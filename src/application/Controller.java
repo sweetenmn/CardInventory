@@ -84,49 +84,47 @@ public class Controller {
 	TableColumn<DataRow, String> setListCard, setListRarity, setListTotal;
 	
 	public void initialize(){
-		canvas.setOnKeyPressed(key -> handleEnter(key.getCode()));
+		canvas.setOnKeyPressed(key -> handleEnterToSearch(key.getCode()));
 		selectionModel = tabs.getSelectionModel();
 		createDatabase();
 		createTables();
-		handleCheckBoxEvents();
-		setChoice();
+		setUpEditTab();
 	}
 	
-	public void createDatabase(){
+	private void handleEnterToSearch(KeyCode code){
+		if (code == KeyCode.ENTER){search();}
+	}
+	
+	private void createDatabase(){
 		try{
 			database = new Database("CardInventory");
 		} catch(Exception e){
 			badNews("Unable to create or connect to database.");
 		}
 	}
-	
-	private void setChoice(){
-		ObservableList<String> finalEntries = FXCollections.observableArrayList();
-		getSetData().forEach(c -> {finalEntries.add(c.getSetName());});
-		setChoice.setItems(finalEntries);
-	}
-	
-	private ObservableList<DataRow> getSetData(){
-		SearchResults results = null;
-		try {
-			results = new SearchResults("", TableType.SET_SEARCH, database);
-		} catch (ClassNotFoundException e) {
-			badNews("Unable to find existing sets.");
-		}
-		ObservableList<DataRow> entries = results.getResults();
-		return entries;
-	}
-	
+
 	private void createTables(){
+		setUpCardSearchTable();
+		setUpSetSearchTable();
+		setUpSetListTable();
+	}
+	
+	private void setUpCardSearchTable(){
 		ArrayList<TableColumn<DataRow, String>> searchCard = addCardSearchColumns();
-		ArrayList<TableColumn<DataRow, String>> searchSet = addSetSearchColumns();
-		ArrayList<TableColumn<DataRow, String>> setList = addSetListColumns();
 		searchCardTable = new Table(TableType.CARD_SEARCH, searchCardTableView, searchCard);
-		searchSetTable = new Table(TableType.SET_SEARCH, searchSetTableView, searchSet);
-		setListTable = new Table(TableType.SET_LIST, setTableView, setList);
 		searchCardTable.handleEvents(this);
-		searchSetTable.handleEvents(this);
-		setListTable.handleEvents(this);
+	}
+	
+	private void setUpSetSearchTable(){
+		ArrayList<TableColumn<DataRow, String>> searchSet = addSetSearchColumns();
+		searchSetTable = new Table(TableType.SET_SEARCH, searchSetTableView, searchSet);
+		searchSetTable.handleEvents(this);		
+	}
+	
+	private void setUpSetListTable(){
+		ArrayList<TableColumn<DataRow, String>> setList = addSetListColumns();
+		setListTable = new Table(TableType.SET_LIST, setTableView, setList);
+		setListTable.handleEvents(this);		
 	}
 	
 	private ArrayList<TableColumn<DataRow, String>> addCardSearchColumns(){
@@ -152,7 +150,29 @@ public class Controller {
 		return search;
 	}
 	
-	private void handleCheckBoxEvents(){
+	private void setUpEditTab(){
+		setChoice();
+		enforceOneRarityChecked();
+	}
+	
+	private void setChoice(){
+		ObservableList<String> finalEntries = FXCollections.observableArrayList();
+		getSetData().forEach(c -> {finalEntries.add(c.getSetName());});
+		setChoice.setItems(finalEntries);
+	}
+	
+	private ObservableList<DataRow> getSetData(){
+		SearchResults results = null;
+		try {
+			results = new SearchResults("", TableType.SET_SEARCH, database);
+		} catch (ClassNotFoundException e) {
+			badNews("Unable to find existing sets.");
+		}
+		ObservableList<DataRow> entries = results.getResults();
+		return entries;
+	}
+
+	private void enforceOneRarityChecked(){
 		rarityList().forEach((c) -> {
             c.setOnAction(k -> {
 				newRarity = c.getText();
@@ -160,69 +180,39 @@ public class Controller {
             });
 		});
 	}
-	
-	void handleEnter(KeyCode code){
-		if (code == KeyCode.ENTER){ search(); }
-	}
-	
-	@FXML
-	void incExcellent(){editE.setText(inc(editE));}
-	@FXML
-	void incNearMint(){editNM.setText(inc(editNM));}	
-	@FXML
-	void incVeryGood(){editVG.setText(inc(editVG));}
-	@FXML
-	void incGood(){editG.setText(inc(editG));}
-	@FXML
-	void incPoor(){editP.setText(inc(editP));}
-	@FXML
-	void decExcellent(){editE.setText(dec(editE));}
-	@FXML
-	void decNearMint(){editNM.setText(dec(editNM));}
-	@FXML
-	void decVeryGood(){editVG.setText(dec(editVG));}
-	@FXML
-	void decGood(){editG.setText(dec(editG));}
-	@FXML
-	void decPoor(){editP.setText(dec(editP));}
-	
-	private String inc(TextField numberField){
-		String value = numberField.getText();
-		if (value.equals("")){
-			value = "0";
-		}
-		return String.valueOf(Integer.valueOf(value) + 1);
-	}
-	private String dec(TextField numberField){
-		String value = numberField.getText();
-		if (!value.equals("0") && !value.equals("")){
-			return String.valueOf(Integer.valueOf(value) - 1);			
-		}
-		return value;
-	}
 
     @FXML
     void editORsave() {
-        if (saveCard.getText().contains("Update")) {
-            editCard();
-        } else {
-            saveCard();
+    	try {
+    		Card newCard = createCardFromGUI();
+	        if (saveCard.getText().contains("Update")) {
+	            editCard(newCard);
+	        } else {
+	            saveCard(newCard);
+	        }
+	        setChoice();
+    	} catch (IllegalArgumentException c) {
+            badNews("Please enter the name and set of your card.");
+        } catch (NullPointerException e) {
+            badNews("Please select a card rarity.");
         }
-        setChoice();
+        
     }
+    
+    private void editCard(Card card) throws IllegalArgumentException, NullPointerException {
+        updateDatabase(card);
+        displaySuccessMessage("Updated");
+    }    
 
-	void saveCard(){
-		Card newCard;
-		try{
-			newCard = createCardFromGUI();
-			sendToDatabase(newCard);
-			displayAddedMessage();
-		} catch (IllegalArgumentException c){
-			badNews("Please enter the name and set of your card.");
-		} catch (NullPointerException e){
-			badNews("Please select a card rarity.");
-		}
+	private void saveCard(Card card) throws IllegalArgumentException, NullPointerException{
+		sendToDatabase(card);
+		displaySuccessMessage("Added");
 	}
+	
+    private void displaySuccessMessage(String lead){
+    	addedCard.setText(lead + " '" + editName.getText() + "'");
+        addedCard.setVisible(true);
+    }
 	
 	private String getSet(){
 		if (addToExistingSet){
@@ -236,7 +226,6 @@ public class Controller {
 		}
 	}
 	
-
 	private void sendToDatabase(Card newCard){
 		try {
 			newCard.sendToDatabase(database);
@@ -245,6 +234,7 @@ public class Controller {
 		}
 		database.closeConnection();
 	}
+	
 	
 	@FXML
 	public void toggleAddNewSet(){
@@ -270,28 +260,10 @@ public class Controller {
 		addToExistingSet = true;			
 	}
 	
-	private void displayAddedMessage(){
-		addedCard.setText("Added '" + editName.getText() + "'" );
-		addedCard.setVisible(true);
-	}
-	
 	private int[] getConditions(){
 		return new int[]{getInt(editNM), getInt(editE),
 				getInt(editVG), getInt(editG), getInt(editP)};        
 	}
-
-    void editCard() {
-    	Card newCard;
-        try {
-            newCard = createCardFromGUI();
-            updateDatabase(newCard);
-            displayUpdateMessage();
-        } catch (IllegalArgumentException c) {
-            badNews("Please enter the name and set of your card.");
-        } catch (NullPointerException e) {
-            badNews("Please select a card rarity.");
-        }
-    }
     
     private Card createCardFromGUI(){
     	String newName = getFrom(editName);
@@ -312,11 +284,6 @@ public class Controller {
     	
     }
     
-    private void displayUpdateMessage(){
-    	addedCard.setText("Updated '" + editName.getText() + "'");
-        addedCard.setVisible(true);
-    	
-    }
     
 	void badNews(String message) {
 		Alert badNum = new Alert(AlertType.ERROR);
@@ -360,14 +327,6 @@ public class Controller {
 		}
 	}
 	
-	private int getInt(TextField field){
-		return Integer.valueOf(getFrom(field));
-	}
-	
-	public void updateView(Card card){
-		searchCardTable.add(new CardRow(card));		
-	}
-	
 	@FXML
 	public void search(){
 		if (searchSets.isSelected()){
@@ -395,10 +354,6 @@ public class Controller {
 		}		
 	}
 	
-	private void badSearch(){
-		badNews("Unable to display results for " + getFrom(searchBar) + ".");
-	}
-	
 	public void viewSetSearch(){
 		searchCardTableView.setVisible(false);
 		searchSetTableView.setVisible(true);
@@ -416,15 +371,6 @@ public class Controller {
 		} else {
 			searchTerm.setText("Search results for: '" + searchBar.getText() + "'");
 		}
-	}
-	
-	private void uncheckOtherBoxes(){
-		rarityList().forEach((c) -> {
-            if (!c.getText().equals(newRarity)) {
-                c.setSelected(false);
-            }
-        });
-		
 	}
 	
 	public void swapToView(CardRow data){
@@ -449,11 +395,6 @@ public class Controller {
 		setText(viewVG, toString(card.getVGCount()));
 		setText(viewGood, toString(card.getGCount()));
 		setText(viewPoor, toString(card.getPCount()));
-		
-	}
-	
-	public void setText(TextField field, String target){
-		field.setText(target);
 	}
 	
 	private void displayImageFor(Card card){
@@ -465,7 +406,6 @@ public class Controller {
 		}
 	}
 	
-	
 	public void swapToList(DataRow data){
 		try {
 			selectionModel.select(1);
@@ -474,10 +414,6 @@ public class Controller {
 		} catch (ClassNotFoundException e) {
 			badNews("Unable to show list for set " + data.getSetName() + ".");
 		}
-	}
-	
-	private String toString(int num){
-		return String.valueOf(num);
 	}
 	
 	@FXML
@@ -492,13 +428,6 @@ public class Controller {
 		highlightSearchText();
 	}
 	
-	private void highlightSearchText(){
-		if (!searchBar.getText().isEmpty()){
-			searchBar.requestFocus();
-			searchBar.selectAll();
-		}
-	}
-	
 	@FXML
 	public void newCard(){
 		setChoice();
@@ -507,30 +436,22 @@ public class Controller {
 		uncheckEditBoxes();
 	}
 	
+    @FXML
+    public void addToSet(){
+    	clearEditFields();
+    	uncheckEditBoxes();
+    	addingNewSet();
+    	setText(editSet, setTitle.getText());
+    	selectionModel.select(3);    	
+    }
+    
+	
 	private void clearEditFields(){
 		editFieldList().forEach((field) -> {field.clear();});
 		addedCard.setVisible(false);
 		saveCard.setText("Save Card");
 	}
 	
-	private void uncheckEditBoxes(){
-		rarityList().forEach((c) -> {c.setSelected(false);});
-		editFoil.setSelected(false);
-		addedCard.setVisible(false);
-	}
-	
-	private ArrayList<TextField> editFieldList(){
-		ArrayList<TextField> fields = new ArrayList<TextField>();
-		fields.add(editName);
-		fields.add(editSet);
-		fields.add(editNM);
-		fields.add(editE);
-		fields.add(editVG);
-		fields.add(editG);
-		fields.add(editP);
-		return fields;
-	}
-
 
     @FXML
 	public void swapToEdit() {
@@ -553,6 +474,20 @@ public class Controller {
         checkCorrectRarity();
     }
     
+	private void uncheckOtherBoxes(){
+		rarityList().forEach((c) -> {
+            if (!c.getText().equals(newRarity)) {
+                c.setSelected(false);
+            }
+        });
+	}
+
+	private void uncheckEditBoxes(){
+		rarityList().forEach((c) -> {c.setSelected(false);});
+		editFoil.setSelected(false);
+		addedCard.setVisible(false);
+	}
+    
     private void handleFoilDisplayName(){
     	if (viewName.getText().contains("Foil")){
             editFoil.setSelected(true);
@@ -572,15 +507,6 @@ public class Controller {
     	 newRarity = viewRarity.getText();
     }
     
-    @FXML
-    public void addToSet(){
-    	clearEditFields();
-    	uncheckEditBoxes();
-    	addingNewSet();
-    	setText(editSet, setTitle.getText());
-    	selectionModel.select(3);    	
-    }
-    
     private ArrayList<CheckBox> rarityList() {
         ArrayList<CheckBox> checkBoxes = new ArrayList<>();
         checkBoxes.add(mythicRare);
@@ -590,6 +516,75 @@ public class Controller {
         return checkBoxes;
     }
     
-  
+	private ArrayList<TextField> editFieldList(){
+		ArrayList<TextField> fields = new ArrayList<TextField>();
+		fields.add(editName);
+		fields.add(editSet);
+		fields.add(editNM);
+		fields.add(editE);
+		fields.add(editVG);
+		fields.add(editG);
+		fields.add(editP);
+		return fields;
+	}
+    
+	@FXML
+	void incExcellent(){editE.setText(inc(editE));}
+	@FXML
+	void incNearMint(){editNM.setText(inc(editNM));}	
+	@FXML
+	void incVeryGood(){editVG.setText(inc(editVG));}
+	@FXML
+	void incGood(){editG.setText(inc(editG));}
+	@FXML
+	void incPoor(){editP.setText(inc(editP));}
+	@FXML
+	void decExcellent(){editE.setText(dec(editE));}
+	@FXML
+	void decNearMint(){editNM.setText(dec(editNM));}
+	@FXML
+	void decVeryGood(){editVG.setText(dec(editVG));}
+	@FXML
+	void decGood(){editG.setText(dec(editG));}
+	@FXML
+	void decPoor(){editP.setText(dec(editP));}
+	
+	private String inc(TextField numberField){
+		String value = numberField.getText();
+		if (value.equals("")){
+			value = "0";
+		}
+		return String.valueOf(Integer.valueOf(value) + 1);
+	}
+	private String dec(TextField numberField){
+		String value = numberField.getText();
+		if (!value.equals("0") && !value.equals("")){
+			return String.valueOf(Integer.valueOf(value) - 1);			
+		}
+		return value;
+	}
+	
+	private void highlightSearchText(){
+		if (!searchBar.getText().isEmpty()){
+			searchBar.requestFocus();
+			searchBar.selectAll();
+		}
+	}
+	
+	public void setText(TextField field, String target){
+		field.setText(target);
+	}
+	
+	private void badSearch(){
+		badNews("Unable to display results for " + getFrom(searchBar) + ".");
+	}
+    
+	private int getInt(TextField field){
+		return Integer.valueOf(getFrom(field));
+	}
+	
+	private String toString(int num){
+		return String.valueOf(num);
+	}
 	
 }

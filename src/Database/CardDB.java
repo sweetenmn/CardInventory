@@ -19,7 +19,6 @@ public class CardDB {
     			}
     		}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     	db.closeConnection();
@@ -37,7 +36,6 @@ public class CardDB {
         			}
         		}
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
         	db.closeConnection();
@@ -64,7 +62,6 @@ public class CardDB {
 				}
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		db.closeConnection();

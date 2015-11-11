@@ -30,7 +30,6 @@ public class Card {
 	public void sendToDatabase(Database database) throws ClassNotFoundException{
 		database.updateDB(setDB.addSet(set));
 		database.updateDB(cards.addCard(name, set, database));
-		setNonEmptyRarity();
 		int cardID = getCardID(database);
 		database.updateDB(rarityDB.setRarity(cardID, rarity, foil));
 		database.updateDB(conditionDB.setConditions(cardID, conditions));
@@ -40,7 +39,6 @@ public class Card {
 		int setID = getSetID(database);
 		database.updateDB(setDB.updateSet(set, setID));
 		database.updateDB(cards.updateCard(name, set, setID, database));
-		setNonEmptyRarity();
 		int cardID = getCardID(database);
 		database.updateDB(rarityDB.updateRarity(cardID, rarity, foil));
 		database.updateDB(conditionDB.updateCondition(cardID, conditions));
@@ -93,11 +91,6 @@ public class Card {
 		return setID;
 	}
 	
-	private void setNonEmptyRarity(){
-		if (rarity.equals("")){ 
-			rarity = "None"; 
-		}
-	}
 	
 	public String getName(){return name;}
 	public String getSet(){return set;}
@@ -119,19 +112,5 @@ public class Card {
 		return conditions;
 	}
 	
-	public void changeName(String name){
-		this.name = name;
-	}
-	
-	public void changeSet(String set){
-		this.set = set;
-	}
-	
-	public void changeRarity(String rarity){
-		this.rarity = rarity;
-	}
-	public void changeFoil(String foil){
-		this.foil = foil;
-	}
 
 }
