@@ -38,15 +38,7 @@ public class Controller {
 	@FXML
 	BorderPane canvas;
 	@FXML
-	Button editTitle;
-    @FXML
-    Button editCard;
-    @FXML
-    Button saveCard;
-	@FXML
-	Button addToSet;
-	@FXML
-	Button searchButton;
+	Button editTitle, editCard, saveCard, addToSet, searchButton;
 	@FXML
 	TextField searchBar;
 	@FXML
@@ -56,7 +48,7 @@ public class Controller {
 	@FXML
 	Text viewRarity;
 	@FXML
-	TextField viewE; 
+	TextField viewE;
 	@FXML
 	TextField viewNM;
 	@FXML
@@ -109,7 +101,6 @@ public class Controller {
 	TabPane tabs;
 	@FXML
 	CheckBox editFoil;
-	ArrayList<CheckBox> boxes = new ArrayList<CheckBox>();
 	SingleSelectionModel<Tab> selectionModel;
 
 	Database database;
@@ -147,7 +138,7 @@ public class Controller {
 		selectionModel = tabs.getSelectionModel();
 		createDatabase();
 		createTables();
-		addBoxes();
+		handleCheckBoxEvents();
 	}
 	
 	public void createDatabase(){
@@ -193,25 +184,19 @@ public class Controller {
 		return search;
 	}
 	
-	private void addBoxes(){
-		boxes.add(mythicRare);
-		boxes.add(rare);
-		boxes.add(uncommon);
-		boxes.add(common);
-		for (CheckBox c: boxes){
-			c.setOnAction(k -> {
+	private void handleCheckBoxEvents(){
+		rarityList().forEach((c) -> {
+            c.setOnAction(k -> {
 				newRarity = c.getText();
 				uncheckOtherBoxes();
-			});
-		}
+            });
+		});
 	}
 	
 	void handlePress(KeyCode code){
 		if (code == KeyCode.ENTER){ search(); }
 	}
 	
-	//So many little functions
-	//How can we generalize but still set up event handlers?
 	@FXML
 	void incExcellent(){editE.setText(inc(editE));}
 	@FXML
@@ -253,28 +238,36 @@ public class Controller {
 		try{
 			String newName = getFrom(editName);
 			String newSet = getFrom(editSet);
-			int[] conditions = new int[]{getInt(editNM), getInt(editE),
-					getInt(editVG), getInt(editG), getInt(editP)};         
-			checkFields();
+			int[] conditions = getConditions();        
+			enforceRarityChecked();
 			newCard = new Card(newName, newSet, newRarity, isFoil(), conditions);
-			try {
-				newCard.sendToDatabase(database);
-			} catch (ClassNotFoundException e) {
-				badNews("Failed to add card to database.");
-			}
-			database.closeConnection();
-			addedCard.setText("Added '" + newName + "'" );
-			addedCard.setVisible(true);
+			sendToDatabase(newCard);
+			displaySuccessMessage(newName);
 		} catch (IllegalArgumentException c){
 			badNews("Please enter the name and set of your card.");
 		} catch (NullPointerException e){
 			badNews("Please select a card rarity.");
 		}
 	}
-
-    void editCard() {
-
-    }
+	
+	private void sendToDatabase(Card newCard){
+		try {
+			newCard.sendToDatabase(database);
+		} catch (ClassNotFoundException e) {
+			badNews("Failed to add card to database.");
+		}
+		database.closeConnection();
+	}
+	
+	private void displaySuccessMessage(String name){
+		addedCard.setText("Added '" + name + "'" );
+		addedCard.setVisible(true);
+	}
+	
+	private int[] getConditions(){
+		return new int[]{getInt(editNM), getInt(editE),
+				getInt(editVG), getInt(editG), getInt(editP)};        
+	}
 	
 	void badNews(String message) {
 		Alert badNum = new Alert(AlertType.ERROR);
@@ -282,35 +275,38 @@ public class Controller {
 		badNum.show();
 	}
 	
-	private void checkFields(){
+	private void enforceRarityChecked(){
 		boolean rarityChecked = false;
-		for (CheckBox c: boxes){
-			if (c.isSelected()){
-				rarityChecked = true;
+		for (CheckBox c: rarityList()){
+			if (c.isSelected()) {
+				 rarityChecked = true;
 			}
 		}
-		if (rarityChecked == false){
-			throw (new NullPointerException());
-		}
+		if (!rarityChecked){throw (new NullPointerException());}
+		
 	}
 	
 	private String isFoil(){
-		if (editFoil.isSelected()){ 
-			return "Yes";
+		if (editFoil.isSelected()){
+			return "true";
 		} else {
-			return "No";
+			return "false";
 		}
 	}
 	
 	private String getFrom(TextField field){
 		if (field.getText().equals("")){
-			if (field == editName || field == editSet){
-				throw (new IllegalArgumentException());
-			} else if (field != searchBar){
-				return "0";
-			} else {
-				return field.getText();
-			}
+			return handleEmptyField(field);
+		} else {
+			return field.getText();
+		}
+	}
+	
+	private String handleEmptyField(TextField field){
+		if (field == editName || field == editSet){
+			throw (new IllegalArgumentException());
+		} else if (field != searchBar){
+			return "0";
 		} else {
 			return field.getText();
 		}
@@ -338,7 +334,7 @@ public class Controller {
 		try {
 			searchSetTable.displayResultsFor(getFrom(searchBar), database);
 		} catch (ClassNotFoundException e) {
-			badNews("Unable to display results for " + getFrom(searchBar) + ".");
+			badSearch();
 		}
 	}
 	
@@ -346,8 +342,12 @@ public class Controller {
 		try{
 			searchCardTable.displayResultsFor(getFrom(searchBar), database);
 		} catch (ClassNotFoundException e){
-			e.printStackTrace();
+			badSearch();
 		}		
+	}
+	
+	private void badSearch(){
+		badNews("Unable to display results for " + getFrom(searchBar) + ".");
 	}
 	
 	public void viewSetSearch(){
@@ -359,7 +359,6 @@ public class Controller {
 	public void viewCardSearch(){
 		searchSetTableView.setVisible(false);
 		searchCardTableView.setVisible(true);
-		
 	}
 	
 	public void displayQuery(String query){
@@ -371,43 +370,45 @@ public class Controller {
 	}
 	
 	private void uncheckOtherBoxes(){
-		for (CheckBox c: boxes){
-			if (!c.getText().equals(newRarity)){
-				c.setSelected(false);
-			} 
-		}
+		rarityList().forEach((c) -> {
+            if (!c.getText().equals(newRarity)) {
+                c.setSelected(false);
+            }
+        });
 		
 	}
 	
 	public void swapToView(CardRow data){
-		Card card = data.getCard();
-		updateViewFields(card);
+		updateViewFields(data);
 		canvas.requestFocus();
 		selectionModel.select(2);
 	
 	}
 	
-	public void updateViewFields(Card card) {
-		if (card.isFoil()){
-			viewName.setText("Foil " + card.getName());
-		} else {
-			viewName.setText(card.getName());
-		}
-		viewSet.setText(card.getSet());
-		viewNM.setText(toString(card.getNMCount()));
-		viewE.setText(toString(card.getEXCCount()));
-		viewVG.setText(toString(card.getVGCount()));
-		viewGood.setText(toString(card.getGCount()));
-		viewPoor.setText(toString(card.getPCount()));
-		viewRarity.setText(card.getRarity());
+	public void updateViewFields(CardRow cardRow) {
+		Card card = cardRow.getCard();
+		viewName.setText(cardRow.getDisplayName());
+		viewSet.setText(cardRow.getSetName());
+		viewRarity.setText(cardRow.getRarity());
+		setText(viewNM, toString(card.getNMCount()));
+		setText(viewE, toString(card.getEXCCount()));
+		setText(viewVG, toString(card.getVGCount()));
+		setText(viewGood, toString(card.getGCount()));
+		setText(viewPoor, toString(card.getPCount()));
+		displayImageFor(card);
+	}
+	
+	public void setText(TextField field, String target){
+		field.setText(target);
+	}
+	
+	private void displayImageFor(Card card){
 		try {
 			img = IO.Open(card.getName());
 			Iview.setImage(img);
 		} catch(IOException ex) {
 			badNews(ex.getMessage());
 		}
-
-		
 	}
 	
 	
@@ -455,13 +456,11 @@ public class Controller {
 			field.clear();
 		}
 		addedCard.setVisible(false);
-        saveCard.setText("Save Card");
+		saveCard.setText("Save Card");
 	}
 	
 	private void uncheckEditBoxes(){
-		for (CheckBox c: boxes){
-			c.setSelected(false);
-		}
+		rarityList().forEach((c) -> {c.setSelected(false);});
 		editFoil.setSelected(false);
 		addedCard.setVisible(false);
 	}
@@ -490,24 +489,22 @@ public class Controller {
     @FXML
 	private void swapToEdit() {
         clearEditFields();
-        uncheckEditBoxes();
         if (viewName.getText().contains("Foil")){
-            editFoil.isSelected();
-            editName.setText(viewName.getText());
+            editFoil.setSelected(true);
+            editName.setText(viewName.getText().substring(5));
         }
         else {
             editName.setText(viewName.getText());
         }
-
-        editSet.setText(viewSet.getText());
-        editNM.setText(viewNM.getText());
-        editE.setText(viewE.getText());
-        editVG.setText(viewVG.getText());
-        editG.setText(viewGood.getText());
-        editP.setText(viewPoor.getText());
-
+        setText(editSet, viewSet.getText());
+        setText(editNM, viewNM.getText());
+        setText(editE, viewE.getText());
+        setText(editVG, viewVG.getText());
+        setText(editG, viewGood.getText());
+        setText(editP, viewPoor.getText());
+        uncheckEditBoxes();
         rarityList().forEach((c) -> {
-            if (c.getText() == viewRarity.getText()) {
+            if (c.getText().equals(viewRarity.getText())) {
                 c.setSelected(true);
             }
         });
@@ -518,5 +515,7 @@ public class Controller {
         //TODO: need to set the save button text to edit when swapping over
         //TODO: need to setup the edit function!!!!
 	}
+    
+  
 	
 }
