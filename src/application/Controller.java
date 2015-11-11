@@ -250,7 +250,7 @@ public class Controller {
 
     @FXML
     void editORsave() {
-        if (saveCard.getText().contains("Edit")) {
+        if (saveCard.getText().contains("Update")) {
             editCard();
         } else {
             saveCard();
@@ -541,13 +541,9 @@ public class Controller {
 
         setCheckBox(viewRarity.getText());
         newRarity = viewRarity.getText();
-        System.out.println(viewRarity.getText());
 
         selectionModel.select(3);
         saveCard.setText("Update Card");
-
-        //TODO: need to set the save button text to edit when swapping over
-        //TODO: need to setup the edit function!!!!
 	}
 	
 }

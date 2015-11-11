@@ -13,7 +13,7 @@ public class SetDB {
 	}
 
     public String getSetID(String setName) {
-        return ("SELECT SetId FROM SetTable WHERE SetName = '"+ setName + "'");
+        return ("SELECT * FROM SetTable WHERE SetName = '"+ setName + "'");
     }
 
     public String getSetNameQuery(int setID) {
@@ -27,6 +27,6 @@ public class SetDB {
 	}
 
     public String updateSet(String setName, int SetID) {
-        return ("UPDATE OR IGNORE SetTable SET SetName = '" + setName + "', WHERE SetId = " + SetID);
+        return ("UPDATE OR IGNORE SetTable SET SetName = '" + setName + "' WHERE SetId = " + SetID);
     }
 }

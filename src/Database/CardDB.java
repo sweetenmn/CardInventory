@@ -70,6 +70,6 @@ public class CardDB {
 		db.closeConnection();
 
 
-		return ("UPDATE CardTable SET CardName = '" + cardName + "', SetId = " + setID + " WHERE CardId = " + CardID);
+		return ("UPDATE CardTable SET CardName = '" + cardName + "' WHERE CardId = " + CardID);
 	}
 }
