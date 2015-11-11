@@ -131,7 +131,6 @@ public class SearchResults {
 		db.closeConnection();
 	}
 	
-	//Put these in respective rarities, cards, sets etc. classes!s - M
 	private String getNameFrom(ResultSet results) throws SQLException{
 		return results.getString("CardName");
 	}
@@ -140,16 +139,12 @@ public class SearchResults {
 		return results.getInt("SetId");
 	}
 	
-	
 	private int getCardID(String name, String set) 
 			throws ClassNotFoundException, SQLException{
 		CardDB cards = new CardDB();
 		int cardID = db.getResults(cards.getCardID(name, set, db)).getInt("CardID");
 		db.closeConnection();
 		return cardID;
-	}
-	
-
-	
+	}	
 
 }
