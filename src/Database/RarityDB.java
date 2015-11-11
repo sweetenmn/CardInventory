@@ -16,15 +16,12 @@ public class RarityDB {
     	return ("SELECT * FROM Rarity WHERE CardID = " + cardID);
     }
     
-	public String getFromRarityTable(String query, int cardID, Database db) throws ClassNotFoundException, SQLException{
+	public String getFromRarities(String query, int cardID, Database db) throws ClassNotFoundException, SQLException{
 		RarityDB rarities = new RarityDB();
-		String result = "";
 		ResultSet rarityInfo = db.getResults(rarities.getRarityQuery(cardID));
-		if (rarityInfo.next()){
-			result = rarityInfo.getString(query);
-		}
+		String foil = rarityInfo.getString(query);
 		db.closeConnection();
-		return result;
+		return foil;
 	}
 	
 

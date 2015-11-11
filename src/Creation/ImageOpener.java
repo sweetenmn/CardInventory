@@ -14,14 +14,14 @@ import java.net.URL;
 
 public class ImageOpener {
 
-    public Image CardImage;
+    public Image cardImage;
 
-    public Image Open(String name) throws IOException {
+    public Image open(String name) throws IOException {
         if (name.contains("Foil")) {
             name = name.substring(4, name.length() - 1);
         }
-        String strippedname = name.replace(' ', '+');
-        URL imgURL = new URL("http://gatherer.wizards.com/Handlers/Image.ashx?type=card&name=" + strippedname);
+        String strippedName = name.replace(' ', '+');
+        URL imgURL = new URL("http://gatherer.wizards.com/Handlers/Image.ashx?type=card&name=" + strippedName);
 
         InputStream inStream = imgURL.openStream();
         FileOutputStream outStream = new FileOutputStream("CardImage.jpg");
@@ -33,8 +33,8 @@ public class ImageOpener {
         if (inStream != null) {inStream.close();}
         if (outStream != null) {outStream.close();}
 
-        CardImage = new Image("file:CardImage.jpg");
+        cardImage = new Image("file:CardImage.jpg");
 
-        return CardImage;
+        return cardImage;
     }
 }

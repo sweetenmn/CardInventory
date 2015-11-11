@@ -27,11 +27,7 @@ public class Database {
 			}
 
 			if (rsCount != 4) {
-				statement.executeUpdate("CREATE TABLE CardTable (CardId INTEGER PRIMARY KEY, CardName TEXT, SetId INTEGER)");
-				statement.executeUpdate("CREATE TABLE SetTable (SetId INTEGER PRIMARY KEY, SetName TEXT, UNIQUE(SetName))");
-				statement.executeUpdate("CREATE TABLE Rarity (CardId INTEGER, Rarity TEXT, Foil TEXT)");
-				statement.executeUpdate("CREATE TABLE Condition (CardId TEXT, NewMint INTEGER, Excellent INTEGER, " +
-						"VeryGood INTEGER, Good INTEGER, Poor INTEGER)");
+				createDBTables(statement);
 			}
 		} catch (SQLException e) {
 			System.err.println(e.getMessage());
@@ -44,6 +40,14 @@ public class Database {
 			}
 		}
 
+	}
+	
+	private void createDBTables(Statement statement) throws SQLException{
+		statement.executeUpdate("CREATE TABLE CardTable (CardId INTEGER PRIMARY KEY, CardName TEXT, SetId INTEGER)");
+		statement.executeUpdate("CREATE TABLE SetTable (SetId INTEGER PRIMARY KEY, SetName TEXT, UNIQUE(SetName))");
+		statement.executeUpdate("CREATE TABLE Rarity (CardId INTEGER, Rarity TEXT, Foil TEXT)");
+		statement.executeUpdate("CREATE TABLE Condition (CardId TEXT, NewMint INTEGER, Excellent INTEGER, " +
+				"VeryGood INTEGER, Good INTEGER, Poor INTEGER)");
 	}
 
 	public void updateDB(String command) {
@@ -66,30 +70,6 @@ public class Database {
 
 	}
 
-	public String GetValues(String command, String Column) {
-		connection = null;
-		String value = null;
-		try {
-			connection = DriverManager.getConnection("jdbc:sqlite:"+ dbName);
-			Statement statement = connection.createStatement();
-			statement.setQueryTimeout(30);
-			ResultSet rs = statement.executeQuery(command);
-			while (rs.next()) {
-				value = rs.getString(Column);
-			}
-		} catch (SQLException e) {
-			System.err.println(e.getMessage());
-		} finally {
-			try {
-				if (connection != null)
-					connection.close();
-
-			} catch (SQLException e) {
-				System.err.println(e);
-			}
-		}
-		return (value);
-	}
 	
 	public ResultSet getResults(String command) throws ClassNotFoundException{
 		Class.forName("org.sqlite.JDBC");

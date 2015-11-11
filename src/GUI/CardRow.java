@@ -28,25 +28,6 @@ public class CardRow extends DataRow {
 			return name.get();
 		}
 	}
-	public void setName(String newName){
-		name.set(newName);
-	}
-	
-	public void setRarity(String newRarity){
-		rarity.set(newRarity);
-	}
-	
-	public void setSet(String newSet){
-		setName.set(newSet);
-	}
-	
-	public void setTotal(String newTotal){
-		total.set(newTotal);
-	}
-	
-	public void setFoil(String newFoil){
-		foil.set(newFoil);
-	}
 	
 	public String getName(){return name.get();}
 	public String getRarity(){return rarity.get();}
