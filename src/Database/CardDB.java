@@ -18,7 +18,6 @@ public class CardDB {
     				setID = rs.getInt("SetId");
     			}
     		}
-		} catch (SQLException e) {
 			e.printStackTrace();
 		}
     	db.closeConnection();
