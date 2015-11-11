@@ -256,7 +256,16 @@ public class Controller {
 		}
 		return value;
 	}
-	@FXML
+
+    @FXML
+    void editORsave() {
+        if (saveCard.getText().contains("Update")) {
+            editCard();
+        } else {
+            saveCard();
+        }
+    }
+
 	void saveCard(){
 		Card newCard;
 		try{
@@ -287,6 +296,7 @@ public class Controller {
 		}
 	}
 	
+
 	private void sendToDatabase(Card newCard){
 		try {
 			newCard.sendToDatabase(database);
@@ -337,6 +347,30 @@ public class Controller {
 		return new int[]{getInt(editNM), getInt(editE),
 				getInt(editVG), getInt(editG), getInt(editP)};        
 	}
+
+    void editCard() {
+        Card newCard;
+        try {
+            String cardName = getFrom(editName);
+            String setName = getFrom(editSet);
+            int[] conditions = new int[]{getInt(editNM), getInt(editE),
+                    getInt(editVG), getInt(editG), getInt(editP)};
+            checkFields();
+            newCard = new Card(cardName, setName, newRarity, isFoil(), conditions);
+            try {
+                newCard.updateCardDatabase(database);
+            } catch (ClassNotFoundException e) {
+                badNews("Failed to update Card");
+            }
+            database.closeConnection();
+            addedCard.setText("Updated '" + editName.getText() + "'");
+            addedCard.setVisible(true);
+        } catch (IllegalArgumentException c) {
+            badNews("Please enter the name and set of your card.");
+        } catch (NullPointerException e) {
+            badNews("Please select a card rarity.");
+        }
+    }
 	
 	void badNews(String message) {
 		Alert badNum = new Alert(AlertType.ERROR);
@@ -547,18 +581,20 @@ public class Controller {
 		return fields;
 	}
 
-    private ArrayList<CheckBox> rarityList() {
-        ArrayList<CheckBox> checkBoxes = new ArrayList<>();
-        checkBoxes.add(mythicRare);
-        checkBoxes.add(rare);
-        checkBoxes.add(uncommon);
-        checkBoxes.add(common);
-        return checkBoxes;
+    private void setCheckBox(String rarity) {
+        if (rarity.contains("Mythic")) {
+            mythicRare.setSelected(true);
+        } else if (rarity.contentEquals("Rare")) {
+            rare.setSelected(true);
+        } else if (rarity.contentEquals("Uncommon")) {
+            uncommon.setSelected(true);
+        } else if (rarity.contentEquals("Common")) {
+            common.setSelected(true);
+        }
     }
 
     @FXML
-	private void swapToEdit() {
-    	
+	public void swapToEdit() {
         clearEditFields();
         addingNewSet();
         if (viewName.getText().contains("Foil")){
@@ -583,9 +619,6 @@ public class Controller {
 
         selectionModel.select(3);
         saveCard.setText("Edit Card");
-
-        //TODO: need to set the save button text to edit when swapping over
-        //TODO: need to setup the edit function!!!!
 	}
     
   

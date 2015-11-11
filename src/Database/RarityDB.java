@@ -35,6 +35,6 @@ public class RarityDB {
 	}
 
 	public String updateRarity(int cardID, String rarity, String foil) {
-		return ("UPDATE Rarity SET Rarity = '" + rarity + "', Foil = '" + foil + "' WHERE CardId = '" + cardID);
+		return ("UPDATE Rarity SET Rarity = '" + rarity + "', Foil = '" + foil + "' WHERE CardId = " + cardID);
 	}
 }

@@ -53,7 +53,7 @@ public class CardDB {
         return ("SELECT MAX(CardId) AS newID FROM Card");
     }
 
-	public String updateCard(String cardName, String setName, Database db) throws ClassNotFoundException{
+	public String updateCard(String cardName, String setName, int CardID, Database db) throws ClassNotFoundException{
 		int setID = 0;
 		try {
 			ResultSet rs = db.getResults("SELECT * FROM SetTable WHERE SetName = '" + setName + "'");
@@ -69,6 +69,7 @@ public class CardDB {
 		}
 		db.closeConnection();
 
-		return ("UPDATE CardTable SET CardName = '" + cardName + "', SetId = " + setID + "");
+
+		return ("UPDATE CardTable SET CardName = '" + cardName + "' WHERE CardId = " + CardID);
 	}
 }
