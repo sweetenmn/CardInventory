@@ -513,7 +513,7 @@ public class Controller {
         });
 
         selectionModel.select(3);
-        saveCard.setText("Edit Card");
+        saveCard.setText("Update Card");
 
         //TODO: need to set the save button text to edit when swapping over
         //TODO: need to setup the edit function!!!!

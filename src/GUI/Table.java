@@ -21,7 +21,6 @@ public class Table {
 		this.table = table;
 		this.type = type;
 		createTable(columns);
-		
 	}
 	
 	public TableView<DataRow> getTable(){

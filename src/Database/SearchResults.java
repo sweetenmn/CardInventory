@@ -38,9 +38,6 @@ public class SearchResults {
 		case SET_SEARCH:
 			setSetResults();
 			break;
-		default:
-			break;
-		
 		}
 	}
 	
@@ -103,8 +100,8 @@ public class SearchResults {
 			int setID = getSetIDFrom(results);
 			String set = sets.getSetName(setID, db);
 			int cardID = getCardID(name, set);
-			String rarity = rarities.getRarity(cardID, db);
-			String foil = rarities.getFoil(cardID, db);
+			String rarity = rarities.getFromRarityTable("Rarity", cardID, db);
+			String foil = rarities.getFromRarityTable("Foil", cardID, db);
 			int[] conditions = conditionDB.getConditions(cardID, db);
 			Card newCard = new Card(name, set, rarity, foil, conditions);
 			entries.add(new CardRow(newCard));
@@ -120,8 +117,8 @@ public class SearchResults {
 			while (cardList.next()){
 				String name = getNameFrom(cardList);
 				int cardID = cardList.getInt("CardId");
-				String rarity = rarities.getRarity(cardID, db);
-				String foil = rarities.getFoil(cardID, db);
+				String rarity = rarities.getFromRarityTable("Rarity", cardID, db);
+				String foil = rarities.getFromRarityTable("Foil", cardID, db);
 				int[] conditions = conditionDB.getConditions(cardID, db);
 				Card newCard = new Card(name, setName, rarity, foil, conditions);
 				entries.add(new CardRow(newCard));
@@ -131,7 +128,6 @@ public class SearchResults {
 		db.closeConnection();
 	}
 	
-	//Put these in respective rarities, cards, sets etc. classes!s - M
 	private String getNameFrom(ResultSet results) throws SQLException{
 		return results.getString("CardName");
 	}
