@@ -46,8 +46,4 @@ public class ConditionDB {
 	public String deleteCondition(int cardID) {
 		return ("DELETE FROM Condition WHERE CardId = " + cardID);
 	}
-//and this
-	public String deleteCondition(int cardID) {
-		return ("DELETE FROM Condition WHERE CardId = " + cardID);
-	}
 }
