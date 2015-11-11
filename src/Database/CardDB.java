@@ -72,4 +72,8 @@ public class CardDB {
 
 		return ("UPDATE CardTable SET CardName = '" + cardName + "' WHERE CardId = " + CardID);
 	}
+
+	public String deleteCard(int CardID){
+		return("DELETE FROM CardTable WHERE CardId = " + CardID);
+	}
 }
