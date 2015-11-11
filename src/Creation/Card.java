@@ -9,6 +9,8 @@ import Database.Database;
 import Database.RarityDB;
 import Database.SetDB;
 
+import javax.xml.crypto.Data;
+
 public class Card {
 	String name, set, rarity, foil;
 	int nm, exc, vg, g, p;
@@ -35,6 +37,17 @@ public class Card {
 		database.updateDB(rarityDB.setRarity(cardID, rarity, foil));
 		database.updateDB(conditionDB.setConditions(cardID, conditions));
 	}
+
+	public void updateCardDatabase(Database database) throws ClassNotFoundException {
+		int setID = getSetID(database);
+		database.updateDB(setDB.updateSet(set, setID));
+		database.updateDB(cards.updateCard(name, set, setID, database));
+		setNonEmptyRarity();
+		int cardID = getCardID(database);
+		database.updateDB(rarityDB.updateRarity(cardID, rarity, foil));
+		database.updateDB(conditionDB.updateCondition(cardID, conditions));
+		database.closeConnection();
+	}
 	
 	private void setConditions(){
 		nm = conditions[0];
@@ -51,6 +64,27 @@ public class Card {
 		try {
 			rs = database.getResults(cards.getCardID(name, set, database));
 			setID = rs.getInt("CardId");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		database.closeConnection();
+		database.closeConnection();
+		return setID;
+	}
+
+	private int getSetID(Database database){
+		ResultSet rs;
+		int setID = 0;
+		try {
+			rs = database.getResults(setDB.getSetID(set));
+			if (!rs.isClosed()){
+
+				if (rs.next()){
+					setID = rs.getInt("SetId");
+				}
+			}
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
