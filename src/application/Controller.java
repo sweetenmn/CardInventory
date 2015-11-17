@@ -1,6 +1,8 @@
 package application;
 
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import Creation.Card;
@@ -44,11 +46,19 @@ public class Controller {
 	@FXML
 	Button editCard, saveCard, addToSet, searchButton, newSetButton;
 	@FXML
+	Button editSetButton;
+	@FXML
+	Button saveSetButton;
+	@FXML 
+	Button cancelSetChanges;
+	@FXML
 	Text viewName, viewSet, viewRarity, addedCard;
 	@FXML
 	TextField searchBar, viewE, viewNM, viewPoor, viewGood, viewVG;
 	@FXML
 	TextField editName, editSet, editNM, editVG, editE, editG, editP;
+	@FXML
+	TextField editSetTitle;
 	@FXML
 	CheckBox searchSets, mythicRare, rare, uncommon, common;
 	@FXML
@@ -74,6 +84,8 @@ public class Controller {
 	String newRarity = "";
 	ImageOpener IO = new ImageOpener();
 	Image img;
+	Card oldCard, viewingCard;
+	String viewingSet;
 	boolean addToExistingSet = true;
 	
 	@FXML
@@ -292,12 +304,29 @@ public class Controller {
     
     private void updateDatabase(Card card){
     	try {
-            card.updateCardDatabase(database);
-        } catch (ClassNotFoundException e) {
+            card.updateCardDatabase(oldCard.copy(), database);
+        } catch (ClassNotFoundException | SQLException e) {
             badNews("Failed to update Card");
-        }
+		}
         database.closeConnection();
-    	
+    }
+    private void updateSet(){
+    	int setID = 0;
+    	try {
+    		ResultSet rs = database.getResults("SELECT * FROM SetTable WHERE SetName = '" + viewingSet + "'");
+    		if (!rs.isClosed()){
+    			
+    			if (rs.next()){
+    				setID = rs.getInt("SetId");
+    			}
+    		}
+		} catch (SQLException | ClassNotFoundException e) {
+			badNews("Failed to edit set");
+			e.printStackTrace();
+		}
+    	database.closeConnection();
+    	SetDB setDB = new SetDB();
+    	database.updateDB(setDB.updateSet(setTitle.getText(), setID));
     }
     
     
@@ -390,6 +419,7 @@ public class Controller {
 	}
 	
 	public void swapToView(CardRow data){
+		viewingCard = data.getCard();
 		updateViewFields(data);
 		canvas.requestFocus();
 		selectionModel.select(2);
@@ -461,6 +491,40 @@ public class Controller {
     	selectionModel.select(3);    	
     }
     
+    @FXML
+    public void editSetTitle(){
+    	editSetTitle.setText(setTitle.getText());
+    	viewingSet = setTitle.getText();
+    	editSetTitle.setVisible(true);
+    	setTitle.setVisible(false);
+    	addToSet.setVisible(false);
+    	editSetButton.setVisible(false);
+    	cancelSetChanges.setVisible(true);
+    	saveSetButton.setVisible(true);
+    }
+    @FXML
+    public void saveSetTitle(){
+    	editSetTitle.setVisible(false);
+    	setTitle.setVisible(true);
+    	setTitle.setText(editSetTitle.getText());
+    	addToSet.setVisible(true);
+    	editSetButton.setVisible(true);
+    	cancelSetChanges.setVisible(false);
+    	saveSetButton.setVisible(false);
+    	updateSet();
+    	
+    }
+    @FXML
+    public void cancelSetChanges(){
+    	editSetTitle.setVisible(false);
+    	setTitle.setVisible(true);
+    	addToSet.setVisible(true);
+    	editSetButton.setVisible(true);
+    	cancelSetChanges.setVisible(false);
+    	saveSetButton.setVisible(false);
+    	
+    }
+    
 	
 	private void clearEditFields(){
 		editFieldList().forEach((field) -> {field.clear();});
@@ -475,6 +539,7 @@ public class Controller {
         uncheckEditBoxes();
         addingNewSet();
         populateEditFromView();
+        oldCard = viewingCard;
         selectionModel.select(3);
         saveCard.setText("Update Card");
 	}

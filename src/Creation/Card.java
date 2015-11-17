@@ -27,6 +27,10 @@ public class Card {
 		setConditions();
 	}
 	
+	public Card copy(){
+		return new Card(name, set, rarity, foil, conditions);
+	}
+	
 	public void sendToDatabase(Database database) throws ClassNotFoundException{
 		database.updateDB(setDB.addSet(set));
 		database.updateDB(cards.addCard(name, set, database));
@@ -35,11 +39,11 @@ public class Card {
 		database.updateDB(conditionDB.setConditions(cardID, conditions));
 	}
 
-	public void updateCardDatabase(Database database) throws ClassNotFoundException {
-		int setID = getSetID(database);
-		database.updateDB(setDB.updateSet(set, setID));
-		database.updateDB(cards.updateCard(name, set, setID, database));
-		int cardID = getCardID(database);
+	public void updateCardDatabase(Card oldCard, Database database) throws ClassNotFoundException, SQLException {
+		//int setID = oldCard.getSetID(database);
+		//database.updateDB(setDB.updateSet(set, setID));
+		int cardID = cards.getCardIDInteger(oldCard.name, oldCard.set, database);
+		database.updateDB(cards.updateCard(name, set, cardID, database));
 		database.updateDB(rarityDB.updateRarity(cardID, rarity, foil));
 		database.updateDB(conditionDB.updateCondition(cardID, conditions));
 		database.closeConnection();
@@ -56,10 +60,11 @@ public class Card {
 	
 	private int getCardID(Database database){
 		ResultSet rs;
-		int setID = 0;
+		int cardID = 0;
 		try {
 			rs = database.getResults(cards.getCardID(name, set, database));
-			setID = rs.getInt("CardId");
+			
+			cardID = rs.getInt("CardId");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
@@ -67,7 +72,7 @@ public class Card {
 		}
 		database.closeConnection();
 		database.closeConnection();
-		return setID;
+		return cardID;
 	}
 
 	private int getSetID(Database database){

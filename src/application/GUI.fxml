@@ -57,6 +57,10 @@
                               <Font name="System Bold" size="12.0" />
                            </font>
                         </Button>
+                        <Button fx:id="editSetButton" layoutX="346.0" layoutY="11.0" mnemonicParsing="false" onAction="#editSetTitle" text="Edit Title" />
+                        <Button fx:id="saveSetButton" layoutX="342.0" layoutY="11.0" mnemonicParsing="false" onAction="#saveSetTitle" text="Save" visible="false" />
+                        <Button fx:id="cancelSetChanges" layoutX="383.0" layoutY="11.0" mnemonicParsing="false" onAction="#cancelSetChanges" text="Cancel" visible="false" />
+                        <TextField fx:id="editSetTitle" layoutX="14.0" layoutY="11.0" prefHeight="25.0" prefWidth="315.0" visible="false" />
                      </children></AnchorPane>
               </content>
             </Tab>
