@@ -1,5 +1,6 @@
 package GUI;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import application.Controller;
@@ -22,6 +23,7 @@ public class Table {
 		this.table = table;
 		this.type = type;
 		createTable(columns);
+
 		
 	}
 	
@@ -76,15 +78,22 @@ public class Table {
 		        if (event.getClickCount() == 2 && (!row.isEmpty()) ) {
 		        	setOnEvent(row, controller);
 		        }
-		    });
-		    row.setOnKeyPressed(key -> handleDelete(key.getCode()));
-		    
+		    });		    
 		    return row ;
 		});
 	}
 	
-	private void handleDelete(KeyCode code){
-		if (code == KeyCode.DELETE){System.out.println("Delete");}
+	
+	public void delete(Database db, Table otherTable){
+		CardRow row = (CardRow) table.getSelectionModel().getSelectedItem();
+		try {
+			row.delete(db);
+			otherTable.entries.remove(row);
+			entries.remove(row);
+		} catch (NumberFormatException | ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
 	}
 	
 	private void setOnEvent(TableRow<DataRow> row, Controller controller){

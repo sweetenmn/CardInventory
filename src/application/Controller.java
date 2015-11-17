@@ -89,10 +89,26 @@ public class Controller {
 		createDatabase();
 		createTables();
 		setUpEditTab();
+		
 	}
 	
 	private void handleEnterToSearch(KeyCode code){
-		if (code == KeyCode.ENTER){search();}
+		if (code == KeyCode.ENTER){
+			search();
+		}
+		else {
+			handleDelete(code);
+		}
+	}
+	
+	private void handleDelete(KeyCode code){
+		if (code == KeyCode.DELETE){
+			if (selectionModel.getSelectedIndex() == 0 && !searchSets.isSelected()){
+				searchCardTable.delete(database, setListTable);
+			} else  if (selectionModel.getSelectedIndex() == 1){
+				setListTable.delete(database,searchCardTable);
+			}			
+		}
 	}
 	
 	private void createDatabase(){

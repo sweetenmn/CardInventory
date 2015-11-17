@@ -71,7 +71,17 @@ public class CardDB {
 		return ("UPDATE CardTable SET CardName = '" + cardName + "' WHERE CardId = " + CardID);
 	}
 	
-	public String deleteCard(int CardID){
-		return("DELETE FROM CardTable WHERE CardId = " + CardID);
+	public String deleteCard(int i){
+		return("DELETE FROM CardTable WHERE CardId = " + i);
+	}
+	
+	public int getCardIDInteger(String cardName, String setName, Database db) throws ClassNotFoundException, SQLException{
+		int ID = 0;
+		ResultSet rs = db.getResults(getCardID(cardName, setName, db));
+		if (rs.next()){
+			ID = rs.getInt("CardId");
+		}
+		db.closeConnection();
+		return ID;
 	}
 }

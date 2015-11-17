@@ -1,6 +1,10 @@
 package GUI;
 
+import java.sql.SQLException;
+
 import Creation.Card;
+import Database.CardDB;
+import Database.Database;
 import javafx.beans.property.SimpleStringProperty;
 
 public class CardRow extends DataRow {
@@ -27,6 +31,11 @@ public class CardRow extends DataRow {
 		} else {
 			return name.get();
 		}
+	}
+	
+	public void delete(Database db) throws NumberFormatException, ClassNotFoundException, SQLException{
+		CardDB cardDB = new CardDB();
+		db.updateDB(cardDB.deleteCard(cardDB.getCardIDInteger(getName(), getSet(), db)));
 	}
 	
 	public String getName(){return name.get();}
