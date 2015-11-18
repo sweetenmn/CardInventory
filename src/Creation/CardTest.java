@@ -1,10 +1,13 @@
 package Creation;
 
+import java.sql.SQLException;
+
 import Database.Database;
 import Database.SearchResults;
 import GUI.CardRow;
 import GUI.DataRow;
 import GUI.TableType;
+
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -44,7 +47,12 @@ public class CardTest{
         foil = "false";
         Card card = new Card(name, set, rarity, foil, conditions);
         Database db = new Database("TestDB");
-        card.sendToDatabase(db);
+        try {
+			card.sendToDatabase(db);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         assertNotNull(db);
     }
 
