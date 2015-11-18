@@ -33,6 +33,7 @@ public class CardTest{
         Card newCard = new Card("Cool", "New", rarity, foil, conditions);
         assertEquals(newCard.getName(), "Cool");
         assertNotEquals(card.getSet(), "New");
+        assertEquals(newCard.getSet(), "New");
     }
 
     @Test
