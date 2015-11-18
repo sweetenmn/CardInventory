@@ -1,6 +1,5 @@
 package Creation;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import Database.CardDB;
@@ -31,22 +30,25 @@ public class Card {
 		return new Card(name, set, rarity, foil, conditions);
 	}
 	
-	public void sendToDatabase(Database database) throws ClassNotFoundException{
-		database.updateDB(setDB.addSet(set));
-		database.updateDB(cards.addCard(name, set, database));
-		int cardID = getCardID(database);
-		database.updateDB(rarityDB.setRarity(cardID, rarity, foil));
-		database.updateDB(conditionDB.setConditions(cardID, conditions));
+	public void sendToDatabase(Database database) throws ClassNotFoundException, SQLException{
+		if (!cards.cardExists(name, set, foil, database)){
+			database.updateDB(setDB.addSet(set));
+			database.updateDB(cards.addCard(name, set, database));
+			int cardID = cards.getLatestCardID(name, set, database);
+			database.updateDB(rarityDB.setRarity(cardID, rarity, foil));
+			database.updateDB(conditionDB.setConditions(cardID, conditions));
+		} else {
+			throw (new IllegalStateException());
+		}
 	}
 
-	public void updateCardDatabase(Card oldCard, Database database) throws ClassNotFoundException, SQLException {
-		//int setID = oldCard.getSetID(database);
-		//database.updateDB(setDB.updateSet(set, setID));
+	public void update(Card oldCard, Database database) throws ClassNotFoundException, SQLException {
 		int cardID = cards.getCardIDInteger(oldCard.name, oldCard.set, database);
-		database.updateDB(cards.updateCard(name, set, cardID, database));
+		database.updateDB(cards.updateCard(name, set, cardID, oldCard.name, database));
 		database.updateDB(rarityDB.updateRarity(cardID, rarity, foil));
 		database.updateDB(conditionDB.updateCondition(cardID, conditions));
 		database.closeConnection();
+
 	}
 	
 	private void setConditions(){
@@ -55,53 +57,13 @@ public class Card {
 		vg = conditions[2];
 		g = conditions[3];
 		p = conditions[4];
-		
 	}
-	
-	private int getCardID(Database database){
-		ResultSet rs;
-		int cardID = 0;
-		try {
-			rs = database.getResults(cards.getCardID(name, set, database));
-			
-			cardID = rs.getInt("CardId");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		database.closeConnection();
-		database.closeConnection();
-		return cardID;
-	}
-
-	private int getSetID(Database database){
-		ResultSet rs;
-		int setID = 0;
-		try {
-			rs = database.getResults(setDB.getSetID(set));
-			if (!rs.isClosed()){
-
-				if (rs.next()){
-					setID = rs.getInt("SetId");
-				}
-			}
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		database.closeConnection();
-		database.closeConnection();
-		return setID;
-	}
-	
 	
 	public String getName(){return name;}
 	public String getSet(){return set;}
 	public String getRarity(){return rarity;}
 	public String getFoil(){return foil;}
-	public boolean isFoil(){return foil.equals("Yes");}
+	public boolean isFoil(){return foil.equals("true");}
 	
 	public int getNMCount(){return nm;}
 	public int getEXCCount(){return exc;}
@@ -116,6 +78,4 @@ public class Card {
 	public int[] getConditions(){
 		return conditions;
 	}
-	
-
 }

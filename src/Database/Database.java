@@ -2,6 +2,9 @@ package Database;
 
 import java.sql.*;
 
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+
 public class Database {
 	String dbName;
 	Connection connection;
@@ -35,11 +38,17 @@ public class Database {
 			try {
 				if (connection != null)
 					connection.close();
+				throw (new SQLException());
 			} catch (SQLException e) {
-				System.err.println(e);
+				badNews(e.getMessage());
 			}
 		}
-
+	}
+	
+	void badNews(String message) {
+		Alert badNum = new Alert(AlertType.ERROR);
+		badNum.setContentText(message);
+		badNum.show();
 	}
 	
 	private void createDBTables(Statement statement) throws SQLException{
@@ -67,10 +76,8 @@ public class Database {
 				System.err.println(e);
 			}
 		}
-
 	}
 
-	
 	public ResultSet getResults(String command) throws ClassNotFoundException{
 		Class.forName("org.sqlite.JDBC");
 		connection = null;

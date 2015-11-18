@@ -8,10 +8,11 @@ import Database.Database;
 import Database.SearchResults;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
-import javafx.scene.input.KeyCode;
+import javafx.scene.control.Alert.AlertType;
 
 public class Table {
 	private TableView<DataRow> table;
@@ -23,8 +24,6 @@ public class Table {
 		this.table = table;
 		this.type = type;
 		createTable(columns);
-
-		
 	}
 	
 	public TableView<DataRow> getTable(){
@@ -91,8 +90,9 @@ public class Table {
 			otherTable.entries.remove(row);
 			entries.remove(row);
 		} catch (NumberFormatException | ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Alert badNum = new Alert(AlertType.ERROR);
+			badNum.setContentText("Failed to delete entry.");
+			badNum.show();
 		} 
 	}
 	
@@ -110,7 +110,7 @@ public class Table {
 		}
 	}
 	
-	public void displayResultsFor(String query, Database db) throws ClassNotFoundException{
+	public void displayResultsFor(String query, Database db) throws ClassNotFoundException, SQLException{
 		SearchResults results = new SearchResults(query, type, db);
 		entries = results.getResults();
 		table.setItems(entries);

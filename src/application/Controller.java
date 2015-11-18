@@ -96,7 +96,7 @@ public class Controller {
 	TableColumn<DataRow, String> setListCard, setListRarity, setListTotal;
 	
 	public void initialize(){
-		canvas.setOnKeyPressed(key -> handleEnterToSearch(key.getCode()));
+		canvas.setOnKeyPressed(key -> handleKeyPress(key.getCode()));
 		selectionModel = tabs.getSelectionModel();
 		createDatabase();
 		createTables();
@@ -104,11 +104,10 @@ public class Controller {
 		
 	}
 	
-	private void handleEnterToSearch(KeyCode code){
+	private void handleKeyPress(KeyCode code){
 		if (code == KeyCode.ENTER){
 			search();
-		}
-		else {
+		} else {
 			handleDelete(code);
 		}
 	}
@@ -211,14 +210,17 @@ public class Controller {
 
     @FXML
     void editORsave() {
+    	int selectedSet = 0;
     	try {
     		Card newCard = createCardFromGUI();
 	        if (saveCard.getText().contains("Update")) {
 	            editCard(newCard);
 	        } else {
+	        	selectedSet = setChoice.getSelectionModel().getSelectedIndex();
 	            saveCard(newCard);
 	        }
 	        setChoice();
+	        setChoice.getSelectionModel().select(selectedSet);
     	} catch (IllegalArgumentException c) {
             badNews("Please enter the name and set of your card.");
         } catch (NullPointerException e) {
@@ -228,17 +230,33 @@ public class Controller {
     }
     
     private void editCard(Card card) throws IllegalArgumentException, NullPointerException {
-        updateDatabase(card);
-        displaySuccessMessage("Updated");
+    	try{
+	        updateDatabase(card);
+	        displaySuccessMessage("Updated");
+    	} catch (IllegalStateException e){
+    		badNews("That card already exists.");
+    	}
     }    
 
-	private void saveCard(Card card) throws IllegalArgumentException, NullPointerException{
-		sendToDatabase(card);
-		displaySuccessMessage("Added");
+	private void saveCard(Card card) throws NullPointerException{
+		try{
+			int selectedSet = setChoice.getSelectionModel().getSelectedIndex();
+			sendToDatabase(card);
+			displaySuccessMessage("Added");
+			setChoice.getSelectionModel().select(selectedSet);
+		} catch (IllegalStateException e){
+			badNews("That card already exists.");
+		}
 	}
 	
+	
+	
     private void displaySuccessMessage(String lead){
-    	addedCard.setText(lead + " '" + editName.getText() + "'");
+    	String isFoil = "";
+    	if (editFoil.isSelected()){
+    		isFoil = "Foil ";
+    	}
+    	addedCard.setText(lead + " '" + isFoil + editName.getText() + "'");
         addedCard.setVisible(true);
     }
 	
@@ -254,12 +272,12 @@ public class Controller {
 		}
 	}
 	
-	private void sendToDatabase(Card newCard){
+	private void sendToDatabase(Card newCard) throws IllegalStateException {
 		try {
 			newCard.sendToDatabase(database);
-		} catch (ClassNotFoundException e) {
+		} catch (ClassNotFoundException | SQLException e) {
 			badNews("Failed to add card to database.");
-		}
+		} 
 		database.closeConnection();
 	}
 	
@@ -302,9 +320,9 @@ public class Controller {
 		return card;
     }
     
-    private void updateDatabase(Card card){
+    private void updateDatabase(Card card) throws IllegalStateException{
     	try {
-            card.updateCardDatabase(oldCard.copy(), database);
+            card.update(oldCard.copy(), database);
         } catch (ClassNotFoundException | SQLException e) {
             badNews("Failed to update Card");
 		}
@@ -399,16 +417,6 @@ public class Controller {
 		}		
 	}
 	
-	public void viewSetSearch(){
-		searchCardTableView.setVisible(false);
-		searchSetTableView.setVisible(true);
-		
-	}
-	
-	public void viewCardSearch(){
-		searchSetTableView.setVisible(false);
-		searchCardTableView.setVisible(true);
-	}
 	
 	public void displayQuery(String query){
 		if (query.equals("")){
@@ -423,7 +431,6 @@ public class Controller {
 		updateViewFields(data);
 		canvas.requestFocus();
 		selectionModel.select(2);
-	
 	}
 	
 	public void updateViewFields(CardRow cardRow) {
@@ -456,6 +463,7 @@ public class Controller {
 		try {
 			selectionModel.select(1);
 			setTitle.setText(data.getSetName());
+			
 			setListTable.displayResultsFor(data.getSetName(), database);
 		} catch (ClassNotFoundException e) {
 			badNews("Unable to show list for set " + data.getSetName() + ".");
@@ -463,15 +471,23 @@ public class Controller {
 	}
 	
 	@FXML
-	public void swapSearchPrompt(){
+	public void swapSearchView(){
+		toggleSearchTables();
+		toggleSearchPrompt();
+		highlightSearchText();
+	}
+	
+	private void toggleSearchTables(){
+		searchSetTableView.setVisible(!searchSetTableView.isVisible());
+		searchCardTableView.setVisible(!searchSetTableView.isVisible());
+	}
+	
+	private void toggleSearchPrompt(){
 		if (searchBar.getPromptText().endsWith("card")){
 			searchBar.setPromptText("Search by set");
-			viewSetSearch();
 		} else {
 			searchBar.setPromptText("Search by card");
-			viewCardSearch();
 		}
-		highlightSearchText();
 	}
 	
 	@FXML
@@ -480,6 +496,8 @@ public class Controller {
 		addingExistingSet();
 		clearEditFields();
 		uncheckEditBoxes();
+		newSetButton.setVisible(true);
+		editSet.setEditable(true);
 	}
 	
     @FXML
@@ -495,34 +513,32 @@ public class Controller {
     public void editSetTitle(){
     	editSetTitle.setText(setTitle.getText());
     	viewingSet = setTitle.getText();
-    	editSetTitle.setVisible(true);
-    	setTitle.setVisible(false);
-    	addToSet.setVisible(false);
-    	editSetButton.setVisible(false);
-    	cancelSetChanges.setVisible(true);
-    	saveSetButton.setVisible(true);
+    	toggleEditingSet();
     }
     @FXML
     public void saveSetTitle(){
-    	editSetTitle.setVisible(false);
-    	setTitle.setVisible(true);
-    	setTitle.setText(editSetTitle.getText());
-    	addToSet.setVisible(true);
-    	editSetButton.setVisible(true);
-    	cancelSetChanges.setVisible(false);
-    	saveSetButton.setVisible(false);
-    	updateSet();
+    	try {
+	    	toggleEditingSet();
+	    	setTitle.setText(editSetTitle.getText());
+	    	updateSet();
+			setListTable.displayResultsFor(setTitle.getText(), database);
+		} catch (ClassNotFoundException e) {
+			badNews("Failed to update set name.");
+		}
     	
     }
     @FXML
     public void cancelSetChanges(){
-    	editSetTitle.setVisible(false);
-    	setTitle.setVisible(true);
-    	addToSet.setVisible(true);
-    	editSetButton.setVisible(true);
-    	cancelSetChanges.setVisible(false);
-    	saveSetButton.setVisible(false);
-    	
+    	toggleEditingSet();
+    }
+    
+    private void toggleEditingSet(){
+    	editSetTitle.setVisible(!editSetTitle.isVisible());
+    	setTitle.setVisible(!setTitle.isVisible());
+    	addToSet.setVisible(!addToSet.isVisible());
+    	editSetButton.setVisible(!editSetButton.isVisible());
+    	cancelSetChanges.setVisible(!cancelSetChanges.isVisible());
+    	saveSetButton.setVisible(!saveSetButton.isVisible());
     }
     
 	
@@ -547,6 +563,8 @@ public class Controller {
     private void populateEditFromView(){
     	handleFoilDisplayName();
     	setText(editSet, viewSet.getText());
+    	editSet.setEditable(false);
+    	newSetButton.setVisible(false);
         setText(editNM, viewNM.getText());
         setText(editE, viewE.getText());
         setText(editVG, viewVG.getText());
@@ -661,6 +679,9 @@ public class Controller {
 	}
     
 	private int getInt(TextField field){
+		if (field.getText().equals("")){
+			field.setText("0");
+		}
 		return Integer.valueOf(getFrom(field));
 	}
 	
