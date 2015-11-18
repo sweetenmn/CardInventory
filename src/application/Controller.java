@@ -192,7 +192,7 @@ public class Controller {
 		SearchResults results = null;
 		try {
 			results = new SearchResults("", TableType.SET_SEARCH, database);
-		} catch (ClassNotFoundException e) {
+		} catch (ClassNotFoundException | SQLException e) {
 			badNews("Unable to find existing sets.");
 		}
 		ObservableList<DataRow> entries = results.getResults();
@@ -246,6 +246,8 @@ public class Controller {
 			setChoice.getSelectionModel().select(selectedSet);
 		} catch (IllegalStateException e){
 			badNews("That card already exists.");
+		} catch (SQLException e) {
+			badNews("Failed to add card to database.");
 		}
 	}
 	
@@ -272,7 +274,7 @@ public class Controller {
 		}
 	}
 	
-	private void sendToDatabase(Card newCard) throws IllegalStateException {
+	private void sendToDatabase(Card newCard) throws IllegalStateException, SQLException {
 		try {
 			newCard.sendToDatabase(database);
 		} catch (ClassNotFoundException | SQLException e) {
@@ -323,10 +325,10 @@ public class Controller {
     private void updateDatabase(Card card) throws IllegalStateException{
     	try {
             card.update(oldCard.copy(), database);
+            database.closeConnection();
         } catch (ClassNotFoundException | SQLException e) {
             badNews("Failed to update Card");
 		}
-        database.closeConnection();
     }
     private void updateSet(){
     	int setID = 0;
@@ -338,13 +340,12 @@ public class Controller {
     				setID = rs.getInt("SetId");
     			}
     		}
+    		database.closeConnection();
+    		SetDB setDB = new SetDB();
+    		database.updateDB(setDB.updateSet(setTitle.getText(), setID));
 		} catch (SQLException | ClassNotFoundException e) {
 			badNews("Failed to edit set");
-			e.printStackTrace();
 		}
-    	database.closeConnection();
-    	SetDB setDB = new SetDB();
-    	database.updateDB(setDB.updateSet(setTitle.getText(), setID));
     }
     
     
@@ -404,7 +405,7 @@ public class Controller {
 	public void searchSets(){
 		try {
 			searchSetTable.displayResultsFor(getFrom(searchBar), database);
-		} catch (ClassNotFoundException e) {
+		} catch (ClassNotFoundException | SQLException e) {
 			badSearch();
 		}
 	}
@@ -412,7 +413,7 @@ public class Controller {
 	public void searchCards(){
 		try{
 			searchCardTable.displayResultsFor(getFrom(searchBar), database);
-		} catch (ClassNotFoundException e){
+		} catch (ClassNotFoundException | SQLException e){
 			badSearch();
 		}		
 	}
@@ -465,7 +466,7 @@ public class Controller {
 			setTitle.setText(data.getSetName());
 			
 			setListTable.displayResultsFor(data.getSetName(), database);
-		} catch (ClassNotFoundException e) {
+		} catch (ClassNotFoundException | SQLException e) {
 			badNews("Unable to show list for set " + data.getSetName() + ".");
 		}
 	}
@@ -522,7 +523,7 @@ public class Controller {
 	    	setTitle.setText(editSetTitle.getText());
 	    	updateSet();
 			setListTable.displayResultsFor(setTitle.getText(), database);
-		} catch (ClassNotFoundException e) {
+		} catch (ClassNotFoundException | SQLException e) {
 			badNews("Failed to update set name.");
 		}
     	

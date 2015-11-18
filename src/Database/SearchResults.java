@@ -41,35 +41,30 @@ public class SearchResults {
 		}
 	}
 	
-	private void setSetResults() throws ClassNotFoundException{
-		try {
-			ResultSet queryResults = db.getResults("SELECT * FROM SetTable");
+	private void setSetResults() throws ClassNotFoundException, SQLException{
+		ResultSet queryResults = db.getResults("SELECT * FROM SetTable");
 			if (!queryResults.isClosed()){
-				while (queryResults.next()){
-					if (queryResults.getString("SetName").toLowerCase().contains(query.toLowerCase())){
-					entries.add(new DataRow(queryResults.getString("SetName")));
-					}
+			while (queryResults.next()){
+				if (queryResults.getString("SetName").toLowerCase().contains(query.toLowerCase())){
+				entries.add(new DataRow(queryResults.getString("SetName")));					
 				}
 			}
-			db.closeConnection();
-		} catch (SQLException e) {
-			e.printStackTrace();
 		}
+		db.closeConnection();
+		
 		
 	}
 	
 	private void setListResults() throws ClassNotFoundException, SQLException{
 			ResultSet queryResults = db.getResults(
 					"SELECT * FROM SetTable WHERE SetName = '" + query + "'");
-		if (!queryResults.isClosed()){
-			if (queryResults.next()){
-				
-				int setID = queryResults.getInt("SetId");
-				String setName = queryResults.getString("SetName");
-				db.closeConnection();
-				setCardList(setID, setName);
-			}			
-			}
+		if (queryResults.next()){
+			int setID = queryResults.getInt("SetId");
+			String setName = queryResults.getString("SetName");
+			db.closeConnection();
+			setCardList(setID, setName);
+		}			
+		
 		
 	}
 	
