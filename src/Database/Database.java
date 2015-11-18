@@ -38,9 +38,8 @@ public class Database {
 			try {
 				if (connection != null)
 					connection.close();
-				throw (new SQLException());
 			} catch (SQLException e) {
-				badNews(e.getMessage());
+				badNews("Database error.");
 			}
 		}
 	}
@@ -59,48 +58,37 @@ public class Database {
 				"VeryGood INTEGER, Good INTEGER, Poor INTEGER)");
 	}
 
-	public void updateDB(String command) {
+	public void updateDB(String command) throws SQLException {
 		connection = null;
 		try {
 			connection = DriverManager.getConnection("jdbc:sqlite:"+ dbName);
 			Statement statement = connection.createStatement();
 			statement.setQueryTimeout(30);
 			statement.executeUpdate(command);
-		} catch (SQLException e) {
-			System.err.println(e.getMessage());
 		} finally {
 			try {
 				if (connection != null)
 					connection.close();
 			} catch (SQLException e) {
-				System.err.println(e);
+				badNews("Database error.");
 			}
 		}
 	}
 
-	public ResultSet getResults(String command) throws ClassNotFoundException{
+	public ResultSet getResults(String command) throws ClassNotFoundException, SQLException{
 		Class.forName("org.sqlite.JDBC");
 		connection = null;
 		ResultSet set = null;
-		try {
-			connection = DriverManager.getConnection("jdbc:sqlite:"+ dbName);
-			Statement statement = connection.createStatement();
-			statement.setQueryTimeout(10);
-			set = statement.executeQuery(command);
-		} catch (SQLException e) {
-			System.err.println(e.getMessage());
-		} 
+		connection = DriverManager.getConnection("jdbc:sqlite:"+ dbName);
+		Statement statement = connection.createStatement();
+		statement.setQueryTimeout(10);
+		set = statement.executeQuery(command);
 		return set;
 	}
 	
-	public void closeConnection(){
+	public void closeConnection() throws SQLException{
 		if (connection != null){
-			try {
-				connection.close();
-			} catch (SQLException e) {
-				System.out.println("Failed to close connection.");
-				e.printStackTrace();
-			}
+			connection.close();
 		}
 	}
 
