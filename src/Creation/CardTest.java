@@ -17,6 +17,7 @@ public class CardTest{
     int[] conditions = new int[]{1, 2, 3, 1 , 2};
     String name, set, rarity, foil;
 
+//Try this
     @Test
     public void createCards() {
         name = "Grapeshot Catapult";
